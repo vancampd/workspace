@@ -1,0 +1,28 @@
+@use "./variables" as *;
+
+@mixin flex-centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin tablet {
+  @media (min-width: $tablet-width) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: $desktop-width) {
+    @content;
+  }
+}
+
+@mixin desktop-container {
+  @include desktop {
+    max-width: 67.5rem;
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
+  }
+}

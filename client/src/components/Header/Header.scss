@@ -1,0 +1,60 @@
+@use '../../partials/typography' as *;
+@use '../../partials/font-scale' as *;
+@use '../../partials/variables' as *;
+@use '../../partials/mixins' as *;
+
+.logo {
+  font-family: "Rancho";
+  color: $primary-color;
+  @include page-header;
+  margin: 0;
+
+  &--underline {
+    font-family: "Rancho", Roboto, "Open Sans", "sans-serif";
+    text-decoration: underline $primary-color--underline;
+  }
+}
+
+.header {
+  background-color: $primary-light;
+  padding: $general-mobile-padding;
+
+  @include tablet {
+    padding-bottom: $general-tablet-padding;
+  }
+
+  &__wrapper {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1080px;
+  }
+
+  &__nav {
+    display: flex;
+    align-items: center;
+  }
+
+  &__nav-list {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  &__list-item {
+    list-style: none;
+    margin-left: $general-mobile-padding;
+    @include paragraph-and-comments;
+  }
+
+  &__link {
+    text-decoration: none;
+    color: $primary-font;
+
+    &--active {
+      @extend .header__link;
+      font-weight: 700;
+    }
+  }
+}

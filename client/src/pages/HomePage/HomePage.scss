@@ -1,0 +1,49 @@
+@use '../../partials/variables' as *;
+@use '../../partials/font-scale' as *;
+
+.form {
+  margin: $general-mobile-padding;
+  margin-top: 0;
+
+  &__element-container {
+    border: 1px solid $divider-line;
+    border-radius: $border-radius;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  &__header {
+    @include page-header;
+    margin: 0;
+    padding-bottom: $general-mobile-padding;
+  }
+
+  &__label {
+    @include labels;
+    font-weight: 500;
+  }
+
+  &__input {
+    outline: none;
+    border: none;
+  }
+
+  &__date-container {
+    display: flex;
+  }
+
+  &__start-date {
+    border-right: 1px solid $divider-line;
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+  }
+
+  &__end-date {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0.5rem;
+  }
+}

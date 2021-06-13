@@ -1,0 +1,53 @@
+@use './partials/variables' as *;
+@use './partials/mixins' as *;
+@use './partials/font-scale' as *;
+
+.App {
+  // margin: $general-mobile-padding;
+  color: $primary-font;
+  font-family: "Nunito", sans-serif;
+
+  @include tablet {
+    margin: $general-tablet-padding;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  border-radius: $border-radius;
+
+  @include tablet {
+    padding: $general-tablet-padding;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.button {
+  padding: 1rem;
+  background-color: $primary-color;
+  color: $primary-light;
+  border-radius: 8px;
+  border: none;
+  font-family: inherit;
+  font-weight: 700;
+
+  @include sub-header;
+
+  &:hover {
+    background-color: $light-blue;
+  }
+
+  &--reverse {
+    @extend .button;
+    background-color: unset;
+    border: 1px solid $primary-color;
+    color: $primary-color;
+
+    &:hover {
+      border: none;
+      background-color: $primary-color;
+      color: $primary-light;
+    }
+  }
+}

@@ -1,0 +1,66 @@
+@use './mixins' as *;
+
+@mixin hero-header {
+  font-size: 1.5rem;
+  line-height: 2rem;
+
+  @include tablet {
+    font-size: 3.75rem;
+    line-height: 4.25rem;
+  }
+}
+
+@mixin page-header {
+  font-size: 1.5rem;
+  line-height: 2rem;
+
+  @include tablet {
+    font-size: 2.25rem;
+    line-height: 2.75rem;
+  }
+}
+
+@mixin section-header {
+  font-size: 0.875rem;
+  line-height: 1.375rem;
+
+  @include tablet {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+}
+
+@mixin sub-header {
+  font-size: 0.875rem;
+  line-height: 1.375rem;
+
+  @include tablet {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+}
+
+@mixin paragraph-and-comments {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+
+  @include tablet {
+    font-size: 0.875rem;
+    line-height: 1.375rem;
+  }
+}
+
+@mixin lists-and-contact-info {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+
+  @include tablet {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+}
+
+@mixin labels {
+  font-size: 0.75rem;
+  line-height: 1.25rem;
+}

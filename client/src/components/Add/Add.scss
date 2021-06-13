@@ -1,0 +1,29 @@
+@use '../../partials/variables' as *;
+@use '../../partials/font-scale' as *;
+
+.add {
+  padding: $general-mobile-padding;
+  display: flex;
+  flex-direction: column;
+
+  &__heading {
+    @include page-header;
+    margin: 0;
+    margin-bottom: $general-mobile-padding;
+  }
+
+  &__icon {
+    height: 1.5rem;
+    margin-left: 1rem;
+  }
+
+  &__alt-background {
+    background-color: $light-background;
+  }
+
+  &__image {
+    width: 100%;
+    margin-bottom: $general-mobile-padding;
+    border-radius: $border-radius;
+  }
+}
