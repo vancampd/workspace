@@ -2,6 +2,7 @@ import './App.scss';
 import {BrowserRouter as Router, Switch, Route, Redirect} from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import Header from './components/Header';
+import Footer from './components/Footer';
 
 
 // Need to import Component and change this to a class component if I need state in App.js
@@ -17,6 +18,7 @@ function App() {
           {/* <Route path='listings/:listingID' component={IndividualListing} /> */}
           <Redirect from='/home' to='/' />
         </Switch>
+        <Footer/>
       </Router>
       
     </div>

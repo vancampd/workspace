@@ -1,19 +1,6 @@
-@use '../../partials/typography' as *;
 @use '../../partials/font-scale' as *;
 @use '../../partials/variables' as *;
 @use '../../partials/mixins' as *;
-
-.logo {
-  font-family: "Rancho";
-  color: $primary-color;
-  @include page-header;
-  margin: 0;
-
-  &--underline {
-    font-family: "Rancho", Roboto, "Open Sans", "sans-serif";
-    text-decoration: underline $primary-color--underline;
-  }
-}
 
 .header {
   background-color: $primary-light;

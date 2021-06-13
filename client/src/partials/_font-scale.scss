@@ -64,3 +64,11 @@
   font-size: 0.75rem;
   line-height: 1.25rem;
 }
+
+@mixin buttons {
+  font-size: 1rem;
+
+  @include tablet {
+    font-size: 1.5rem;
+  }
+}

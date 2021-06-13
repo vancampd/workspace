@@ -1,0 +1,12 @@
+@use '../../partials/variables' as *;
+@use '../../partials/font-scale' as *;
+@use '../../partials/mixins' as *;
+
+.footer {
+  display: flex;
+  padding: $general-mobile-padding;
+
+  @include tablet {
+    padding: $general-tablet-padding;
+  }
+}
