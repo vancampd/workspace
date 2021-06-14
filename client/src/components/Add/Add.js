@@ -13,7 +13,7 @@ class Add extends Component {
         console.log(appStyles);
 
         return(
-            <div className={'add ' + `add__${background}`}>
+            <div className={background ? `add add__${background}` : 'add'}>
                 <h2 className='add__heading'>
                     {heading}
                     {icon ? <img src={icon} alt={iconAlt} className='add__icon'/> : ''}

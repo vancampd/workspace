@@ -8,6 +8,8 @@ import office2 from '../../assets/images/office2.jpeg';
 
 
 class HomePage extends Component {
+// TODO: add form functionality/verification
+
     render(){
         return(
             <div>
