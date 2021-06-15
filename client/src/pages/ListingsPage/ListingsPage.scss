@@ -80,6 +80,7 @@
 
   &__right-arrow {
     position: absolute;
+    height: 2rem;
     right: 0;
     top: 30%;
     width: 3rem;
@@ -87,6 +88,7 @@
 
   &__left-arrow {
     position: absolute;
+    height: 2rem;
     left: 0;
     top: 30%;
     width: 3rem;
@@ -107,5 +109,10 @@
 
   &__text {
     @include paragraph-and-comments;
+  }
+
+  &__cost {
+    @include paragraph-and-comments;
+    font-weight: 700;
   }
 }

@@ -4,18 +4,14 @@
     "title": "Work Space Office and Conference Room (Westchester/Kendall)",
     "description": "",
     "rentPeriod": "Daily or weekly",
-    "images": [
-      "listing1/image1.jpeg",
-      "listing1/image2.jpeg",
-      "listing1/image3.jpeg"
-    ],
+    "images": ["image1.jpeg", "image2.jpeg", "image3.jpeg"],
     "streetAddress": "8900 SW 117th Ave",
     "city": "Miami",
     "state": "FL",
     "zipCode": "33186",
     "latitude": "25.684912",
     "longitude": "-80.385075",
-    "price": [{ "individuals": ["Per day: $30", "Full week: $120"] }],
+    "price": "$30/day",
     "details": [
       "Air Conditioning",
       "Flooring: wood",
@@ -34,27 +30,14 @@
     "title": "Repurposing our space for individual or collaborative work",
     "description": "Our restaurant opens at 5pm. With the growing tech presence throughout the city, we want to offer our space to individuals and groups. Use it for your daily work, group meetings, events, or whatever you like!",
     "rentPeriod": "Daily, Weekly, Monthly",
-    "images": [
-      "migonette/image1.jpg",
-      "migonette/image2.jpg",
-      "migonette/image3.jpg"
-    ],
+    "images": ["image1.jpg", "image2.jpg", "image3.jpg"],
     "streetAddress": "210 NE 18th St",
     "city": "Miami",
     "state": "FL",
     "zipCode": "33182",
     "latitude": "25.793434088986697",
     "longitude": "-80.1904559067461",
-    "price": [
-      { "individuals": ["Per day: $20", "Full week: $90"] },
-      { "Groups below 10": ["Per day: $17/person", "Per week: $15/person"] },
-      {
-        "Groups above 10, maximum 15": [
-          "Per day: $15/person",
-          "Per week: $13/person"
-        ]
-      }
-    ],
+    "price": "$20/day",
     "details": ["", "", "", "", ""],
     "contactInfo": {
       "name": "",

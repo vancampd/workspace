@@ -1,0 +1,13 @@
+@use '../../partials/variables' as *;
+@use '../../partials/font-scale' as *;
+@use '../../partials/mixins' as *;
+
+.individual-listing {
+  display: flex;
+  flex-direction: column;
+
+  &__header {
+    @include hero-header;
+    text-align: center;
+  }
+}
