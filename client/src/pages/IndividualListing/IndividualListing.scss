@@ -5,9 +5,116 @@
 .individual-listing {
   display: flex;
   flex-direction: column;
+  padding: 0 $general-mobile-padding;
 
   &__header {
     @include hero-header;
     text-align: center;
+  }
+
+  &__image-container {
+    height: 20rem;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    border-radius: $border-radius;
+    position: relative;
+    overflow: hidden;
+  }
+
+  &__image-counter {
+    height: 10px;
+    width: 10px;
+    border-radius: 5px;
+    background-color: #ffffff50;
+    margin-right: 5px;
+
+    &:last-child {
+      margin: 0;
+    }
+
+    &--active {
+      @extend .individual-listing__image-counter;
+      background-color: #fff;
+    }
+  }
+
+  &__counter-container {
+    position: absolute;
+    bottom: 1rem;
+    display: flex;
+    justify-content: center;
+    width: calc(100% - 2rem);
+  }
+
+  &__image {
+    border-radius: $border-radius;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s;
+
+    &:hover {
+      transform: scale(1.2);
+    }
+
+    @include tablet {
+      border-radius: unset;
+    }
+  }
+
+  &__right-arrow {
+    position: absolute;
+    height: 2rem;
+    right: -3rem;
+    top: 50%;
+    width: 3rem;
+  }
+
+  &__left-arrow {
+    position: absolute;
+    height: 2rem;
+    left: -3rem;
+    top: 50%;
+    width: 3rem;
+  }
+
+  &__description {
+    position: relative;
+    background-color: white;
+    border-radius: 0 0 $border-radius $border-radius;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  &__link {
+    text-decoration: none;
+    color: $primary-font;
+  }
+
+  &__text {
+    @include paragraph-and-comments;
+  }
+
+  &__cost {
+    @include paragraph-and-comments;
+    font-weight: 700;
+  }
+
+  &__side-images {
+    display: flex;
+    justify-content: center;
+  }
+
+  &__side-image-container {
+    height: 9rem;
+    width: 6rem;
+    border-radius: $border-radius;
+    overflow: hidden;
+    margin: 0.5rem;
+  }
+
+  &__side-image {
+    height: 100%;
   }
 }

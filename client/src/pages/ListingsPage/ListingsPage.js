@@ -64,7 +64,8 @@ function ListingsPage() {
                     return (
                         <section key={listing.id} className='listing-card'>
                             <div className='listing-card__image-container'>
-                                <img className='listing-card__image' src={`http://localhost:8080/public/images/${listing.id}/${listing.images[image[l]]}`} alt="Office overview"/>
+                                {/* <img className='listing-card__image' src={`http://localhost:8080/public/images/${listing.id}/${listing.images[image[l]]}`} alt="Office overview"/> */}
+                                <img className='listing-card__image' src={`${listing.images[image[l]]}`} alt="Office overview"/>
                                 {image[l] < (listing.images.length-1) ? <img className='listing-card__right-arrow' onClick={() => handleNextImage(l)} src={rightArrow} alt='Right Arrow'/> : ''}
                                 {image[l] > 0 ? <img className='listing-card__left-arrow' onClick={() => handlePreviousImage(l)} src={leftArrow} alt='Left Arrow'/> : ''}
                                 <div className='listing-card__counter-container'>
