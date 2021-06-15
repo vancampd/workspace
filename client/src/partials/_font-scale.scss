@@ -21,7 +21,7 @@
 }
 
 @mixin section-header {
-  font-size: 0.875rem;
+  font-size: 1.2rem;
   line-height: 1.375rem;
 
   @include tablet {
@@ -31,7 +31,7 @@
 }
 
 @mixin sub-header {
-  font-size: 0.875rem;
+  font-size: 1rem;
   line-height: 1.375rem;
 
   @include tablet {

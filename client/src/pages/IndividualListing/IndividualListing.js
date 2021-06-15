@@ -2,6 +2,8 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import './IndividualListing.scss';
 import axios from 'axios';
+import emptyLike from '../../assets/images/like-empty.svg';
+import filledLike from '../../assets/images/like.svg';
 const API_URL = 'http://localhost:8080/'
 
 function IndividualListing() {
@@ -39,24 +41,6 @@ function IndividualListing() {
         }
     }
 
-    const handleNextImage = () => {
-        // Create copy array that we can alter, rather than changing state directly
-        let imageCopy = image;
-
-        imageCopy++
-
-        setImage(imageCopy)
-    }
-
-    const handlePreviousImage = () => {
-        // Create copy array that we can alter, rather than changing state directly
-        let imageCopy = image;
-
-        imageCopy--
-
-        setImage(imageCopy)
-    }
-
     const handleChangeImage = (i) => {
         // Create copy array that we can alter, rather than changing state directly
         let imageCopy = image;
@@ -66,10 +50,51 @@ function IndividualListing() {
         setImage(imageCopy)
     }
 
+    const [isFavorite, setFavorite] = useState(false);
+    useEffect(()=> {
+        // Check if mainListing exists in favorites
+        if(mainListing){
+           axios
+            .get(`${API_URL}favorites`)
+            .then(res => {
+                const favorites = res.data;
+                if(favorites.some(favorite => favorite.id === mainListing.id)){
+                    setFavorite(true)
+                } else {
+                    setFavorite(false)
+                }
+            }) 
+        }
+        
+    }, [mainListing])
+
+    const handleAddFavorite = () => {
+        setFavorite(true)
+
+        axios
+        .post(`${API_URL}favorites`, mainListing)
+        // .then(res => console.log(res.data))
+        .catch(err => console.log("error posting favorite", err))
+    }
+
+    const handleRemoveFavorite = () => {
+        setFavorite(false)
+        // console.log('removing favorite')
+
+        axios
+        .delete(`${API_URL}favorites`, {
+            data:{
+                id: mainListing.id
+            }
+        })
+        // .then(res => console.log(res.data))
+        .catch(err => console.log('error removing favorite', err))
+    }
+
     if(!mainListing){
         return <div>Loading...</div>
     }
-
+    
     return (
 
         <section className='individual-listing'>
@@ -93,17 +118,42 @@ function IndividualListing() {
                     mainListing.images.map((img,i) => {
                         if(img !== mainListing.images[image]){
                             return (
-                                <div className='individual-listing__side-image-container'>
+                                <div className='individual-listing__side-image-container' key={i}>
                                     <img className='individual-listing__side-image' onClick={()=>{handleChangeImage(i)}} src={img} alt='Listing'/>
                                 </div>
                             )
-                        }
-                    
-                    })
-                           
+                        }                    
+                    })        
                 }
             </div>
-            {/* <IndividualListingImages mainListing={mainListing} image={image} listings={listings}/> */}
+            <div>
+                {
+                    isFavorite ?
+                    <img className='individual-listing__like-button' src={filledLike} alt='Like Button' onClick={handleRemoveFavorite}/>
+                    : <img className='individual-listing__like-button' src={emptyLike} alt='Like Button' onClick={handleAddFavorite}/>
+                } 
+            </div>
+            <section className='individual-listing__details'>
+                <div>
+                    <p className='individual-listing__text'>{mainListing.description}</p>
+                    <p className='individual-listing__text'>Rent period: <span className='individual-listing__text--bold'>{mainListing.rentPeriod}</span></p>
+                    <p className='individual-listing__text'>Price: <span className='individual-listing__text--bold'>{mainListing.price}</span></p>
+                    <ul>
+                    {/* Contact:
+                    {
+                        for(key in mainListing.contactInfo){
+                            
+                        }
+                    } */}
+                </ul>
+                </div>
+                <ul className='individual-listing__features'>
+                    Features:
+                    {
+                        mainListing.details.map((detail,i) => <li key={i}>{detail}</li>)
+                    }
+                </ul>
+            </section>
           
         </section>
     )

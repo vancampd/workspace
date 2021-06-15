@@ -10,10 +10,16 @@
   &__header {
     @include hero-header;
     text-align: center;
+    margin: 0 0 $general-mobile-padding 0;
+  }
+
+  &__like-button {
+    height: 2rem;
+    float: right;
   }
 
   &__image-container {
-    height: 20rem;
+    height: 18rem;
     max-width: 100%;
     display: flex;
     justify-content: center;
@@ -51,7 +57,6 @@
   &__image {
     border-radius: $border-radius;
     height: 100%;
-    object-fit: contain;
     transition: transform 0.3s;
 
     &:hover {
@@ -63,47 +68,10 @@
     }
   }
 
-  &__right-arrow {
-    position: absolute;
-    height: 2rem;
-    right: -3rem;
-    top: 50%;
-    width: 3rem;
-  }
-
-  &__left-arrow {
-    position: absolute;
-    height: 2rem;
-    left: -3rem;
-    top: 50%;
-    width: 3rem;
-  }
-
-  &__description {
-    position: relative;
-    background-color: white;
-    border-radius: 0 0 $border-radius $border-radius;
-    padding: 1rem;
-    text-align: center;
-  }
-
-  &__link {
-    text-decoration: none;
-    color: $primary-font;
-  }
-
-  &__text {
-    @include paragraph-and-comments;
-  }
-
-  &__cost {
-    @include paragraph-and-comments;
-    font-weight: 700;
-  }
-
   &__side-images {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
   }
 
   &__side-image-container {
@@ -116,5 +84,26 @@
 
   &__side-image {
     height: 100%;
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: row;
+  }
+
+  &__text {
+    @include sub-header;
+    margin: 0;
+    margin-bottom: 1rem;
+
+    &--bold {
+      @extend .individual-listing__text;
+      font-weight: 700;
+    }
+  }
+
+  &__features {
+    width: 20%;
+    @include paragraph-and-comments;
   }
 }
