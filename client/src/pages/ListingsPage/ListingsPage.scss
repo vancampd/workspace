@@ -3,7 +3,7 @@
 @use '../../partials/mixins' as *;
 
 .listings-page {
-  padding: $general-mobile-padding;
+  // padding: 0 $general-mobile-padding;
 
   @include tablet {
     padding: $general-tablet-padding;
@@ -15,7 +15,7 @@
   flex-direction: column;
   border-radius: $border-radius;
   position: relative;
-  //   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+  padding: 0 $general-mobile-padding;
   overflow: hidden;
 
   //   @include tablet {

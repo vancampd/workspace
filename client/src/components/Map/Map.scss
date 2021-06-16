@@ -1,0 +1,8 @@
+@use '../../partials/variables' as *;
+@use '../../partials/font-scale' as *;
+@use '../../partials/mixins' as *;
+
+.map-container {
+  height: 20rem;
+  padding-bottom: $general-mobile-padding;
+}

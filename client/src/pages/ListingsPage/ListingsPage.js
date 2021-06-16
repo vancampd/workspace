@@ -4,10 +4,11 @@ import axios from 'axios';
 import rightArrow from '../../assets/images/right-arrow.svg'
 import leftArrow from '../../assets/images/left-arrow.svg'
 import {Link} from 'react-router-dom';
+import ListingMapNav from '../../components/ListingsMapNav';
+import Map from '../../components/Map';
 const API_URL = 'http://localhost:8080/'
 
 function ListingsPage() {
-
 
     const [listings, setListings] = useState([]);
     useEffect(() => {
@@ -24,6 +25,8 @@ function ListingsPage() {
         }
     }, [listings])
 
+    const [mapActive, setMapActive] = useState(false)
+  
     const getListings = () => {
         axios
         .get(`${API_URL}listings`)
@@ -53,18 +56,18 @@ function ListingsPage() {
     }
 
     if(!listings.length || !image.length){
-        return <div>Loading...</div>
+        return <div className='listings-page'>Loading...</div>
     }
     
     return (
-
         <div className='listings-page'>
+            <ListingMapNav mapActive={mapActive} setMapActive={setMapActive}/>
+            {mapActive ? <Map listings={listings}/> : ''}
             {
                 listings.map((listing, l) => {
                     return (
-                        <section key={listing.id} className='listing-card'>
+                        <section key={listing.id} className='listing-card' id={listing.id}>
                             <div className='listing-card__image-container'>
-                                {/* <img className='listing-card__image' src={`http://localhost:8080/public/images/${listing.id}/${listing.images[image[l]]}`} alt="Office overview"/> */}
                                 <img className='listing-card__image' src={`${listing.images[image[l]]}`} alt="Office overview"/>
                                 {image[l] < (listing.images.length-1) ? <img className='listing-card__right-arrow' onClick={() => handleNextImage(l)} src={rightArrow} alt='Right Arrow'/> : ''}
                                 {image[l] > 0 ? <img className='listing-card__left-arrow' onClick={() => handlePreviousImage(l)} src={leftArrow} alt='Left Arrow'/> : ''}

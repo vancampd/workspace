@@ -4,6 +4,7 @@ import './IndividualListing.scss';
 import axios from 'axios';
 import emptyLike from '../../assets/images/like-empty.svg';
 import filledLike from '../../assets/images/like.svg';
+import Map from '../../components/Map';
 const API_URL = 'http://localhost:8080/'
 
 function IndividualListing() {
@@ -101,7 +102,7 @@ function IndividualListing() {
     }
 
     if(!mainListing){
-        return <div>Loading...</div>
+        return <div className='individual-listing'>Loading...</div>
     }
 
     const sideImages = mainListing.images.filter(img => img !== image)
@@ -135,35 +136,42 @@ function IndividualListing() {
                     })
                 }
             </div>
-            <div>
-                {
-                    isFavorite ?
-                    <img className='individual-listing__like-button' src={filledLike} alt='Like Button' onClick={handleRemoveFavorite}/>
-                    : <img className='individual-listing__like-button' src={emptyLike} alt='Like Button' onClick={handleAddFavorite}/>
-                } 
-            </div>
-            <section className='individual-listing__details'>
-                <div>
+            <section className='individual-listing__info'>
+                <div className='individual-listing__details-left'>
                     <p className='individual-listing__text'>{mainListing.description}</p>
                     <p className='individual-listing__text'>Rent period: <span className='individual-listing__text--bold'>{mainListing.rentPeriod}</span></p>
                     <p className='individual-listing__text'>Price: <span className='individual-listing__text--bold'>{mainListing.price}</span></p>
-                    <ul>
-                    Contact:
+                    <ul className='individual-listing__contact-info'>
+                    <h3 className='individual-listing__list-heading'>Contact:</h3>
                     {
                         Object.keys(mainListing.contactInfo).map((key,i) => {
-                            return <li key={i}>{`${key}: ${mainListing.contactInfo[key]}`}</li>
+                            return <li className='individual-listing__list-item' key={i}>{`${key}: ${mainListing.contactInfo[key]}`}</li>
                         })
                     }
                 </ul>
                 </div>
-                <ul className='individual-listing__features'>
-                    Features:
+                <div className='individual-listing__details-right'>
+                    <div className='individual-listing__like-button-container'>
+                        {
+                            isFavorite ?
+                            <img className='individual-listing__like-button' src={filledLike} alt='Like Button' onClick={handleRemoveFavorite}/>
+                            : <img className='individual-listing__like-button' src={emptyLike} alt='Like Button' onClick={handleAddFavorite}/>
+                        } 
+                    </div>
                     {
-                        mainListing.details.map((detail,i) => <li key={i}>{detail}</li>)
+                        mainListing.details.length > 0 ?
+                        <ul className='individual-listing__features'>
+                            <h3 className='individual-listing__list-heading'>Features:</h3>
+                            {
+                                mainListing.details.map((detail,i) => <li className='individual-listing__list-item' key={i}>{detail}</li>)
+                            }
+                        </ul>
+                        : ''
                     }
-                </ul>
+                    
+                </div>
             </section>
-          
+            <Map listings={mainListing} center={{lat: Number(mainListing.coordinates.lat), lng: Number(mainListing.coordinates.lng)}} zoom={13}/>
         </section>
     )
     

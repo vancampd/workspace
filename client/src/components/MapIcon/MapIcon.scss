@@ -1,0 +1,29 @@
+@use '../../partials/variables' as *;
+@use '../../partials/font-scale' as *;
+@use '../../partials/mixins' as *;
+
+.icon {
+  font-size: 2rem;
+  color: $primary-color;
+
+  &__link {
+    text-decoration: none;
+    color: $primary-color;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+.icon-container {
+  display: inline-block;
+}
+
+.icon-text {
+  font-weight: 600;
+  background-color: white;
+  padding: 0.1rem;
+  border: 1px solid $primary-color;
+  border-radius: 20px;
+  margin: 0;
+}

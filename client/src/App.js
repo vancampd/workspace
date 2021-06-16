@@ -5,7 +5,6 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import ListingsPage from './pages/ListingsPage';
 import IndividualListing from './pages/IndividualListing';
-import Map from './components/Map';
 
 
 
@@ -17,9 +16,8 @@ function App() {
         <Header/>
         <Switch>
           <Route exact path='/home' component={HomePage}/>
-          <Route exact path='/listings' component={ListingsPage}/>
-          <Route path='/listings/map' component={Map} />
           <Route path='/listings/:listingID' component={IndividualListing} />
+          <Route path='/listings' component={ListingsPage}/>
           <Redirect from='/' to='/home' />
         </Switch>
         <Footer/>

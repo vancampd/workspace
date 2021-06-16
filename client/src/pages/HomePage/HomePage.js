@@ -34,7 +34,7 @@ class HomePage extends Component {
                     <button className='button'>Search</button>
                 </form>
                 <Add 
-                    heading='Choose from 1000s of locations across the world' 
+                    heading='Become one of our 1000s of locations across the world' 
                     icon={globe} 
                     iconAlt='Globe Icon' 
                     background='alt-background'
