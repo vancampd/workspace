@@ -18,11 +18,20 @@ function IndividualListing() {
 
     const [mainListing, setMainListing] = useState(null)
     useEffect(()=> {
-        // Set the listing being displayed on the page
-        getMainListing()
-    }, [listings])
+        // Set the main listing being displayed on the page
+        if(listings){
+            const mainListing = listings.find(listing => listing.id === listingID)
+            setMainListing(mainListing)
+        }
+    } 
+    , [listings, listingID])
 
-    const [image, setImage] = useState(0);
+    const [image, setImage] = useState('');
+    useEffect(()=>{
+        if(mainListing){
+            setImage(mainListing.images[0])
+        }
+    },[mainListing])
 
     const getListings = () => {
         axios
@@ -34,21 +43,21 @@ function IndividualListing() {
         .catch(err => console.log("Error fetching listings", err))
     }
 
-    const getMainListing = () => {
-        if(listings){
-            const mainListing = listings.find(listing => listing.id === listingID)
-            setMainListing(mainListing)
-        }
-    }
+    // const getMainListing = () => {
+    //     if(listings){
+    //         const mainListing = listings.find(listing => listing.id === listingID)
+    //         setMainListing(mainListing)
+    //     }
+    // }
 
-    const handleChangeImage = (i) => {
-        // Create copy array that we can alter, rather than changing state directly
-        let imageCopy = image;
+    // const handleChangeImage = (i) => {
+    //     // Create copy array that we can alter, rather than changing state directly
+    //     let imageCopy = image;
 
-        imageCopy = i;
+    //     imageCopy = i;
 
-        setImage(imageCopy)
-    }
+    //     setImage(imageCopy)
+    // }
 
     const [isFavorite, setFavorite] = useState(false);
     useEffect(()=> {
@@ -94,19 +103,21 @@ function IndividualListing() {
     if(!mainListing){
         return <div>Loading...</div>
     }
+
+    const sideImages = mainListing.images.filter(img => img !== image)
     
     return (
 
         <section className='individual-listing'>
             <h2 className='individual-listing__header'>{mainListing.title}</h2>
             <div className='individual-listing__image-container'>
-                <img className='individual-listing__image' src={`${mainListing.images[image]}`} alt="Office overview"/>
+                <img className='individual-listing__image' src={image} alt="Office overview"/>
                 <div className='individual-listing__counter-container'>
-                    {mainListing.images.map((img, i) => {
+                    {mainListing.images.map((img) => {
                         return ( 
                             <div
-                                className={i === image ? 'individual-listing__image-counter--active' : 'individual-listing__image-counter'}
-                                key={i}
+                                className={img === image ? 'individual-listing__image-counter--active' : 'individual-listing__image-counter'}
+                                key={img}
                             >
                             </div>
                         )
@@ -115,15 +126,13 @@ function IndividualListing() {
             </div>
             <div className='individual-listing__side-images'>
                 {
-                    mainListing.images.map((img,i) => {
-                        if(img !== mainListing.images[image]){
-                            return (
-                                <div className='individual-listing__side-image-container' key={i}>
-                                    <img className='individual-listing__side-image' onClick={()=>{handleChangeImage(i)}} src={img} alt='Listing'/>
-                                </div>
-                            )
-                        }                    
-                    })        
+                    sideImages.map((img,i) => {
+                        return (
+                            <div className='individual-listing__side-image-container' key={i}>
+                                <img className='individual-listing__side-image' onClick={()=>{setImage(img)}} src={img} alt='Listing'/>
+                            </div>
+                        )
+                    })
                 }
             </div>
             <div>
@@ -139,12 +148,12 @@ function IndividualListing() {
                     <p className='individual-listing__text'>Rent period: <span className='individual-listing__text--bold'>{mainListing.rentPeriod}</span></p>
                     <p className='individual-listing__text'>Price: <span className='individual-listing__text--bold'>{mainListing.price}</span></p>
                     <ul>
-                    {/* Contact:
+                    Contact:
                     {
-                        for(key in mainListing.contactInfo){
-                            
-                        }
-                    } */}
+                        Object.keys(mainListing.contactInfo).map((key,i) => {
+                            return <li key={i}>{`${key}: ${mainListing.contactInfo[key]}`}</li>
+                        })
+                    }
                 </ul>
                 </div>
                 <ul className='individual-listing__features'>
