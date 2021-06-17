@@ -17,7 +17,7 @@ class HomePage extends Component {
                     <h2 className='form__header'>Find a workspace</h2>
                     <div className='form__element-container'>
                         <label className='form__label' htmlFor='location'>Location:</label>
-                        <input className='form__input' name='location' id='location' placeholder='Enter a location'/>
+                        <input className='form__input' name='location' id='location' placeholder="Enter the city you're working in"/>
                     </div>
                     <div className='form__element-container'>
                         <div className='form__date-container'>
