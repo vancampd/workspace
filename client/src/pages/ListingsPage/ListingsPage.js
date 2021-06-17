@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import {useLocation} from 'react-router-dom';
 import './ListingsPage.scss';
 import axios from 'axios';
 import Listing from '../../components/Listing';
@@ -8,11 +9,18 @@ const API_URL = 'http://localhost:8080/'
 
 function ListingsPage() {
 
+    const {pathname}=useLocation()
+
     const [listings, setListings] = useState([]);
     useEffect(() => {
-        // Get the listings
-        getListings()
-    }, [])
+        if(pathname ==='/favorites'){
+            getFavorites()
+        } else {
+            // Get the listings
+            getListings()
+        }
+        
+    }, [pathname])
 
     const [mapActive, setMapActive] = useState(false)
   
@@ -24,6 +32,20 @@ function ListingsPage() {
             setListings(listings)
         })
         .catch(err => console.log("Error fetching listings", err))
+    }
+  
+    const getFavorites = () => {
+        axios
+        .get(`${API_URL}favorites`)
+        .then(res => {
+            const favorites = res.data;
+            setListings(favorites)
+        })
+        .catch(err => console.log("Error fetching listings", err))
+    }
+
+    if(pathname==='/favorites' && !listings.length){
+        return <div>You don't have any favorites</div>
     }
 
     if(!listings.length){

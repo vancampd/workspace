@@ -6,8 +6,6 @@ import Footer from './components/Footer';
 import ListingsPage from './pages/ListingsPage';
 import IndividualListing from './pages/IndividualListing';
 
-
-
 // Need to import Component and change this to a class component if I need state in App.js
 function App() {
   return (
@@ -18,6 +16,7 @@ function App() {
           <Route exact path='/home' component={HomePage}/>
           <Route path='/listings/:listingID' component={IndividualListing} />
           <Route path='/listings' component={ListingsPage}/>
+          <Route path='/favorites' component={ListingsPage}/>
           <Redirect from='/' to='/home' />
         </Switch>
         <Footer/>

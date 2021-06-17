@@ -6,11 +6,9 @@ import './Add.scss';
 class Add extends Component {
     render(){
         const {heading, icon, iconAlt, background, image1, alt1, image2, alt2, buttonClass, buttonText} = this.props;
-        const appStyles = {
-            backgroundColor: {background}
-        }
-
-        console.log(appStyles);
+        // const appStyles = {
+        //     backgroundColor: {background}
+        // }
 
         return(
             <div className={background ? `add add__${background}` : 'add'}>
