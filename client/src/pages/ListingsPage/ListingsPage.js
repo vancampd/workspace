@@ -14,15 +14,6 @@ function ListingsPage() {
         getListings()
     }, [])
 
-    const [image, setImage] = useState([]);
-    useEffect(() => {
-        if(listings.length > 0){
-            const initialImage = listings.map(listing => 0)
-
-            setImage(initialImage)
-        }
-    }, [listings])
-
     const [mapActive, setMapActive] = useState(false)
   
     const getListings = () => {
@@ -35,25 +26,7 @@ function ListingsPage() {
         .catch(err => console.log("Error fetching listings", err))
     }
 
-    const handleNextImage = (i) => {
-        // Create copy array that we can alter, rather than changing state directly
-        const imageCopy = [...image];
-
-        imageCopy[i]++
-
-        setImage(imageCopy)
-    }
-
-    const handlePreviousImage = (i) => {
-        // Create copy array that we can alter, rather than changing state directly
-        const imageCopy = [...image];
-
-        imageCopy[i]--
-
-        setImage(imageCopy)
-    }
-
-    if(!listings.length || !image.length){
+    if(!listings.length){
         return <div className='listings-page'>Loading...</div>
     }
     
@@ -65,10 +38,6 @@ function ListingsPage() {
                 listings.map((listing, l) =>
                     <Listing 
                         listing={listing}
-                        l={l}
-                        handlePreviousImage={handlePreviousImage} 
-                        handleNextImage={handleNextImage} 
-                        image={image}
                         key={listing.id}
                     />
                 )

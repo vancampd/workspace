@@ -1,20 +1,46 @@
-import React from 'react'
+import {useState} from 'react';
 import rightArrow from '../../assets/images/right-arrow.svg'
 import leftArrow from '../../assets/images/left-arrow.svg'
+import './Listing.scss';
 import {Link} from 'react-router-dom';
 
-function Listing({listing, l, handlePreviousImage, handleNextImage, image}) {
+function Listing({listing}) {
+
+    // image is the index of the image being displayed from the listing.images array
+    // set the initial image value to be 0
+    const [image, setImage] = useState(0);
+
+    const handleNextImage = () => {
+        // Create copy of image that we can alter, rather than changing state directly
+        let imageCopy = image;
+
+        imageCopy++
+
+        setImage(imageCopy)
+    }
+
+    const handlePreviousImage = () => {
+        // Create copy of image that we can alter, rather than changing state directly
+        let imageCopy = image;
+
+        imageCopy--
+
+        setImage(imageCopy)
+    }
+
+
+
     return (
         <section key={listing.id} className='listing-card' id={listing.id}>
             <div className='listing-card__image-container'>
-                <img className='listing-card__image' src={`${listing.images[image[l]]}`} alt="Office overview"/>
-                {image[l] < (listing.images.length-1) ? <img className='listing-card__right-arrow' onClick={() => handleNextImage(l)} src={rightArrow} alt='Right Arrow'/> : ''}
-                {image[l] > 0 ? <img className='listing-card__left-arrow' onClick={() => handlePreviousImage(l)} src={leftArrow} alt='Left Arrow'/> : ''}
+                <img className='listing-card__image' src={`${listing.images[image]}`} alt="Office overview"/>
+                {image < (listing.images.length-1) ? <img className='listing-card__right-arrow' onClick={() => handleNextImage()} src={rightArrow} alt='Right Arrow'/> : ''}
+                {image > 0 ? <img className='listing-card__left-arrow' onClick={() => handlePreviousImage()} src={leftArrow} alt='Left Arrow'/> : ''}
                 <div className='listing-card__counter-container'>
                     {listing.images.map((img, i) => {
                         return ( 
                             <div
-                                className={i === image[l] ? 'listing-card__image-counter--active' : 'listing-card__image-counter'}
+                                className={i === image ? 'listing-card__image-counter--active' : 'listing-card__image-counter'}
                                 key={i}
                             >
                             </div>
