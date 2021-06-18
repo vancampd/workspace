@@ -1,1 +1,35 @@
-[{"id":"936604ea-97cf-4a71-bff7-628cf93d80d7","title":"Work Space Office and Conference Room (Westchester/Kendall)","description":"Two offices and shared conference room available. Rent single office or the whole space","rentPeriod":"Daily, Weekly, Monthly","images":["http://localhost:8080/public/images/936604ea-97cf-4a71-bff7-628cf93d80d7/image1.jpeg","http://localhost:8080/public/images/936604ea-97cf-4a71-bff7-628cf93d80d7/image2.jpeg","http://localhost:8080/public/images/936604ea-97cf-4a71-bff7-628cf93d80d7/image3.jpeg"],"streetAddress":"8900 SW 117th Ave","city":"Miami","state":"FL","zipCode":"33186","coordinates":{"lat":"25.684912","lng":"-80.385075"},"price":"$30/day","details":["Air Conditioning","Flooring: wood","Furnished","Street Parking","1 BR"],"contactInfo":{"name":"Al","phone":"305-613-7190","email":""}}]
+[
+  {
+    "id": "936604ea-97cf-4a71-bff7-628cf93d80d7",
+    "title": "Work Space Office and Conference Room (Westchester/Kendall)",
+    "description": "Two offices and shared conference room available. Rent single office or the whole space",
+    "rentPeriod": "Daily, Weekly, Monthly",
+    "images": [
+      "http://localhost:8080/public/images/936604ea-97cf-4a71-bff7-628cf93d80d7/image1.jpeg",
+      "http://localhost:8080/public/images/936604ea-97cf-4a71-bff7-628cf93d80d7/image2.jpeg",
+      "http://localhost:8080/public/images/936604ea-97cf-4a71-bff7-628cf93d80d7/image3.jpeg"
+    ],
+    "streetAddress": "8900 SW 117th Ave",
+    "city": "Miami",
+    "state": "FL",
+    "zipCode": "33186",
+    "coordinates": {
+      "lat": "25.684912",
+      "lng": "-80.385075"
+    },
+    "price": "$30/day",
+    "details": [
+      "Air Conditioning",
+      "Flooring: wood",
+      "Furnished",
+      "Street Parking",
+      "1 BR"
+    ],
+    "contactInfo": {
+      "name": "Al",
+      "phone": "305-613-7190",
+      "email": ""
+    },
+    "comments": []
+  }
+]

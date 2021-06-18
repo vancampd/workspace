@@ -7,6 +7,24 @@
   flex-direction: column;
   padding: 0 $general-mobile-padding;
 
+  &__arrow-div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 1rem;
+    cursor: pointer;
+  }
+
+  &__back-arrow {
+    height: 1rem;
+    margin-right: 0.2rem;
+  }
+
+  &__back-arrow-text {
+    font-size: 1rem;
+    margin: 0;
+  }
+
   &__header {
     @include hero-header;
     text-align: center;

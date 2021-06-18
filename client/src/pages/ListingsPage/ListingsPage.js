@@ -5,6 +5,7 @@ import axios from 'axios';
 import Listing from '../../components/Listing';
 import ListingMapNav from '../../components/ListingsMapNav';
 import Map from '../../components/Map';
+import BackArrow from '../../components/BackArrow';
 const API_URL = 'http://localhost:8080/'
 
 function ListingsPage() {
@@ -54,6 +55,11 @@ function ListingsPage() {
     
     return (
         <div className='listings-page'>
+            {
+                pathname==='/favorites' ?
+                <BackArrow page='listings'/>
+                : ''
+            }
             <ListingMapNav mapActive={mapActive} setMapActive={setMapActive}/>
             {mapActive ? <Map listings={listings}/> : ''}
             {

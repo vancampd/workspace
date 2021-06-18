@@ -1,0 +1,12 @@
+@use '../../partials/variables' as *;
+@use '../../partials/font-scale' as *;
+@use '../../partials/mixins' as *;
+
+.star {
+  height: 2rem;
+  margin-right: 4px;
+}
+
+.comment-star {
+  height: 1rem;
+}

@@ -1,0 +1,83 @@
+@use "../../partials/font-scale" as *;
+@use "../../partials/variables" as *;
+@use "../../partials/mixins" as *;
+
+.comment {
+  padding: $general-mobile-padding 0;
+  border-bottom: 1px solid $divider-line;
+  display: flex;
+  position: relative;
+
+  &__image {
+    min-width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background-color: $divider-line;
+    margin-right: 1rem;
+  }
+
+  &__header-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-bottom: 1rem;
+
+    @include tablet {
+      justify-content: flex-start;
+    }
+  }
+
+  &__header {
+    @include sub-header;
+    font-weight: 600;
+    margin: 0;
+
+    @include tablet {
+      margin-right: 0.5rem;
+    }
+  }
+
+  &__date {
+    @include sub-header;
+    color: $light-font;
+  }
+
+  &__comment {
+    @include paragraph-and-comments;
+    margin: 0;
+
+    @include tablet {
+      width: 39rem;
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  &__button-div {
+    display: flex;
+    justify-content: space-between;
+    padding-top: $general-mobile-padding;
+  }
+
+  &__delete-button {
+    @include labels;
+    border: none;
+    background-color: $primary-light;
+    color: $divider-line;
+    text-decoration: underline;
+    align-self: flex-end;
+    cursor: pointer;
+
+    @include desktop {
+      padding-right: $general-mobile-padding;
+    }
+
+    &:hover {
+      color: $primary-color;
+    }
+  }
+}

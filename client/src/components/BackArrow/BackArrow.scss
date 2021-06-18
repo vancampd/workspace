@@ -1,0 +1,22 @@
+@use '../../partials/variables' as *;
+@use '../../partials/font-scale' as *;
+@use '../../partials/mixins' as *;
+
+.arrow-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0 $general-mobile-padding;
+  cursor: pointer;
+}
+
+.back-arrow {
+  height: 1rem;
+  margin-right: 0.2rem;
+}
+
+.back-arrow-text {
+  font-size: 1rem;
+  margin: 0;
+}

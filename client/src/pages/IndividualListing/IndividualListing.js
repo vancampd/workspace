@@ -1,10 +1,12 @@
-import { useParams } from 'react-router-dom';
+import { useParams} from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import './IndividualListing.scss';
 import axios from 'axios';
 import emptyLike from '../../assets/images/like-empty.svg';
 import filledLike from '../../assets/images/like.svg';
+import BackArrow from '../../components/BackArrow';
 import Map from '../../components/Map';
+import CommentSection from '../../components/CommentSection';
 const API_URL = 'http://localhost:8080/'
 
 function IndividualListing() {
@@ -43,22 +45,6 @@ function IndividualListing() {
         })
         .catch(err => console.log("Error fetching listings", err))
     }
-
-    // const getMainListing = () => {
-    //     if(listings){
-    //         const mainListing = listings.find(listing => listing.id === listingID)
-    //         setMainListing(mainListing)
-    //     }
-    // }
-
-    // const handleChangeImage = (i) => {
-    //     // Create copy array that we can alter, rather than changing state directly
-    //     let imageCopy = image;
-
-    //     imageCopy = i;
-
-    //     setImage(imageCopy)
-    // }
 
     const [isFavorite, setFavorite] = useState(false);
     useEffect(()=> {
@@ -101,6 +87,49 @@ function IndividualListing() {
         .catch(err => console.log('error removing favorite', err))
     }
 
+    const [error, setError] = useState(false);
+
+    const handleCommentSubmit = (e) => {
+        e.preventDefault();
+
+        const newComment = {
+            name: e.target[0].value,
+            comment: e.target[2].value || e.target[1].value
+        }
+
+        if(!newComment.name || !newComment.comment || !rating){            
+            return setError(true)
+        }
+
+        axios
+        .post(`${API_URL}listings/${mainListing.id}/comments`, {
+            listingID: mainListing.id,
+            rating,
+            ...newComment
+        })
+        .then(res => setMainListing(res.data))
+        .catch(err => console.log('error posting comment', err))
+
+        e.target.reset();
+        setRating(0)
+        setError(false)
+    }
+
+    const handleDeleteComment = (e, commentID) => {
+        e.preventDefault();    
+     
+        axios
+          .delete(`${API_URL}listings/${mainListing.id}/comments/${commentID}`, 
+          {
+            data:{
+              listingID: mainListing.id, commentID
+            }
+          })
+          .then(res => setMainListing(res.data))
+    }
+    
+    const [rating, setRating] = useState(0)
+
     if(!mainListing){
         return <div className='individual-listing'>Loading...</div>
     }
@@ -108,71 +137,85 @@ function IndividualListing() {
     const sideImages = mainListing.images.filter(img => img !== image)
     
     return (
-
-        <section className='individual-listing'>
-            <h2 className='individual-listing__header'>{mainListing.title}</h2>
-            <div className='individual-listing__image-container'>
-                <img className='individual-listing__image' src={image} alt="Office overview"/>
-                <div className='individual-listing__counter-container'>
-                    {mainListing.images.map((img) => {
-                        return ( 
-                            <div
-                                className={img === image ? 'individual-listing__image-counter--active' : 'individual-listing__image-counter'}
-                                key={img}
-                            >
-                            </div>
-                        )
-                    })}
+            
+            <section className='individual-listing'>
+            <BackArrow page='listings'/>
+                <h2 className='individual-listing__header'>{mainListing.title}</h2>
+                <div className='individual-listing__image-container'>
+                    <img className='individual-listing__image' src={image} alt="Office overview"/>
+                    <div className='individual-listing__counter-container'>
+                        {mainListing.images.map((img) => {
+                            return ( 
+                                <div
+                                    className={img === image ? 'individual-listing__image-counter--active' : 'individual-listing__image-counter'}
+                                    key={img}
+                                >
+                                </div>
+                            )
+                        })}
+                    </div>
                 </div>
-            </div>
-            <div className='individual-listing__side-images'>
-                {
-                    sideImages.map((img,i) => {
-                        return (
-                            <div className='individual-listing__side-image-container' key={i}>
-                                <img className='individual-listing__side-image' onClick={()=>{setImage(img)}} src={img} alt='Listing'/>
-                            </div>
-                        )
-                    })
-                }
-            </div>
-            <section className='individual-listing__info'>
-                <div className='individual-listing__details-left'>
-                    <p className='individual-listing__text'>{mainListing.description}</p>
-                    <p className='individual-listing__text'>Rent period: <span className='individual-listing__text--bold'>{mainListing.rentPeriod}</span></p>
-                    <p className='individual-listing__text'>Price: <span className='individual-listing__text--bold'>{mainListing.price}</span></p>
-                    <ul className='individual-listing__contact-info'>
-                    <h3 className='individual-listing__list-heading'>Contact:</h3>
+                <div className='individual-listing__side-images'>
                     {
-                        Object.keys(mainListing.contactInfo).map((key,i) => {
-                            return <li className='individual-listing__list-item' key={i}>{`${key}: ${mainListing.contactInfo[key]}`}</li>
+                        sideImages.map((img,i) => {
+                            return (
+                                <div className='individual-listing__side-image-container' key={i}>
+                                    <img className='individual-listing__side-image' onClick={()=>{setImage(img)}} src={img} alt='Listing'/>
+                                </div>
+                            )
                         })
                     }
-                </ul>
                 </div>
-                <div className='individual-listing__details-right'>
-                    <div className='individual-listing__like-button-container'>
+                <section className='individual-listing__info'>
+                    <div className='individual-listing__details-left'>
+                        <p className='individual-listing__text'>{mainListing.description}</p>
+                        <p className='individual-listing__text'>Rent period: <span className='individual-listing__text--bold'>{mainListing.rentPeriod}</span></p>
+                        <p className='individual-listing__text'>Price: <span className='individual-listing__text--bold'>{mainListing.price}</span></p>
+                        <ul className='individual-listing__contact-info'>
+                        <h3 className='individual-listing__list-heading'>Contact:</h3>
                         {
-                            isFavorite ?
-                            <img className='individual-listing__like-button' src={filledLike} alt='Like Button' onClick={handleRemoveFavorite}/>
-                            : <img className='individual-listing__like-button' src={emptyLike} alt='Like Button' onClick={handleAddFavorite}/>
-                        } 
+                            Object.keys(mainListing.contactInfo).map((key,i) => {
+                                return <li className='individual-listing__list-item' key={i}>{`${key}: ${mainListing.contactInfo[key]}`}</li>
+                            })
+                        }
+                    </ul>
                     </div>
-                    {
-                        mainListing.details.length > 0 ?
-                        <ul className='individual-listing__features'>
-                            <h3 className='individual-listing__list-heading'>Features:</h3>
+                    <div className='individual-listing__details-right'>
+                        <div className='individual-listing__like-button-container'>
                             {
-                                mainListing.details.map((detail,i) => <li className='individual-listing__list-item' key={i}>{detail}</li>)
-                            }
-                        </ul>
-                        : ''
-                    }
-                    
-                </div>
+                                isFavorite ?
+                                <img className='individual-listing__like-button' src={filledLike} alt='Like Button' onClick={handleRemoveFavorite}/>
+                                : <img className='individual-listing__like-button' src={emptyLike} alt='Like Button' onClick={handleAddFavorite}/>
+                            } 
+                        </div>
+                        {
+                            mainListing.details.length > 0 ?
+                            <ul className='individual-listing__features'>
+                                <h3 className='individual-listing__list-heading'>Features:</h3>
+                                {
+                                    mainListing.details.map((detail,i) => <li className='individual-listing__list-item' key={i}>{detail}</li>)
+                                }
+                            </ul>
+                            : ''
+                        }
+                        
+                    </div>
+                </section>
+                <Map 
+                    listings={mainListing} 
+                    center={{lat: Number(mainListing.coordinates.lat), lng: Number(mainListing.coordinates.lng)}} 
+                    zoom={13}
+                />
+                <CommentSection 
+                    mainListing={mainListing} 
+                    handleCommentSubmit={handleCommentSubmit} 
+                    handleDeleteComment={handleDeleteComment} 
+                    rating={rating} 
+                    setRating={setRating}
+                    error={error}
+                />
             </section>
-            <Map listings={mainListing} center={{lat: Number(mainListing.coordinates.lat), lng: Number(mainListing.coordinates.lng)}} zoom={13}/>
-        </section>
+        
     )
     
 }
