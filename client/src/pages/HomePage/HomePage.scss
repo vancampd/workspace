@@ -84,4 +84,10 @@
     flex-direction: column;
     padding-bottom: $general-mobile-padding;
   }
+
+  &__footnote {
+    margin: 0;
+    margin-left: $general-mobile-padding;
+    @include labels;
+  }
 }

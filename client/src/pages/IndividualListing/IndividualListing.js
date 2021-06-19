@@ -184,7 +184,7 @@ function IndividualListing() {
                     <div className='individual-listing__details-left'>
                         <p className='individual-listing__text'>{mainListing.description}</p>
                         <p className='individual-listing__text'>Rent period: <span className='individual-listing__text--bold'>{mainListing.rentPeriod}</span></p>
-                        <p className='individual-listing__text'>Price: <span className='individual-listing__text--bold'>{mainListing.price}</span></p>
+                        <p className='individual-listing__text'>Daily rent: <span className='individual-listing__text--bold'>{mainListing.price}</span></p>
                         <ul className='individual-listing__contact-info'>
                         {
                            mainListing.name || mainListing.phone || mainListing.email ?

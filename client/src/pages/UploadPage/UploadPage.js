@@ -5,7 +5,11 @@ import UploadPage2 from '../../components/UploadPage2';
 import UploadPage3 from '../../components/UploadPage3';
 import UploadPageImageForm from '../../components/UploadPageImageForm';
 import axios from 'axios';
-const API_URL = 'http://localhost:8080/'
+import errorIcon from '../../assets/images/error-12px.svg';
+require('dotenv').config()
+const API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
+const API_URL = process.env.REACT_APP_EXPRESS_API_URL;
+const GEO_URL = process.env.REACT_APP_GOOGLE_GEOCODING_URL;
 
 function UploadPage() {
 
@@ -45,18 +49,79 @@ function UploadPage() {
 
     const [newListingId, setNewListingId] = useState('')
 
+    const [error, setError] = useState(false);
+
+    const handleCheckPage1 = () => {
+        const {title, description, rentPeriod, amenities, price } = input;
+
+
+        if(!title || !description || !rentPeriod || !price){
+            return setError(true)
+        }
+
+        if(!amenities){
+            setInput({...input, amenities: []})
+        }
+
+        setError(false)
+        setPage(1)
+    }
+    const handleCheckPage2 = () => {
+        const {streetAddress, city, state} = input;
+
+        if(!streetAddress || !city || !state){
+            return setError(true)
+        }
+
+        setError(false)
+        setPage(2)
+    }
+    // const handleCheckPage3 = () => {
+    //     const {name, phone, email} = input;
+
+    //     console.log(name)
+    //     console.log(phone)
+    //     console.log(email)
+
+
+    //     if(!name && !phone && !email){
+    //         return setError(true)
+    //     }
+
+    //     setError(false)
+    // }
+
     const handlePostListing = (e) => {
         e.preventDefault();
         console.log(input)
 
+        const {phone, email} = input;
+
+        if(!phone && !email){
+            return setError(true)
+        }
+
+        setError(false)
 
         axios
-        .post(`${API_URL}listings`, input)
+        .get(`${GEO_URL}${input.streetAddress},${input.city},${input.state}&key=${API_KEY}`)
         .then(res => {
-            console.log('Response from server', res.data)
-            setNewListingId(res.data.id)
+            const {location} = res.data.results[0].geometry;
+            console.log(location.lat, location.lng)
+
+            axios
+            .post(`${API_URL}listings`, {
+                ...input,
+                coordinates:{lat: String(location.lat), lng: String(location.lng)}
+            })
+            .then(res => {
+                console.log('Response from server', res.data)
+                setNewListingId(res.data.id)
+            })
+            .catch(err => console.log(err)) 
         })
-        .catch(err => console.log(err))
+
+       
     }
 
     return (
@@ -65,18 +130,18 @@ function UploadPage() {
             {
                 page===0 ?
                 <>
-                    <UploadPage1 handleInputChange={handleInputChange}/>
-                    <button type='button' className='button' onClick={()=>setPage(1)}>Next</button>
+                    <UploadPage1 handleInputChange={handleInputChange} error={error} input={input} errorIcon={errorIcon}/>
+                    <button type='button' className='button' onClick={handleCheckPage1}>Next</button>
                 </>
                 : ''
             }
             {
                 page===1 ?
                 <>
-                    <UploadPage2 handleInputChange={handleInputChange}/>
+                    <UploadPage2 handleInputChange={handleInputChange} error={error} input={input} errorIcon={errorIcon}/>
                     <div className='form__button-container'>
                         <button className='button--back' type='button' onClick={()=>setPage(0)}>Back</button> 
-                        <button className='button' type='button' onClick={()=>setPage(2)}>Next</button>
+                        <button className='button' type='button' onClick={handleCheckPage2}>Next</button>
                     </div>
                 </>
                 : ''
@@ -84,9 +149,10 @@ function UploadPage() {
             {
                 page===2 ?
                 <>
-                    <UploadPage3 handleInputChange={handleInputChange}/>
+                    <UploadPage3 handleInputChange={handleInputChange} error={error} input={input} errorIcon={errorIcon}/>
                     <div className='form__button-container'>
-                        <button type='button' className='button--back' onClick={()=>setPage(1)}>Back</button> 
+                        <button type='button' className='button--back'  onClick={()=>setPage(1)}>Back</button> 
+                        {/* <button className='button' type='submit' onClick={handleCheckPage3}>Submit Info</button> */}
                         <button className='button' type='submit'>Submit Info</button>
                     </div>
                 </>
@@ -98,6 +164,8 @@ function UploadPage() {
             <UploadPageImageForm newListingId={newListingId}/>
             : ''
             }
+        <p className='form__footnote'>* indicates a required field</p>
+        <p className='form__footnote'>** indicates at least one field must be selected</p>
     </div>
     )
 }

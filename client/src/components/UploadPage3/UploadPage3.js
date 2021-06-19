@@ -1,9 +1,16 @@
 import React from 'react'
 
-function UploadPage3({handleInputChange}) {
+function UploadPage3({handleInputChange, error, input, errorIcon}) {
+    const {phone, email} = input;
+
     return (
         <>
-            <h2 className='form__sub-header'>Contact Info</h2>
+            <h2 className='form__sub-header'>**Contact Info</h2>
+            {
+                    error && !phone && !email ? 
+                    <p className='error-text'><img src={errorIcon} alt='error icon'/> Either your phone or email is required</p> 
+                    : ''
+            }
             <div className='form__element-container'>
                 <label className='form__label' htmlFor='name'>Name:</label>
                 <input

@@ -27,14 +27,6 @@ router
 
             const listings = getListings();
 
-            // const foundListing = listings.find(listing => listing.id === listingID);
-
-            // console.log('before images', foundListing)
-
-            // foundListing.images = [`http://localhost:8080/${req.file.path}`]
-
-            // console.log('after images', foundListing)
-
             listings.forEach(listing => {
                 if(listing.id === listingID){
                     listing.images = [`http://localhost:8080/${req.file.path}`]
@@ -128,7 +120,7 @@ router
         const newListing = {
             id:uuidv4(),
             comments:[],
-            coordinates:{},
+            // coordinates:{},
             ...req.body,
         }
 
@@ -157,11 +149,5 @@ function getListings() {
     const listings = JSON.parse(listingsData);
     return listings;
 }
-
-  
-// function writeInventory(data) {
-// fs.writeFileSync("./data/inventories.json", JSON.stringify(data));
-// console.log("New Data written to ./data/inventories.json");
-// }
 
 module.exports = router;
