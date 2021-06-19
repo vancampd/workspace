@@ -29,27 +29,38 @@ function CommentSection({mainListing, handleCommentSubmit, handleDeleteComment, 
             <div className="comments-section__container">
                 <form className="comments-section__form" onSubmit={handleCommentSubmit}>
                     <div className="comments-section__form-content">
-                        <label className='comments-section__label'>rating</label>
+                        <label className='form__label'>Rating</label>
                         <Rating rating={rating} setRating={setRating}/>
                         {
                             error && !rating ? 
                             <p className='error-text'><img src={errorIcon} alt='error icon'/> You must leave a rating</p> 
                             : ''
                         }
-                        <label className="comments-section__label" htmlFor="person">name</label>
+                        {/* <label className="comments-section__label" htmlFor="person">name</label>
                         <input
                             className={error && !input.name ? "comments-section__input--name error" : "comments-section__input--name"}
                             type ="text" 
                             name="name" 
                             onChange={handleInputChange}
                             placeholder="Write name here"
-                        />
+                        /> */}
+                        <div className={error & !input.name ? 'form__element-container--comment error' : 'form__element-container--comment'}>
+                            <label className='form__label' htmlFor='name'>Name</label>
+                            <input 
+                                className='form__input'
+                                name='name' 
+                                id='name'
+                                placeholder="Write name here"
+                                onChange={handleInputChange}
+                            />
+                        </div>
                         {
                             error && !input.name ? 
                             <p className='error-text'><img src={errorIcon} alt='error icon'/> Your name is required</p> 
                             : ''
                         }
-                        <label className="comments-section__label" htmlFor="comment">review</label>
+                        
+                        {/* <label className="comments-section__label" htmlFor="comment">review</label>
                         <textarea 
                             className={error && !input.comment ? "comments-section__text-area error" : "comments-section__text-area"}
                             name="comment" 
@@ -63,14 +74,30 @@ function CommentSection({mainListing, handleCommentSubmit, handleDeleteComment, 
                             name="comment" 
                             onChange={handleInputChange}
                             placeholder="Leave review here"
-                        />
+                        /> */}
+                        <div className={error & !input.comment ? 'form__element-container--comment error' : 'form__element-container--comment'}>
+                            <label className='form__label' htmlFor='name'>Review</label>
+                            <input 
+                                className='form__input'
+                                name='comment' 
+                                id='comment'
+                                placeholder="Leave review here"
+                                onChange={handleInputChange}
+                            />
+                        </div>
                         {
                             error && !input.comment ? 
                             <p className='error-text'><img src={errorIcon} alt='error icon'/> Text is required in the review field</p> 
                             : ''
                         }
                     </div>
-                    <button className='button' type='submit'>Submit</button>
+                    <div className="comments-section__button-container">
+                        {/* <button className="comments-section__button--cancel" type='reset' onClick={()=>{handleCancelComment(); setInput({})}}>Cancel</button> */}
+                        {/* <button className="comments-section__button--cancel" type='reset'>Cancel</button> */}
+                        <button type='submit' className="comments-section__button">Submit</button>
+                    </div>
+
+                    {/* <button className='button' type='submit'>Submit</button> */}
                 </form>
             </div>
             {comments.map(comment =>

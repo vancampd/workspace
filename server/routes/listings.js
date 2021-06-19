@@ -12,8 +12,29 @@ router
         res.json(listings);
     })
     .post((req, res) => {
-        console.log("Listings post request:", req)
-        res.json({ 'message': 'post requests received for listings'})
+        console.log("Listings post request:", req.body)
+        const {images} = req.body;
+        const cloneListing = req.body;
+        const alteredListing = delete cloneListing.images;
+
+        const imageArray = [images];
+        console.log('imageArray',imageArray);
+
+        const newListing = {
+            id:uuidv4(),
+            comments:[],
+            coordinates:{},
+            images: imageArray,
+            ...cloneListing,
+        }
+
+        const listings = getListings();
+
+        listings.push(newListing)
+
+        fs.writeFileSync("./data/listings.json", JSON.stringify(listings));
+
+        res.json(listings)
     })
 
 router

@@ -46,7 +46,13 @@ function ListingsPage() {
     }
 
     if(pathname==='/favorites' && !listings.length){
-        return <div>You don't have any favorites</div>
+        
+        return (
+            <>
+                <BackArrow page='listings'/>
+                <div className='listing-card'>You don't have any favorites</div>
+            </>
+        )
     }
 
     if(!listings.length){

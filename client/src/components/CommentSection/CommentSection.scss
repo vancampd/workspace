@@ -8,7 +8,7 @@
     @include sub-header;
     font-weight: 600;
     margin: 0;
-    padding-top: $general-mobile-padding;
+    padding: $general-mobile-padding 0;
 
     @include tablet {
       padding: 4rem 0 2rem 0;
@@ -120,6 +120,38 @@
     &--name {
       @extend .comments-section__input;
       display: unset;
+    }
+  }
+
+  &__button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+
+  &__button {
+    padding: 0.5rem 1rem;
+    background-color: $primary-color;
+    color: $primary-light;
+    border-radius: 50px;
+    border: none;
+    font-family: inherit;
+    font-weight: 700;
+    width: 35%;
+
+    @include buttons;
+
+    &:hover {
+      background-color: unset;
+      border: 2px solid $primary-color;
+      color: $primary-color;
+    }
+
+    &--cancel {
+      @extend .comments-section__button;
+      background-color: unset;
+      border: 2px solid $primary-color;
+      color: $primary-color;
     }
   }
 }

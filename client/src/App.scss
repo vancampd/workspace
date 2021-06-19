@@ -31,6 +31,7 @@
   border: none;
   font-family: inherit;
   font-weight: 700;
+  width: 100%;
 
   @include buttons;
 
@@ -38,6 +39,13 @@
     background-color: unset;
     border: 2px solid $primary-color;
     color: $primary-color;
+  }
+
+  &--back {
+    @extend .button;
+    width: 33%;
+    margin-right: 1rem;
+    background-color: $primary-font;
   }
 
   &--reverse {

@@ -13,12 +13,23 @@
     flex-direction: column;
     padding: 0.5rem;
     margin-bottom: 1rem;
+
+    &--comment {
+      @extend .form__element-container;
+      margin-bottom: 0;
+      margin-top: 1rem;
+    }
   }
 
   &__header {
     @include page-header;
     margin: 0;
     padding-bottom: $general-mobile-padding;
+  }
+
+  &__sub-header {
+    @include sub-header;
+    margin: 0;
   }
 
   &__label {
@@ -29,22 +40,42 @@
   &__input {
     outline: none;
     border: none;
+    font-family: inherit;
   }
 
-  &__date-container {
+  &__inner-container {
     display: flex;
   }
 
-  &__start-date {
+  &__inner-left {
     border-right: 1px solid $divider-line;
     display: flex;
     flex-direction: column;
     width: 50%;
   }
 
-  &__end-date {
+  &__inner-right {
     display: flex;
     flex-direction: column;
     padding-left: 0.5rem;
+    justify-content: center;
+  }
+
+  &__check-box-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  &__button-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding-top: 1rem;
+  }
+
+  &__select {
+    border: none;
+    outline: none;
   }
 }

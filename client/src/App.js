@@ -5,6 +5,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import ListingsPage from './pages/ListingsPage';
 import IndividualListing from './pages/IndividualListing';
+import UploadPage from './pages/UploadPage';
 
 // Need to import Component and change this to a class component if I need state in App.js
 function App() {
@@ -17,6 +18,7 @@ function App() {
           <Route path='/listings/:listingID' component={IndividualListing} />
           <Route path='/listings' component={ListingsPage}/>
           <Route path='/favorites' component={ListingsPage}/>
+          <Route path='/post' component={UploadPage}/>
           <Redirect from='/' to='/home' />
         </Switch>
         <Footer/>

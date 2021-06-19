@@ -20,12 +20,12 @@ class HomePage extends Component {
                         <input className='form__input' name='location' id='location' placeholder="Enter the city you're working in"/>
                     </div>
                     <div className='form__element-container'>
-                        <div className='form__date-container'>
-                            <div className='form__start-date'>
+                        <div className='form__inner-container'>
+                            <div className='form__inner-left'>
                                 <label className='form__label' htmlFor='startDate'>Start date:</label>
                                 <input type='date' className='form__input' name='startDate' id='startDate' placeholder='Select a date'/>
                             </div>
-                            <div className='form__end-date'>
+                            <div className='form__inner-right'>
                                 <label className='form__label' htmlFor='endDate'>End date:</label>
                                 <input type='date' className='form__input' name='endDate' id='endDate' placeholder='Select a date'/>
                             </div>

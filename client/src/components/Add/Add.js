@@ -1,8 +1,6 @@
 import {Component} from 'react';
 import './Add.scss';
 
-
-
 class Add extends Component {
     render(){
         const {heading, icon, iconAlt, background, image1, alt1, image2, alt2, buttonClass, buttonText} = this.props;

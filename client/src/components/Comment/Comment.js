@@ -5,7 +5,7 @@ const Comment = ({comment, handleDeleteComment, rating}) => {
 
             return (
             <section className="comment"  key={comment.commentID}>
-                <div className="comment__image"></div>
+                {/* <div className="comment__image"></div> */}
                 <div className="comment__content">
                     <div className="comment__header-container">
                         <h3 className="comment__header">{comment.name}</h3>

@@ -65,6 +65,11 @@
   line-height: 1.25rem;
 }
 
+@mixin sub-labels {
+  font-size: 0.675rem;
+  line-height: 1.125rem;
+}
+
 @mixin buttons {
   font-size: 1rem;
 

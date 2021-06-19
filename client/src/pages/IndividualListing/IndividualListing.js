@@ -89,6 +89,13 @@ function IndividualListing() {
 
     const [error, setError] = useState(false);
 
+    const [rating, setRating] = useState(0)
+    // const [isCanceled, setCanceled] = useState(false)
+    // const handleCancelComment = () => {
+    //     setRating(0)
+    //     setCanceled(true)
+    // }
+
     const handleCommentSubmit = (e) => {
         e.preventDefault();
 
@@ -97,9 +104,15 @@ function IndividualListing() {
             comment: e.target[2].value || e.target[1].value
         }
 
-        if(!newComment.name || !newComment.comment || !rating){            
-            return setError(true)
-        }
+        // if(!isCanceled){
+            if(!newComment.name || !newComment.comment || !rating){ 
+                console.log('setting error true')          
+                return setError(true)
+            }
+        // } else {
+        //     return setError(false)
+        // }
+
 
         axios
         .post(`${API_URL}listings/${mainListing.id}/comments`, {
@@ -113,7 +126,10 @@ function IndividualListing() {
         e.target.reset();
         setRating(0)
         setError(false)
+        // setCanceled(false)
     }
+
+    // console.log(isCanceled)
 
     const handleDeleteComment = (e, commentID) => {
         e.preventDefault();    
@@ -127,8 +143,6 @@ function IndividualListing() {
           })
           .then(res => setMainListing(res.data))
     }
-    
-    const [rating, setRating] = useState(0)
 
     if(!mainListing){
         return <div className='individual-listing'>Loading...</div>
@@ -172,11 +186,30 @@ function IndividualListing() {
                         <p className='individual-listing__text'>Rent period: <span className='individual-listing__text--bold'>{mainListing.rentPeriod}</span></p>
                         <p className='individual-listing__text'>Price: <span className='individual-listing__text--bold'>{mainListing.price}</span></p>
                         <ul className='individual-listing__contact-info'>
-                        <h3 className='individual-listing__list-heading'>Contact:</h3>
                         {
+                           mainListing.name || mainListing.phone || mainListing.email ?
+                           <h3 className='individual-listing__list-heading'>Contact:</h3>
+                           : ''
+                        }
+                        {/* {
                             Object.keys(mainListing.contactInfo).map((key,i) => {
                                 return <li className='individual-listing__list-item' key={i}>{`${key}: ${mainListing.contactInfo[key]}`}</li>
                             })
+                        } */}
+                        {
+                            mainListing.name ?
+                            <li className='individual-listing__list-item'>Name: {mainListing.name}</li>
+                            : ''
+                        }
+                        {
+                            mainListing.phone ?
+                            <li className='individual-listing__list-item'>Phone: {mainListing.phone}</li>
+                            : ''
+                        }
+                        {
+                            mainListing.email ?
+                            <li className='individual-listing__list-item'>Email: {mainListing.email}</li>
+                            : ''
                         }
                     </ul>
                     </div>
@@ -189,11 +222,11 @@ function IndividualListing() {
                             } 
                         </div>
                         {
-                            mainListing.details.length > 0 ?
+                            mainListing.amenities.length > 0 ?
                             <ul className='individual-listing__features'>
-                                <h3 className='individual-listing__list-heading'>Features:</h3>
+                                <h3 className='individual-listing__list-heading'>Amenities:</h3>
                                 {
-                                    mainListing.details.map((detail,i) => <li className='individual-listing__list-item' key={i}>{detail}</li>)
+                                    mainListing.amenities.map((detail,i) => <li className='individual-listing__list-item' key={i}>{detail}</li>)
                                 }
                             </ul>
                             : ''
@@ -213,6 +246,7 @@ function IndividualListing() {
                     rating={rating} 
                     setRating={setRating}
                     error={error}
+                    // handleCancelComment={handleCancelComment}
                 />
             </section>
         
