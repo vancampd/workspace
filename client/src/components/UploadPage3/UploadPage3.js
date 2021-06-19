@@ -34,14 +34,6 @@ function UploadPage3({handleInputChange}) {
                     onChange={handleInputChange}
                 />
             </div>
-            <label className='form__label' htmlFor='images'>Images:</label>
-            <input
-                className='form__input' 
-                name='images' 
-                id='images' 
-                type='file'
-                onChange={handleInputChange}
-            />
         </>
     )
 }

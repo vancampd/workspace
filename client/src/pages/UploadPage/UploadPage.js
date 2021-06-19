@@ -3,6 +3,7 @@ import './UploadPage.scss'
 import UploadPage1 from '../../components/UploadPage1';
 import UploadPage2 from '../../components/UploadPage2';
 import UploadPage3 from '../../components/UploadPage3';
+import UploadPageImageForm from '../../components/UploadPageImageForm';
 import axios from 'axios';
 const API_URL = 'http://localhost:8080/'
 
@@ -12,20 +13,7 @@ function UploadPage() {
 
     const [input, setInput] = useState({})
     const handleInputChange = (e) => {
-        const {name, value, checked, type} = e.target
-
-        if(name==='images'){
-            let data = new FormData();
-            let selectedFile = e.target.files[0];
-            console.log('selectedFile',selectedFile);
-            console.log('data',data.get('file'))
-            data.append('file', selectedFile)
-            const formData = data.get('file')
-            console.log('data', formData);
-
-            return setInput({...input, [name]: selectedFile })
-        }
-        
+        const {name, value, checked, type} = e.target        
 
         // Enter this block if the input/target is a checkbox
         if(type==='checkbox'){
@@ -53,7 +41,9 @@ function UploadPage() {
         }
     }
 
-    console.log('input', input)
+    // console.log('input', input)
+
+    const [newListingId, setNewListingId] = useState('')
 
     const handlePostListing = (e) => {
         e.preventDefault();
@@ -62,7 +52,10 @@ function UploadPage() {
 
         axios
         .post(`${API_URL}listings`, input)
-        .then(res => console.log(res))
+        .then(res => {
+            console.log('Response from server', res.data)
+            setNewListingId(res.data.id)
+        })
         .catch(err => console.log(err))
     }
 
@@ -94,12 +87,17 @@ function UploadPage() {
                     <UploadPage3 handleInputChange={handleInputChange}/>
                     <div className='form__button-container'>
                         <button type='button' className='button--back' onClick={()=>setPage(1)}>Back</button> 
-                        <button className='button' type='submit'>Submit</button>
+                        <button className='button' type='submit'>Submit Info</button>
                     </div>
                 </>
                 : ''
             }
         </form>
+            {
+            page===2 ?
+            <UploadPageImageForm newListingId={newListingId}/>
+            : ''
+            }
     </div>
     )
 }

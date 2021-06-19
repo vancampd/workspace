@@ -78,4 +78,10 @@
     border: none;
     outline: none;
   }
+
+  &__upload-image-container {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: $general-mobile-padding;
+  }
 }

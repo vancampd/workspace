@@ -1,6 +1,117 @@
 const router = require('express').Router();
 const { v4: uuidv4} = require('uuid');
 const fs = require('fs');
+const multer = require('multer')
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public')
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' +file.originalname)
+  }
+})
+
+const upload = multer({ storage: storage }).single('file')
+
+router
+    .route('/:listingID/images')
+    .post((req, res) => {
+        upload(req, res, (err) => {
+            if (err) {
+                res.sendStatus(500);
+            }
+
+            console.log('params', req.params);
+            const{listingID} = req.params;
+
+            const listings = getListings();
+
+            // const foundListing = listings.find(listing => listing.id === listingID);
+
+            // console.log('before images', foundListing)
+
+            // foundListing.images = [`http://localhost:8080/${req.file.path}`]
+
+            // console.log('after images', foundListing)
+
+            listings.forEach(listing => {
+                if(listing.id === listingID){
+                    listing.images = [`http://localhost:8080/${req.file.path}`]
+                }
+            })
+    
+            fs.writeFileSync('./data/listings.json', JSON.stringify(listings))
+
+            res.send(req.file.path);
+        });
+
+        
+    });
+
+    router
+    .route('/:listingID/comments')
+    .get((req, res) => {
+        console.log("Comments get request:", req)
+        res.json({ 'message': 'get requests received for comments by listingID'})
+    })
+    .post((req, res) => {
+        const {listingID, name, comment, rating} = req.body;
+
+        console.log('received request to post comment')
+
+        const listingsData = fs.readFileSync('./data/listings.json');
+        const listings = JSON.parse(listingsData);
+        const mainListing = listings.find(listing => listing.id === listingID);
+        const comments = mainListing.comments;
+
+        const newComment = {
+            "commentID": uuidv4(),
+            name,
+            comment,
+            rating,
+            "date": Date.now()
+        }
+
+        comments.push(newComment)
+
+        listings.forEach(listing => {
+            if(listing.id === listingID){
+                listing.comments = comments
+            }
+        })
+
+        fs.writeFileSync('./data/listings.json', JSON.stringify(listings))
+
+        mainListing.comments = comments;
+
+        res.json(mainListing)
+    })
+
+router
+    .route('/:listingID/comments/:commentID')
+    .delete((req, res) => {
+        const {listingID, commentID} = req.body;
+
+        const listingsData = fs.readFileSync('./data/listings.json');
+        const listings = JSON.parse(listingsData);
+        const mainListing = listings.find(listing => listing.id === listingID);
+        const comments = mainListing.comments;
+
+        const newComments = comments.filter(comment => comment.commentID !== commentID)
+
+        listings.forEach(listing => {
+            if(listing.id === listingID){
+                listing.comments = newComments
+            }
+        })
+
+        fs.writeFileSync('./data/listings.json', JSON.stringify(listings))
+
+        mainListing.comments = newComments;
+
+        res.json(mainListing)
+    })
 
 router
     .route('/')
@@ -13,19 +124,12 @@ router
     })
     .post((req, res) => {
         console.log("Listings post request:", req.body)
-        const {images} = req.body;
-        const cloneListing = req.body;
-        const alteredListing = delete cloneListing.images;
-
-        const imageArray = [images];
-        console.log('imageArray',imageArray);
 
         const newListing = {
             id:uuidv4(),
             comments:[],
             coordinates:{},
-            images: imageArray,
-            ...cloneListing,
+            ...req.body,
         }
 
         const listings = getListings();
@@ -34,7 +138,7 @@ router
 
         fs.writeFileSync("./data/listings.json", JSON.stringify(listings));
 
-        res.json(listings)
+        res.json(newListing)
     })
 
 router
