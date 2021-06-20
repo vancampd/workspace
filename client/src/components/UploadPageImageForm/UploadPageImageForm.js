@@ -4,6 +4,8 @@ const API_URL = 'http://localhost:8080/'
 
 function UploadPageImageForm({newListingId}) {
 
+    console.log('newListingId', newListingId)
+
     const handleUploadImage = (e) => {
 
         e.preventDefault();
@@ -28,7 +30,7 @@ function UploadPageImageForm({newListingId}) {
                     type='file'
                 />
             </div>
-            <button className='button'>Upload Images</button> 
+            <button className='button'>Submit</button> 
         </form>
     )
 }

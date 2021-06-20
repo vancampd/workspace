@@ -66,6 +66,7 @@ function UploadPage() {
         setError(false)
         setPage(1)
     }
+
     const handleCheckPage2 = () => {
         const {streetAddress, city, state} = input;
 
@@ -76,20 +77,33 @@ function UploadPage() {
         setError(false)
         setPage(2)
     }
+
     // const handleCheckPage3 = () => {
-    //     const {name, phone, email} = input;
+    //     const {phone, email} = input;
 
-    //     console.log(name)
-    //     console.log(phone)
-    //     console.log(email)
-
-
-    //     if(!name && !phone && !email){
+    //     if(!phone && !email){
     //         return setError(true)
     //     }
 
+    //     if(phone){
+    //         if(!validatePhone(phone)){
+    //             return setError(true)
+    //         }
+    //     }
+
+    //     // Have to check valid email before returning setValidPhone
+    //     if(email){
+    //         if(!validateEmail(email)){
+    //             return setError(true)
+    //         }
+    //     }
+
     //     setError(false)
+    //     setPage(3)
     // }
+
+    // const [validPhone, setValidPhone] = useState(true)
+    // const [validEmail, setValidEmail] = useState(true)
 
     const handlePostListing = (e) => {
         e.preventDefault();
@@ -101,6 +115,21 @@ function UploadPage() {
             return setError(true)
         }
 
+        if(phone){
+            if(!validatePhone(phone)){
+                return setError(true)
+            }
+        }
+
+        // Have to check valid email before returning setValidPhone
+        if(email){
+            if(!validateEmail(email)){
+                return setError(true)
+            }
+        }
+
+        // setValidPhone(true)
+        // setValidEmail(true)
         setError(false)
 
         axios
@@ -116,16 +145,28 @@ function UploadPage() {
             })
             .then(res => {
                 console.log('Response from server', res.data)
-                setNewListingId(res.data.id)
+                return (setNewListingId(res.data.id), setPage(3))
             })
             .catch(err => console.log(err)) 
-        })
+        })  
+    }
 
-       
+    const validatePhone = (phone) => {
+
+        const re=/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/
+        
+        return re.test(String(phone));
+    }
+    
+    const validateEmail = (email) => {
+
+        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        
+        return re.test(String(email).toLowerCase());
     }
 
     return (
-        <div>
+        <div className='form__upload-container'>
         <form className='card form' onSubmit={handlePostListing}>
             {
                 page===0 ?
@@ -149,19 +190,30 @@ function UploadPage() {
             {
                 page===2 ?
                 <>
-                    <UploadPage3 handleInputChange={handleInputChange} error={error} input={input} errorIcon={errorIcon}/>
+                    <UploadPage3 
+                        handleInputChange={handleInputChange} 
+                        error={error} 
+                        input={input} 
+                        errorIcon={errorIcon}
+                        // validPhone={validPhone}
+                        // validEmail={validEmail}
+                        validateEmail={validateEmail}
+                        validatePhone={validatePhone}
+                    />
                     <div className='form__button-container'>
                         <button type='button' className='button--back'  onClick={()=>setPage(1)}>Back</button> 
                         {/* <button className='button' type='submit' onClick={handleCheckPage3}>Submit Info</button> */}
-                        <button className='button' type='submit'>Submit Info</button>
+                        <button className='button' type='submit'>Next</button>
                     </div>
                 </>
                 : ''
             }
         </form>
             {
-            page===2 ?
-            <UploadPageImageForm newListingId={newListingId}/>
+            page===3 ?
+            <>
+                <UploadPageImageForm newListingId={newListingId}/>
+            </>
             : ''
             }
         <p className='form__footnote'>* indicates a required field</p>

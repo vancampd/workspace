@@ -90,4 +90,8 @@
     margin-left: $general-mobile-padding;
     @include labels;
   }
+
+  &__upload-container {
+    min-height: calc(100vh - 8rem);
+  }
 }

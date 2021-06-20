@@ -1,6 +1,6 @@
 import React from 'react'
 
-function UploadPage3({handleInputChange, error, input, errorIcon}) {
+function UploadPage3({handleInputChange, error, input, errorIcon, validatePhone, validateEmail}) {
     const {phone, email} = input;
 
     return (
@@ -8,7 +8,7 @@ function UploadPage3({handleInputChange, error, input, errorIcon}) {
             <h2 className='form__sub-header'>**Contact Info</h2>
             {
                     error && !phone && !email ? 
-                    <p className='error-text'><img src={errorIcon} alt='error icon'/> Either your phone or email is required</p> 
+                    <p className='error-text'><img src={errorIcon} alt='error icon'/> Either a valid phone or a valid email is required</p> 
                     : ''
             }
             <div className='form__element-container'>
@@ -30,6 +30,16 @@ function UploadPage3({handleInputChange, error, input, errorIcon}) {
                     placeholder="Phone Number"
                     onChange={handleInputChange}
                 />
+                {/* {
+                    !validPhone ? 
+                    <p className='error-text'><img src={errorIcon} alt='error icon'/> Please enter a valid phone number</p> 
+                    : ''
+                } */}
+                {
+                    error && phone && !validatePhone(phone) ? 
+                    <p className='error-text'><img src={errorIcon} alt='error icon'/> Please enter a valid phone number</p> 
+                    : ''
+                }
             </div>
             <div className='form__element-container'>
                 <label className='form__label' htmlFor='email'>Email:</label>
@@ -40,6 +50,16 @@ function UploadPage3({handleInputChange, error, input, errorIcon}) {
                     placeholder="Email"
                     onChange={handleInputChange}
                 />
+                {/* {
+                    !validEmail ? 
+                    <p className='error-text'><img src={errorIcon} alt='error icon'/> Please enter a email</p> 
+                    : ''
+                } */}
+                {
+                    error && email && !validateEmail(email) ? 
+                    <p className='error-text'><img src={errorIcon} alt='error icon'/> Please enter a valid email</p> 
+                    : ''
+                }
             </div>
         </>
     )
