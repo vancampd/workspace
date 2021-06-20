@@ -39,7 +39,8 @@ function UploadPage2({handleInputChange, error, input, errorIcon}) {
         </div>
         <div className='form__element-container'>
             <label className='form__label' htmlFor='state'>*State:</label>
-            <select id='state' name='state' onChange={handleInputChange} className='form__select'>
+            <select id='state' name='state' onChange={handleInputChange} className='form__select' defaultValue=''>
+                <option value=''>Please select</option>
                 {listOfStates.states.map(state => <option value={`${state}`} key={`${state}`}>{state}</option>)}
             </select>
             {

@@ -15,8 +15,8 @@ function App() {
         <Header/>
         <Switch>
           <Route exact path='/home' component={HomePage}/>
-          <Route path='/listings/:listingID' component={IndividualListing} />
-          <Route path='/listings' component={ListingsPage}/>
+          <Route path='/listings/:city/:listingID' component={IndividualListing} />
+          <Route path='/listings/:city' component={ListingsPage}/>
           <Route path='/favorites' component={ListingsPage}/>
           <Route path='/post' component={UploadPage}/>
           <Redirect from='/' to='/home' />

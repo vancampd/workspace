@@ -1,14 +1,35 @@
-import React from 'react';
+import {useState} from 'react';
+import {useHistory} from 'react-router-dom';
 import axios from 'axios';
 const API_URL = 'http://localhost:8080/'
 
-function UploadPageImageForm({newListingId}) {
+function UploadPageImageForm({newListingId, city, errorIcon}) {
 
-    console.log('newListingId', newListingId)
+    console.log('city', city)
+
+    const history = useHistory();
+
+    const [error, setError] = useState(false);
+    const [image, setImage] = useState('');
+
+    const handleSetImage = (e) => {
+
+        const image = e.target.files[0];
+
+        if(image){
+            return setImage(image)
+        } else {
+            setImage('')
+        }
+
+    }
 
     const handleUploadImage = (e) => {
-
         e.preventDefault();
+
+        if(!e.target[0].files[0]){
+            return setError(true)
+        }
 
         const data = new FormData();
         data.append('file', e.target[0].files[0]);
@@ -16,7 +37,8 @@ function UploadPageImageForm({newListingId}) {
         axios.post(`${API_URL}listings/${newListingId}/images`, data)
         .then((res) => {
             console.log('response', res);
-        });
+            history.push(`/listings/${city}`)
+        });   
     }
 
     return (
@@ -28,7 +50,13 @@ function UploadPageImageForm({newListingId}) {
                     name='images' 
                     id='images' 
                     type='file'
+                    onChange={handleSetImage}
                 />
+                {
+                    error && !image ? 
+                    <p className='error-text'><img src={errorIcon} alt='error icon'/> You must upload an image</p> 
+                    : ''
+                }
             </div>
             <button className='button'>Submit</button> 
         </form>

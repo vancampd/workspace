@@ -45,8 +45,6 @@ function UploadPage() {
         }
     }
 
-    // console.log('input', input)
-
     const [newListingId, setNewListingId] = useState('')
 
     const [error, setError] = useState(false);
@@ -102,8 +100,6 @@ function UploadPage() {
     //     setPage(3)
     // }
 
-    // const [validPhone, setValidPhone] = useState(true)
-    // const [validEmail, setValidEmail] = useState(true)
 
     const handlePostListing = (e) => {
         e.preventDefault();
@@ -128,8 +124,6 @@ function UploadPage() {
             }
         }
 
-        // setValidPhone(true)
-        // setValidEmail(true)
         setError(false)
 
         axios
@@ -212,7 +206,7 @@ function UploadPage() {
             {
             page===3 ?
             <>
-                <UploadPageImageForm newListingId={newListingId}/>
+                <UploadPageImageForm newListingId={newListingId} city={input.city} errorIcon={errorIcon}/>
             </>
             : ''
             }
