@@ -4,7 +4,7 @@ import MapIcon from '../MapIcon';
 require('dotenv').config()
 const API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
 
-function Map({listings, coordinates, zoom}) {
+function Map({listings, center, zoom}) {
     const defaultProps={
         // center: {lat: 25.76074855678577, lng: -80.19306839319478},
         zoom: 10
@@ -17,7 +17,7 @@ function Map({listings, coordinates, zoom}) {
             <div className='map-container'>
             <GoogleMapReact
                 bootstrapURLKeys={{key: `${API_KEY}`, language: 'en'}}
-                defaultCenter={coordinates}
+                defaultCenter={center}
                 defaultZoom={zoom || defaultProps.zoom}
             >
                 {

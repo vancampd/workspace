@@ -151,9 +151,10 @@ function IndividualListing() {
     const sideImages = mainListing.images.filter(img => img !== image)
     
     return (
-            
+        <>    
+            {/* <BackArrow path={`/listings/${city}`} page='listings'/> */}
+            <BackArrow/>
             <section className='individual-listing'>
-            <BackArrow page='listings'/>
                 <h2 className='individual-listing__header'>{mainListing.title}</h2>
                 <div className='individual-listing__image-container'>
                     <img className='individual-listing__image' src={image} alt="Office overview"/>
@@ -249,7 +250,7 @@ function IndividualListing() {
                     // handleCancelComment={handleCancelComment}
                 />
             </section>
-        
+        </>
     )
     
 }

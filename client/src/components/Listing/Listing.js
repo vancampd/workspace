@@ -4,7 +4,7 @@ import leftArrow from '../../assets/images/left-arrow.svg'
 import './Listing.scss';
 import {Link} from 'react-router-dom';
 
-function Listing({listing}) {
+function Listing({listing, city}) {
 
     // image is the index of the image being displayed from the listing.images array
     // set the initial image value to be 0
@@ -48,7 +48,7 @@ function Listing({listing}) {
                     })}
                 </div>
             </div>
-            <Link to={`/listings/${listing.id}`} className='listing-card__link'>
+            <Link to={`/listings/${city}/${listing.id}`} className='listing-card__link'>
                 <div className='listing-card__description'>
                     <h2 className='listing-card__header'>{listing.title}</h2>
                     <p className='listing-card__text'>Rent period: {listing.rentPeriod}</p>

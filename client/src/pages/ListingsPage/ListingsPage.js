@@ -91,16 +91,26 @@ function ListingsPage() {
         <div className='listings-page'>
             {
                 pathname==='/favorites' ?
-                <BackArrow page='listings'/>
+                // <BackArrow path={`/listings/${city}`} page='listings'/>
+                <BackArrow/>
                 : ''
             }
-            <ListingMapNav mapActive={mapActive} setMapActive={setMapActive}/>
-            {mapActive ? <Map listings={listings} coordinates={coordinates}/> : ''}
+            {
+                pathname !== '/favorites' ?
+                <>
+                    <ListingMapNav mapActive={mapActive} setMapActive={setMapActive}/>
+                    {mapActive ? <Map listings={listings} center={coordinates}/> : ''}
+                </>
+                : ''
+            }
+            {/* <ListingMapNav mapActive={mapActive} setMapActive={setMapActive}/>
+            {mapActive ? <Map listings={listings} center={coordinates}/> : ''} */}
             {
                 listings.map((listing, l) =>
                     <Listing 
                         listing={listing}
                         key={listing.id}
+                        city={city}
                     />
                 )
            }

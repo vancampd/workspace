@@ -146,6 +146,7 @@
     padding: 0;
     margin: 0;
     @include paragraph-and-comments;
+    min-height: 5.75rem;
   }
 
   &__contact-info {

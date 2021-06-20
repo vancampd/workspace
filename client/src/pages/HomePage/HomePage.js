@@ -56,7 +56,7 @@ function HomePage() {
        const foundCity = listings.find(listing => listing.city.toLowerCase() === location.toLowerCase())
 
        if(!foundCity) {
-          return console.log('did not find listings in that city')
+          return setError(true)
        }
 
        history.push(`/listings/${foundCity.city.toLowerCase()}`)
@@ -80,6 +80,11 @@ function HomePage() {
                     {
                         error && !input.location ? 
                         <p className='error-text'><img src={errorIcon} alt='error icon'/>You must enter a location</p> 
+                        : ''
+                    }
+                    {
+                        error && input.location ? 
+                        <p className='error-text'><img src={errorIcon} alt='error icon'/>Sorry, there are no listings currently in that city</p> 
                         : ''
                     }
                 </div>

@@ -17,14 +17,19 @@ function CommentSection({mainListing, handleCommentSubmit, handleDeleteComment, 
         return (commentB.date - commentA.date);
     })
 
+    let totalRatings = 0;
+    mainListing.comments.forEach(comment => totalRatings = totalRatings + comment.rating)
+    const averageRating = (Math.round((totalRatings/mainListing.comments.length)*10)/10).toFixed(1);
+
     return (
         <section className="comments-section">
             <h3 className="comments-section__header">
-                {
+             {averageRating} out of 5 stars
+                ({
                     mainListing.comments.length === 1 ?
                     `${mainListing.comments.length} Review`
                     : `${mainListing.comments.length} Reviews`
-                }  
+                })
             </h3>
             <div className="comments-section__container">
                 <form className="comments-section__form" onSubmit={handleCommentSubmit}>
