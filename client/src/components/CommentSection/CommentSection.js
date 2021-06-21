@@ -5,7 +5,7 @@ import Rating from '../Rating';
 import errorIcon from '../../assets/images/error-12px.svg';
 require('dotenv').config();
 
-function CommentSection({mainListing, handleCommentSubmit, handleDeleteComment, rating, setRating, error}) {
+function CommentSection({mainListing, handleCommentSubmit, handleDeleteComment, rating, setRating, error, setError}) {
 
     const [input, setInput]= useState({})
 
@@ -16,6 +16,14 @@ function CommentSection({mainListing, handleCommentSubmit, handleDeleteComment, 
     const comments = mainListing.comments.sort((commentA, commentB) => {
         return (commentB.date - commentA.date);
     })
+
+    const handleCancelComment = () => {
+       return (
+            setInput(''), 
+            setRating(''), 
+            setError(false)
+       )
+    }
 
     let totalRatings = 0;
     mainListing.comments.forEach(comment => totalRatings = totalRatings + comment.rating)
@@ -41,14 +49,6 @@ function CommentSection({mainListing, handleCommentSubmit, handleDeleteComment, 
                             <p className='error-text'><img src={errorIcon} alt='error icon'/> You must leave a rating</p> 
                             : ''
                         }
-                        {/* <label className="comments-section__label" htmlFor="person">name</label>
-                        <input
-                            className={error && !input.name ? "comments-section__input--name error" : "comments-section__input--name"}
-                            type ="text" 
-                            name="name" 
-                            onChange={handleInputChange}
-                            placeholder="Write name here"
-                        /> */}
                         <div className={error & !input.name ? 'form__element-container--comment error' : 'form__element-container--comment'}>
                             <label className='form__label' htmlFor='name'>Name</label>
                             <input 
@@ -64,22 +64,6 @@ function CommentSection({mainListing, handleCommentSubmit, handleDeleteComment, 
                             <p className='error-text'><img src={errorIcon} alt='error icon'/> Your name is required</p> 
                             : ''
                         }
-                        
-                        {/* <label className="comments-section__label" htmlFor="comment">review</label>
-                        <textarea 
-                            className={error && !input.comment ? "comments-section__text-area error" : "comments-section__text-area"}
-                            name="comment" 
-                            onChange={handleInputChange}
-                            placeholder="Leave review here"
-                        >
-                        </textarea>
-                        <input 
-                            className={error && !input.name ? "comments-section__input error" : "comments-section__input"}
-                            type ="text" 
-                            name="comment" 
-                            onChange={handleInputChange}
-                            placeholder="Leave review here"
-                        /> */}
                         <div className={error & !input.comment ? 'form__element-container--comment error' : 'form__element-container--comment'}>
                             <label className='form__label' htmlFor='name'>Review</label>
                             <input 
@@ -97,12 +81,9 @@ function CommentSection({mainListing, handleCommentSubmit, handleDeleteComment, 
                         }
                     </div>
                     <div className="comments-section__button-container">
-                        {/* <button className="comments-section__button--cancel" type='reset' onClick={()=>{handleCancelComment(); setInput({})}}>Cancel</button> */}
-                        {/* <button className="comments-section__button--cancel" type='reset'>Cancel</button> */}
+                        <button className="comments-section__button--cancel" type='reset' onClick={handleCancelComment}>Cancel</button>
                         <button type='submit' className="comments-section__button">Submit</button>
                     </div>
-
-                    {/* <button className='button' type='submit'>Submit</button> */}
                 </form>
             </div>
             {comments.map(comment =>

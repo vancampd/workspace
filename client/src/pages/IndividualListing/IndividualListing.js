@@ -69,13 +69,11 @@ function IndividualListing() {
 
         axios
         .post(`${API_URL}favorites`, mainListing)
-        // .then(res => console.log(res.data))
         .catch(err => console.log("error posting favorite", err))
     }
 
     const handleRemoveFavorite = () => {
         setFavorite(false)
-        // console.log('removing favorite')
 
         axios
         .delete(`${API_URL}favorites`, {
@@ -83,18 +81,12 @@ function IndividualListing() {
                 id: mainListing.id
             }
         })
-        // .then(res => console.log(res.data))
         .catch(err => console.log('error removing favorite', err))
     }
 
     const [error, setError] = useState(false);
 
     const [rating, setRating] = useState(0)
-    // const [isCanceled, setCanceled] = useState(false)
-    // const handleCancelComment = () => {
-    //     setRating(0)
-    //     setCanceled(true)
-    // }
 
     const handleCommentSubmit = (e) => {
         e.preventDefault();
@@ -104,14 +96,9 @@ function IndividualListing() {
             comment: e.target[2].value || e.target[1].value
         }
 
-        // if(!isCanceled){
-            if(!newComment.name || !newComment.comment || !rating){ 
-                console.log('setting error true')          
-                return setError(true)
-            }
-        // } else {
-        //     return setError(false)
-        // }
+        if(!newComment.name || !newComment.comment || !rating){        
+            return setError(true)
+        }
 
 
         axios
@@ -126,10 +113,9 @@ function IndividualListing() {
         e.target.reset();
         setRating(0)
         setError(false)
-        // setCanceled(false)
+
     }
 
-    // console.log(isCanceled)
 
     const handleDeleteComment = (e, commentID) => {
         e.preventDefault();    
@@ -192,11 +178,6 @@ function IndividualListing() {
                            <h3 className='individual-listing__list-heading'>Contact:</h3>
                            : ''
                         }
-                        {/* {
-                            Object.keys(mainListing.contactInfo).map((key,i) => {
-                                return <li className='individual-listing__list-item' key={i}>{`${key}: ${mainListing.contactInfo[key]}`}</li>
-                            })
-                        } */}
                         {
                             mainListing.name ?
                             <li className='individual-listing__list-item'>Name: {mainListing.name}</li>
@@ -247,7 +228,7 @@ function IndividualListing() {
                     rating={rating} 
                     setRating={setRating}
                     error={error}
-                    // handleCancelComment={handleCancelComment}
+                    setError={setError}
                 />
             </section>
         </>
