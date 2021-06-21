@@ -7,7 +7,8 @@ import filledLike from '../../assets/images/like.svg';
 import BackArrow from '../../components/BackArrow';
 import Map from '../../components/Map';
 import CommentSection from '../../components/CommentSection';
-const API_URL = 'http://localhost:8080/'
+require('dotenv').config();
+const API_URL = process.env.REACT_APP_EXPRESS_API_URL;
 
 function IndividualListing() {
 

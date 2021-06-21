@@ -3,7 +3,7 @@ import Comment from '../Comment';
 import {useState} from 'react';
 import Rating from '../Rating';
 import errorIcon from '../../assets/images/error-12px.svg';
-require('dotenv').config();
+
 
 function CommentSection({mainListing, handleCommentSubmit, handleDeleteComment, rating, setRating, error, setError}) {
 
