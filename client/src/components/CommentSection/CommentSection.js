@@ -5,7 +5,7 @@ import Rating from '../Rating';
 import errorIcon from '../../assets/images/error-12px.svg';
 
 
-function CommentSection({mainListing, handleCommentSubmit, handleDeleteComment, rating, setRating, error, setError}) {
+function CommentSection({mainListing, handleCommentSubmit, handleDeleteComment, rating, setRating, error, setError, signedIn}) {
 
     const [input, setInput]= useState({})
 
@@ -39,53 +39,58 @@ function CommentSection({mainListing, handleCommentSubmit, handleDeleteComment, 
                     : `${mainListing.comments.length} Reviews`
                 })
             </h3>
-            <div className="comments-section__container">
-                <form className="comments-section__form" onSubmit={handleCommentSubmit}>
-                    <div className="comments-section__form-content">
-                        <label className='form__label'>Rating</label>
-                        <Rating rating={rating} setRating={setRating}/>
-                        {
-                            error && !rating ? 
-                            <p className='error-text'><img src={errorIcon} alt='error icon'/> You must leave a rating</p> 
-                            : ''
-                        }
-                        <div className={error & !input.name ? 'form__element-container--comment error' : 'form__element-container--comment'}>
-                            <label className='form__label' htmlFor='name'>Name</label>
-                            <input 
-                                className='form__input'
-                                name='name' 
-                                id='name'
-                                placeholder="Write name here"
-                                onChange={handleInputChange}
-                            />
+            {
+                signedIn ?
+                <div className="comments-section__container">
+                    <form className="comments-section__form" onSubmit={handleCommentSubmit}>
+                        <div className="comments-section__form-content">
+                            <label className='form__label'>Rating</label>
+                            <Rating rating={rating} setRating={setRating}/>
+                            {
+                                error && !rating ? 
+                                <p className='error-text'><img src={errorIcon} alt='error icon'/> You must leave a rating</p> 
+                                : ''
+                            }
+                            {/* <div className={error & !input.name ? 'form__element-container--comment error' : 'form__element-container--comment'}>
+                                <label className='form__label' htmlFor='name'>Name</label>
+                                <input 
+                                    className='form__input'
+                                    name='name' 
+                                    id='name'
+                                    placeholder="Write name here"
+                                    onChange={handleInputChange}
+                                />
+                            </div> */}
+                            {/* {
+                                error && !input.name ? 
+                                <p className='error-text'><img src={errorIcon} alt='error icon'/> Your name is required</p> 
+                                : ''
+                            } */}
+                            <div className={error & !input.comment ? 'form__element-container--comment error' : 'form__element-container--comment'}>
+                                <label className='form__label' htmlFor='name'>Review</label>
+                                <input 
+                                    className='form__input'
+                                    name='comment' 
+                                    id='comment'
+                                    placeholder="Leave review here"
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                            {
+                                error && !input.comment ? 
+                                <p className='error-text'><img src={errorIcon} alt='error icon'/> Text is required in the review field</p> 
+                                : ''
+                            }
                         </div>
-                        {
-                            error && !input.name ? 
-                            <p className='error-text'><img src={errorIcon} alt='error icon'/> Your name is required</p> 
-                            : ''
-                        }
-                        <div className={error & !input.comment ? 'form__element-container--comment error' : 'form__element-container--comment'}>
-                            <label className='form__label' htmlFor='name'>Review</label>
-                            <input 
-                                className='form__input'
-                                name='comment' 
-                                id='comment'
-                                placeholder="Leave review here"
-                                onChange={handleInputChange}
-                            />
+                        <div className="comments-section__button-container">
+                            <button className="comments-section__button--cancel" type='reset' onClick={handleCancelComment}>Cancel</button>
+                            <button type='submit' className="comments-section__button">Submit</button>
                         </div>
-                        {
-                            error && !input.comment ? 
-                            <p className='error-text'><img src={errorIcon} alt='error icon'/> Text is required in the review field</p> 
-                            : ''
-                        }
-                    </div>
-                    <div className="comments-section__button-container">
-                        <button className="comments-section__button--cancel" type='reset' onClick={handleCancelComment}>Cancel</button>
-                        <button type='submit' className="comments-section__button">Submit</button>
-                    </div>
-                </form>
-            </div>
+                    </form>
+                </div>
+                : ''
+            }
+            
             {comments.map(comment =>
             <Comment
                 key={comment.commentID}
