@@ -25,7 +25,7 @@ router
             const userData = fs.readFileSync('./data/users.json')
             const users = JSON.parse(userData)
 
-            const newUser = { name, username, password: hashedPassword}
+            const newUser = { name, username, password: hashedPassword, favorites:[]}
 
             users.push(newUser)
 
@@ -56,17 +56,21 @@ router
 
         if(!foundUser) return res.status(400).send('No user with that username was found')
 
-        const isPasswordCorrect = bcrypt.compare(password, foundUser.password)
+        bcrypt.compare(password, foundUser.password).then(isPasswordCorrect => {
+            if(!isPasswordCorrect) return res.status(400).send('Invalid Password')
 
-        if(!isPasswordCorrect) return res.status(400).send('Invalid Password')
+            const token = jwt.sign(
+                {name: foundUser.name, username: foundUser.username},
+                JWT_SECRET,
+                {expiresIn: '24h'}
+            )
 
-        const token = jwt.sign(
-            {name: foundUser.name, username: foundUser.username},
-            JWT_SECRET,
-            {expiresIn: '24h'}
-        )
+            res.json({token})
+        })
+        .catch(() => res.status(400).send('Incorrect Password') )
+        
 
-        res.json({token})
+        
 
     })
 
