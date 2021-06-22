@@ -20,6 +20,10 @@ function SignUp({showRegister, setShowRegister, setShowLogin}) {
         const {name, value} = e.target;
 
         setInput({...input, [name]: value});
+
+        if(input.password === input.confirmPassword){
+            setPasswordMatch(true)
+        }
     }
 
     useEffect(()=>{
@@ -41,11 +45,18 @@ function SignUp({showRegister, setShowRegister, setShowLogin}) {
             return setError(true) 
         }
 
+        if(password !== confirmPassword){
+            return setPasswordMatch(false)
+        } else {
+            setPasswordMatch(true)
+        }
+
         axios
         .post(`${API_URL}users/register`, input)
         .then(res => {
             alert('Registered Successfully')
-            history.push('/login')
+            setShowRegister(false);
+            setShowLogin(true);
         })
         .catch(err => console.log('Error signing up', err))
     }

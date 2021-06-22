@@ -11,11 +11,7 @@ const API_URL = process.env.REACT_APP_EXPRESS_API_URL
 
 
 function HomePage() {
-// TODO: add form functionality/verification
-    // const [location, setLocation] = useState('');
 
-    // const search = useLocation().search;
-    // const searchLocation = new URLSearchParams(search).get('location');
 
     const [error, setError] = useState(false);
 
@@ -40,9 +36,12 @@ function HomePage() {
 
     const handleInputChange = (e) => {
         setInput({...input, [e.target.name]: e.target.value})
+        setFoundCity(true)
     }
 
     const history = useHistory();
+
+    const [foundCity, setFoundCity] = useState(true);
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -56,7 +55,7 @@ function HomePage() {
        const foundCity = listings.find(listing => listing.city.toLowerCase() === location.toLowerCase())
 
        if(!foundCity) {
-          return setError(true)
+          return setFoundCity(false)
        }
 
        history.push(`/listings/${foundCity.city.toLowerCase()}`)
@@ -83,7 +82,7 @@ function HomePage() {
                         : ''
                     }
                     {
-                        error && input.location ? 
+                        !foundCity ? 
                         <p className='error-text'><img src={errorIcon} alt='error icon'/>Sorry, there are no listings currently in that city</p> 
                         : ''
                     }

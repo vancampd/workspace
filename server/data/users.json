@@ -1,1 +1,8 @@
-[{"name":"Bob","username":"bob","password":"$2b$08$BTkqegWSfX1bX1iWrjUdKeebg5ApEvDrQpkvNkI3E9KQxvzfEdcZq"},{"name":"Daniel Van Camp","username":"dvancamp","password":"$2b$08$vHBFaGmg4jLlasy2z.9ohOiiYCzD5/WeaUlPpilUh175rtdI.NBqu"}]
+[
+  {
+    "name": "name",
+    "username": "name",
+    "password": "$2b$08$zgVqi4eAZpoz9iosxPaMQ.4J6Jf0uSwiK3mr86xEW5UfLwckOCuCG",
+    "favorites": []
+  }
+]
