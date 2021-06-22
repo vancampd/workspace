@@ -112,6 +112,7 @@
     display: flex;
     flex-direction: row;
     padding: $general-mobile-padding 0;
+    justify-content: space-between;
   }
 
   &__details-right {

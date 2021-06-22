@@ -33,9 +33,11 @@ router
                 }
             })
     
-            fs.writeFileSync('./data/listings.json', JSON.stringify(listings))
+            fs.writeFile('./data/listings.json', JSON.stringify(listings), ()=>{
+                res.send(req.file.path);
+            })
 
-            res.send(req.file.path);
+            
         });
 
         

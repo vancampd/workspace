@@ -11,7 +11,7 @@ function UploadPage3({handleInputChange, error, input, errorIcon, validatePhone,
                     <p className='error-text'><img src={errorIcon} alt='error icon'/> Either a valid phone or a valid email is required</p> 
                     : ''
             }
-            <div className='form__element-container'>
+            {/* <div className='form__element-container'>
                 <label className='form__label' htmlFor='name'>Name:</label>
                 <input
                     className='form__input' 
@@ -20,7 +20,7 @@ function UploadPage3({handleInputChange, error, input, errorIcon, validatePhone,
                     placeholder="Your Name"
                     onChange={handleInputChange}
                 />
-            </div>
+            </div> */}
             <div className='form__element-container'>
                 <label className='form__label' htmlFor='phone'>Phone:</label>
                 <input

@@ -3,6 +3,8 @@ import Rating from '../Rating';
 
 const Comment = ({comment, handleDeleteComment, rating}) => {
 
+    const name = sessionStorage.getItem('name');
+
             return (
             <section className="comment"  key={comment.commentID}>
                 {/* <div className="comment__image"></div> */}
@@ -14,7 +16,12 @@ const Comment = ({comment, handleDeleteComment, rating}) => {
                     <p className="comment__comment">{comment.comment}</p>
                     <div className='comment__button-div'>
                         <Rating rating={rating} setRating={()=>{}} classAddition='comment-star'/>
-                        <button className="comment__delete-button" onClick={(e)=> handleDeleteComment(e, comment.commentID)}>delete</button>
+                        {
+                            comment.name === name ?
+                            <button className="comment__delete-button" onClick={(e)=> handleDeleteComment(e, comment.commentID)}>delete</button>
+                            : ''
+                        }
+                        
                     </div>
                 </div>
             </section>

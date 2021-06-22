@@ -125,6 +125,8 @@ function UploadPage() {
 
         setError(false)
 
+        const name=sessionStorage.getItem('name');
+
         // Send request to Google Geocode with the address entered on the from to retrieve the coordinates
         axios
         .get(`${GEO_URL}${input.streetAddress},${input.city},${input.state}&key=${API_KEY}`)
@@ -134,6 +136,7 @@ function UploadPage() {
             axios
             .post(`${API_URL}listings`, {
                 ...input,
+                name,
                 coordinates:{lat: String(location.lat), lng: String(location.lng)}
             })
             .then(res => {
