@@ -6,8 +6,6 @@ const { v4: uuidv4} = require('uuid');
 require('dotenv').config();
 const {JWT_SECRET} = process.env;
 
-
-
 router
     .route('/register')
     .post((req, res) => {

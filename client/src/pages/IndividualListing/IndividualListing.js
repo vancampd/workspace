@@ -54,7 +54,7 @@ function IndividualListing({signedIn}) {
         // Check if mainListing exists in favorites
         if(mainListing){
            axios
-            .get(`${API_URL}favorites`)
+            .get(`${API_URL}favorites/${profileName}`)
             .then(res => {
                 const favorites = res.data;
                 if(favorites.some(favorite => favorite.id === mainListing.id)){
@@ -65,13 +65,13 @@ function IndividualListing({signedIn}) {
             }) 
         }
         
-    }, [mainListing])
+    }, [mainListing, profileName])
 
     const handleAddFavorite = () => {
         setFavorite(true)
 
         axios
-        .post(`${API_URL}favorites`, mainListing)
+        .post(`${API_URL}favorites/${profileName}`, mainListing)
         .catch(err => console.log("error posting favorite", err))
     }
 
@@ -79,7 +79,7 @@ function IndividualListing({signedIn}) {
         setFavorite(false)
 
         axios
-        .delete(`${API_URL}favorites`, {
+        .delete(`${API_URL}favorites/${profileName}`, {
             data:{
                 id: mainListing.id
             }
@@ -95,7 +95,6 @@ function IndividualListing({signedIn}) {
         e.preventDefault();
 
         const newComment = {
-            // name: e.target[0].value,
             name: profileName,
             comment: e.target[0].value
         }
@@ -141,7 +140,6 @@ function IndividualListing({signedIn}) {
     
     return (
         <>    
-            {/* <BackArrow path={`/listings/${city}`} page='listings'/> */}
             <BackArrow/>
             <section className='individual-listing'>
                 <h2 className='individual-listing__header'>{mainListing.title}</h2>

@@ -1,13 +1,10 @@
 import {useState, useEffect} from 'react'
 import './SignUp.scss';
-import {useHistory} from 'react-router-dom'
 import axios from 'axios';
 import errorIcon from '../../assets/images/error-12px.svg';
 const API_URL = process.env.REACT_APP_EXPRESS_API_URL;
 
 function SignUp({showRegister, setShowRegister, setShowLogin}) {
-
-    const history = useHistory();
 
     const [input, setInput] = useState({});
 

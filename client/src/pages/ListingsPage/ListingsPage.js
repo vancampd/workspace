@@ -17,34 +17,30 @@ function ListingsPage() {
     const {city} = useParams();
 
     const [mapActive, setMapActive] = useState(false)
-  
-    // const getListings = () => {
+
+    const name = sessionStorage.getItem('name');
+    
+    // const getFavorites = () => {
     //     axios
-    //     .get(`${API_URL}listings`)
+    //     .get(`${API_URL}favorites/${name}`)
     //     .then(res => {
-    //         const listings = res.data;
-
-    //         const foundListings = listings.filter(listing => listing.city === city)
-
-    //         setListings(foundListings)
+    //         const favorites = res.data;
+    //         setListings(favorites)
     //     })
     //     .catch(err => console.log("Error fetching listings", err))
     // }
-  
-    const getFavorites = () => {
-        axios
-        .get(`${API_URL}favorites`)
-        .then(res => {
-            const favorites = res.data;
-            setListings(favorites)
-        })
-        .catch(err => console.log("Error fetching listings", err))
-    }
 
     const [listings, setListings] = useState([]);
     useEffect(() => {
         if(pathname ==='/favorites'){
-            getFavorites()    
+            axios
+            .get(`${API_URL}favorites/${name}`)
+            .then(res => {
+            const favorites = res.data;
+            setListings(favorites)
+        })
+        .catch(err => console.log("Error fetching listings", err))  
+
         } else {
             // Get the listings
             axios
@@ -59,19 +55,19 @@ function ListingsPage() {
             .catch(err => console.log("Error fetching listings", err))
         }
         
-    }, [pathname, city])
+    }, [pathname, city, name])
 
     const [coordinates, setCoordinates] = useState();
     useEffect(()=> {
         axios
         .get(`${GEO_URL}${city}&key=${API_KEY}`)
-    .then(res => {
-        // console.log('geocode', res)
-        const coordinates = res.data.results[0].geometry.location
-        // console.log('coordinates', coordinates)
-        setCoordinates(coordinates)
-    })
-    }, [city])
+        .then(res => {
+
+            const coordinates = res.data.results[0].geometry.location
+
+            setCoordinates(coordinates)
+        })
+        }, [city])
 
 
     if(pathname==='/favorites' && !listings.length){
@@ -97,21 +93,12 @@ function ListingsPage() {
         <div className='listings-page'>
             {
                 pathname==='/favorites' ?
-                // <BackArrow path={`/listings/${city}`} page='listings'/>
                 <BackArrow/>
                 : <>
                     <ListingMapNav mapActive={mapActive} setMapActive={setMapActive}/>
                     {mapActive ? <Map listings={listings} center={coordinates}/> : ''}
                 </>
             }
-            {/* {
-                pathname !== '/favorites' ?
-                <>
-                    <ListingMapNav mapActive={mapActive} setMapActive={setMapActive}/>
-                    {mapActive ? <Map listings={listings} center={coordinates}/> : ''}
-                </>
-                : ''
-            } */}
             {
                 listings.map((listing, l) =>
                     <Listing 
