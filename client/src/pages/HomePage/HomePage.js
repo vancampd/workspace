@@ -66,7 +66,7 @@ function HomePage() {
 
     return(
         <div>
-            <form className='card form'  onSubmit={handleSearch}>
+            <form className='form'  onSubmit={handleSearch}>
                 <h2 className='form__header'>Find a workspace</h2>
                 <div className='form__element-container'>
                     <label className='form__label' htmlFor='location'>Location:</label>

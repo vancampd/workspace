@@ -5,8 +5,6 @@ const API_URL = 'http://localhost:8080/'
 
 function UploadPageImageForm({newListingId, city, errorIcon}) {
 
-    console.log('city', city)
-
     const history = useHistory();
 
     const [error, setError] = useState(false);
@@ -36,7 +34,6 @@ function UploadPageImageForm({newListingId, city, errorIcon}) {
 
         axios.post(`${API_URL}listings/${newListingId}/images`, data)
         .then((res) => {
-            console.log('response', res);
             history.push(`/listings/${city}`)
         });   
     }

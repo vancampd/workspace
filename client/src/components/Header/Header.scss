@@ -33,6 +33,11 @@
     list-style: none;
     margin-left: $general-mobile-padding;
     @include paragraph-and-comments;
+
+    &--logout {
+      @extend .header__list-item;
+      cursor: pointer;
+    }
   }
 
   &__link {

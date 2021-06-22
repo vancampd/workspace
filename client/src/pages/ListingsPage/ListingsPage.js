@@ -44,7 +44,7 @@ function ListingsPage() {
     const [listings, setListings] = useState([]);
     useEffect(() => {
         if(pathname ==='/favorites'){
-            getFavorites()
+            getFavorites()    
         } else {
             // Get the listings
             axios
@@ -73,6 +73,7 @@ function ListingsPage() {
     })
     }, [city])
 
+
     if(pathname==='/favorites' && !listings.length){
         
         return (
@@ -86,6 +87,11 @@ function ListingsPage() {
     if(!listings.length || !coordinates){
         return <div className='listings-page'>Loading...</div>
     }
+
+    const token = sessionStorage.getItem('token');
+    if(pathname==='/favorites' && !token){
+        return <p className='listing-card'>You must be logged in to view your favorites</p>
+    }
     
     return (
         <div className='listings-page'>
@@ -93,18 +99,19 @@ function ListingsPage() {
                 pathname==='/favorites' ?
                 // <BackArrow path={`/listings/${city}`} page='listings'/>
                 <BackArrow/>
-                : ''
+                : <>
+                    <ListingMapNav mapActive={mapActive} setMapActive={setMapActive}/>
+                    {mapActive ? <Map listings={listings} center={coordinates}/> : ''}
+                </>
             }
-            {
+            {/* {
                 pathname !== '/favorites' ?
                 <>
                     <ListingMapNav mapActive={mapActive} setMapActive={setMapActive}/>
                     {mapActive ? <Map listings={listings} center={coordinates}/> : ''}
                 </>
                 : ''
-            }
-            {/* <ListingMapNav mapActive={mapActive} setMapActive={setMapActive}/>
-            {mapActive ? <Map listings={listings} center={coordinates}/> : ''} */}
+            } */}
             {
                 listings.map((listing, l) =>
                     <Listing 

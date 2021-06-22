@@ -9,7 +9,9 @@ import Map from '../../components/Map';
 import CommentSection from '../../components/CommentSection';
 const API_URL = 'http://localhost:8080/'
 
-function IndividualListing() {
+function IndividualListing({signedIn}) {
+
+    const profileName = sessionStorage.getItem('name');
 
     const {listingID} = useParams();
 
@@ -92,14 +94,14 @@ function IndividualListing() {
         e.preventDefault();
 
         const newComment = {
-            name: e.target[0].value,
-            comment: e.target[2].value || e.target[1].value
+            // name: e.target[0].value,
+            name: profileName,
+            comment: e.target[0].value
         }
 
-        if(!newComment.name || !newComment.comment || !rating){        
+        if(!profileName|| !newComment.comment || !rating){   
             return setError(true)
         }
-
 
         axios
         .post(`${API_URL}listings/${mainListing.id}/comments`, {
@@ -196,13 +198,18 @@ function IndividualListing() {
                     </ul>
                     </div>
                     <div className='individual-listing__details-right'>
-                        <div className='individual-listing__like-button-container'>
-                            {
-                                isFavorite ?
-                                <img className='individual-listing__like-button' src={filledLike} alt='Like Button' onClick={handleRemoveFavorite}/>
-                                : <img className='individual-listing__like-button' src={emptyLike} alt='Like Button' onClick={handleAddFavorite}/>
-                            } 
-                        </div>
+                        {
+                            signedIn ?
+                            <div className='individual-listing__like-button-container'>
+                                {
+                                    isFavorite ?
+                                    <img className='individual-listing__like-button' src={filledLike} alt='Like Button' onClick={handleRemoveFavorite}/>
+                                    : <img className='individual-listing__like-button' src={emptyLike} alt='Like Button' onClick={handleAddFavorite}/>
+                                } 
+                            </div>
+                            : <img className='individual-listing__like-button' src={emptyLike} alt='Like Button' title='You must be signed in to add a favorite'/>
+                        }
+                        
                         {
                             mainListing.amenities.length > 0 ?
                             <ul className='individual-listing__features'>
@@ -229,6 +236,7 @@ function IndividualListing() {
                     setRating={setRating}
                     error={error}
                     setError={setError}
+                    signedIn={signedIn}
                 />
             </section>
         </>

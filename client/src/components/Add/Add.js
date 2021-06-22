@@ -2,11 +2,6 @@ import './Add.scss';
 import {Link} from 'react-router-dom';
 
 function Add({heading, icon, iconAlt, background, image1, alt1, image2, alt2, buttonClass, buttonText, path}) {
- 
-    // const appStyles = {
-    //     backgroundColor: {background}
-    // }
-
 
     return(
         <div className={background ? `add add__${background}` : 'add'}>
