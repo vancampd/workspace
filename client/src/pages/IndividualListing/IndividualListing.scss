@@ -33,7 +33,8 @@
 
   &__like-button-container {
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
+    align-items: flex-end;
   }
 
   &__like-button {

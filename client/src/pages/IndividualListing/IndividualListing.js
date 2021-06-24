@@ -208,7 +208,7 @@ function IndividualListing({signedIn}) {
                                     : <img className='individual-listing__like-button' src={emptyLike} alt='Like Button' onClick={handleAddFavorite}/>
                                 } 
                             </div>
-                            : <div>
+                            : <div className='individual-listing__like-button-container'>
                                 <img className='individual-listing__like-button' src={emptyLike} alt='Like Button' onClick={()=>setFavoriteClicked(true)}title='You must be signed in to add a favorite'/>
                                 {
                                     favoriteClicked?
