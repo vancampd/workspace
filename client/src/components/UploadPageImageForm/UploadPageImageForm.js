@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import axios from 'axios';
-const API_URL = 'http://localhost:8080/'
+const API_URL = process.env.REACT_APP_EXPRESS_API_URL
 
 function UploadPageImageForm({newListingId, city, errorIcon}) {
 

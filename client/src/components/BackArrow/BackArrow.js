@@ -1,14 +1,10 @@
 import React from 'react'
 import leftArrow from '../../assets/images/left-arrow.svg';
-// import {useHistory} from 'react-router-dom';
 import './BackArrow.scss';
 
 function BackArrow() {
-
-    // const history = useHistory();
     
     const handleReturnToListings = () => {
-        // history.push(`${path}`)
         window.history.back()
     }
     return (

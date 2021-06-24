@@ -6,11 +6,8 @@ const API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
 
 function Map({listings, center, zoom}) {
     const defaultProps={
-        // center: {lat: 25.76074855678577, lng: -80.19306839319478},
         zoom: 10
     };
-
-    // console.log(useLocation());
 
     return (
         <div>

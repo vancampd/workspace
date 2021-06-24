@@ -10,9 +10,6 @@ function Header({showLogin, setShowLogin, showRegister, setShowRegister, signedI
     
     const {pathname}=useLocation()
 
-    // const [token, setToken] = useState('')
-    // const [signedIn, setSignedIn] = useState(false)
-
     useEffect(()=>{
         const token = sessionStorage.getItem('token');
        
@@ -29,7 +26,6 @@ function Header({showLogin, setShowLogin, showRegister, setShowRegister, signedI
                     <ul className='header__nav-list'>
                         {
                             !signedIn ?
-                                // <li className='header__list-item'><NavLink to='/login' className='header__link' activeClassName='header__link--active'>Sign In</NavLink></li>
                                 <li className='header__list-item' onClick={()=>setShowLogin(true)}>Sign In</li>
                             : <>
                                 <li className='header__list-item'><NavLink strict to='/favorites' className='header__link' activeClassName='header__link--active'>Favorites</NavLink></li>

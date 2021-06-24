@@ -51,21 +51,6 @@ function CommentSection({mainListing, handleCommentSubmit, handleDeleteComment, 
                                 <p className='error-text'><img src={errorIcon} alt='error icon'/> You must leave a rating</p> 
                                 : ''
                             }
-                            {/* <div className={error & !input.name ? 'form__element-container--comment error' : 'form__element-container--comment'}>
-                                <label className='form__label' htmlFor='name'>Name</label>
-                                <input 
-                                    className='form__input'
-                                    name='name' 
-                                    id='name'
-                                    placeholder="Write name here"
-                                    onChange={handleInputChange}
-                                />
-                            </div> */}
-                            {/* {
-                                error && !input.name ? 
-                                <p className='error-text'><img src={errorIcon} alt='error icon'/> Your name is required</p> 
-                                : ''
-                            } */}
                             <div className={error & !input.comment ? 'form__element-container--comment error' : 'form__element-container--comment'}>
                                 <label className='form__label' htmlFor='name'>Review</label>
                                 <input 

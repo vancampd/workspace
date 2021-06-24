@@ -1,7 +1,6 @@
 import {useState} from 'react'
 import './Login.scss';
 import axios from 'axios';
-// import {Link} from 'react-router-dom';
 import errorIcon from '../../assets/images/error-12px.svg';
 import jwt_decode from 'jwt-decode';
 const API_URL = process.env.REACT_APP_EXPRESS_API_URL;

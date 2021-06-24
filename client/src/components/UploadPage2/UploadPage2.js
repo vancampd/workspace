@@ -51,16 +51,6 @@ function UploadPage2({handleInputChange, error, input, errorIcon}) {
                 : ''
             }
         </div>
-        {/* <div className='form__element-container'>
-            <label className='form__label' htmlFor='zipCode'>Zip Code:</label>
-            <input 
-                className='form__input' 
-                name='zipCode' 
-                id='zipCode' 
-                placeholder="Zip Code"
-                onChange={handleInputChange}
-            />
-        </div> */}
     </>
     )
 }
