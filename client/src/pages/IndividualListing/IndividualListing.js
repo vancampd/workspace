@@ -16,6 +16,8 @@ function IndividualListing({signedIn}) {
 
     const {listingID} = useParams();
 
+    const [favoriteClicked, setFavoriteClicked] = useState(false);
+
     const [listings, setListings] = useState([]);
     useEffect(() => {
         // Get the listings
@@ -52,7 +54,7 @@ function IndividualListing({signedIn}) {
     const [isFavorite, setFavorite] = useState(false);
     useEffect(()=> {
         // Check if mainListing exists in favorites
-        if(mainListing){
+        if(mainListing && profileName){
            axios
             .get(`${API_URL}favorites/${profileName}`)
             .then(res => {
@@ -206,7 +208,14 @@ function IndividualListing({signedIn}) {
                                     : <img className='individual-listing__like-button' src={emptyLike} alt='Like Button' onClick={handleAddFavorite}/>
                                 } 
                             </div>
-                            : <img className='individual-listing__like-button' src={emptyLike} alt='Like Button' title='You must be signed in to add a favorite'/>
+                            : <div>
+                                <img className='individual-listing__like-button' src={emptyLike} alt='Like Button' onClick={()=>setFavoriteClicked(true)}title='You must be signed in to add a favorite'/>
+                                {
+                                    favoriteClicked?
+                                    <p className='error-text'>You must be signed in to like a post</p>
+                                    : ''
+                                }
+                            </div>
                         }
                         
                         {

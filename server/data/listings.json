@@ -71,5 +71,21 @@
         "date": 1623975928799
       }
     ]
+  },
+  {
+    "id": "2db6087f-9241-4e2b-9ddb-9ebaef96a01a",
+    "comments": [],
+    "title": "new space",
+    "description": "new space",
+    "rentPeriod": ["Weekly"],
+    "price": "50",
+    "amenities": [],
+    "streetAddress": "2100 woodward ave",
+    "city": "detroit",
+    "state": "MI",
+    "email": "vancampdj@gmail.com",
+    "name": "Daniel Van Camp",
+    "coordinates": { "lat": "42.3391886", "lng": "-83.04947829999999" },
+    "images": ["http://localhost:8080/public/1624478668354-demo-office-2.jpeg"]
   }
 ]

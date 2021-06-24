@@ -34,14 +34,12 @@ router
             })
     
             fs.writeFile('./data/listings.json', JSON.stringify(listings), ()=>{
-                res.send(req.file.path);
+                return res.send(req.file.path);
             })
 
             
-        });
-
-        
-    });
+        })
+    })
 
     router
     .route('/:listingID/comments')

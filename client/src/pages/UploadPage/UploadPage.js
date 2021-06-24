@@ -15,7 +15,22 @@ function UploadPage() {
 
     const [page, setPage] = useState(0)
 
-    const [input, setInput] = useState({})
+    const [input, setInput] = useState({
+        title: '',
+        description: '',
+        rentPeriod:[],
+        amenities: [],
+        price: '',
+        streetAddress: '',
+        city: '',
+        state: '',
+        name: '',
+        phone: '',
+        email: '',
+        comments: [],
+        images: [],
+        
+    })
     const handleInputChange = (e) => {
         const {name, value, checked, type} = e.target        
 

@@ -13,6 +13,7 @@ function UploadPage1({handleInputChange, error, input, errorIcon}) {
                     name='title' 
                     id='title' 
                     placeholder="Title"
+                    value={input.title}
                     onChange={handleInputChange}
                 />
                 {
@@ -28,6 +29,7 @@ function UploadPage1({handleInputChange, error, input, errorIcon}) {
                     name='description' 
                     id='description' 
                     placeholder="Description"
+                    value={input.description}
                     onChange={handleInputChange}
                 >
                 </textarea>
@@ -49,6 +51,7 @@ function UploadPage1({handleInputChange, error, input, errorIcon}) {
                                     id='daily' 
                                     value='Daily' 
                                     type='checkbox'
+                                    checked={input.rentPeriod.includes('Daily') ? true : false}
                                     onChange={handleInputChange}
                                 />
                                 Daily
@@ -60,6 +63,7 @@ function UploadPage1({handleInputChange, error, input, errorIcon}) {
                                     id='weekly' 
                                     value='Weekly' 
                                     type='checkbox'
+                                    checked={input.rentPeriod.includes('Weekly') ? true : false}
                                     onChange={handleInputChange}
                                 />
                                 Weekly
@@ -71,6 +75,7 @@ function UploadPage1({handleInputChange, error, input, errorIcon}) {
                                     id='monthly'
                                     value='Monthly' 
                                     type='checkbox'
+                                    checked={input.rentPeriod.includes('Monthly') ? true : false}
                                     onChange={handleInputChange}
                                 />
                                 Monthly
@@ -92,6 +97,7 @@ function UploadPage1({handleInputChange, error, input, errorIcon}) {
                                     id='Conference Room' 
                                     value='Conference Room' 
                                     type='checkbox'
+                                    checked={input.amenities.includes('Conference Room') ? true : false}
                                     onChange={handleInputChange}
                                 />
                                 Conference Room
@@ -103,6 +109,7 @@ function UploadPage1({handleInputChange, error, input, errorIcon}) {
                                     id='Refrigerator' 
                                     value='Refrigerator' 
                                     type='checkbox'
+                                    checked={input.amenities.includes('Refrigerator') ? true : false}
                                     onChange={handleInputChange}
                                 />
                                 Refrigerator
@@ -114,6 +121,7 @@ function UploadPage1({handleInputChange, error, input, errorIcon}) {
                                     id='Bathroom'
                                     value='Bathroom' 
                                     type='checkbox'
+                                    checked={input.amenities.includes('Bathroom') ? true : false}
                                     onChange={handleInputChange}
                                 />
                                 Bathroom
@@ -125,6 +133,7 @@ function UploadPage1({handleInputChange, error, input, errorIcon}) {
                                     id='Coffee'
                                     value='Coffee' 
                                     type='checkbox'
+                                    checked={input.amenities.includes('Coffee') ? true : false}
                                     onChange={handleInputChange}
                                 />
                                 Coffee
@@ -136,6 +145,7 @@ function UploadPage1({handleInputChange, error, input, errorIcon}) {
                                     id='Outside work area'
                                     value='Outside work area' 
                                     type='checkbox'
+                                    checked={input.amenities.includes('Outside work area') ? true : false}
                                     onChange={handleInputChange}
                                 />
                                 Outside work area
@@ -152,6 +162,7 @@ function UploadPage1({handleInputChange, error, input, errorIcon}) {
                     id='price' 
                     placeholder="Enter the price to rent each day"
                     type='number'
+                    value={parseInt(input.price, 10) || ''}
                     onChange={handleInputChange}
                 />
                 {

@@ -4,9 +4,24 @@
 
 .footer {
   display: flex;
+  flex-direction: column;
   padding: $general-mobile-padding;
 
   @include tablet {
     padding: $general-tablet-padding;
+  }
+
+  &__info-container {
+    // width: 70%;
+  }
+
+  &__header {
+    @include paragraph-and-comments;
+    // margin: 0;
+  }
+
+  &__text {
+    @include lists-and-contact-info;
+    margin: 0;
   }
 }

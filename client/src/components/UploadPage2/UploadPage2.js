@@ -14,6 +14,7 @@ function UploadPage2({handleInputChange, error, input, errorIcon}) {
                     name='streetAddress' 
                     id='streetAddress' 
                     placeholder="Street Address"
+                    value={input.streetAddress}
                     onChange={handleInputChange}
                 />
                 {
@@ -29,6 +30,7 @@ function UploadPage2({handleInputChange, error, input, errorIcon}) {
                 name='city' 
                 id='city' 
                 placeholder="City"
+                value={input.city}
                 onChange={handleInputChange}
             />
              {
@@ -39,7 +41,7 @@ function UploadPage2({handleInputChange, error, input, errorIcon}) {
         </div>
         <div className='form__element-container'>
             <label className='form__label' htmlFor='state'>*State:</label>
-            <select id='state' name='state' onChange={handleInputChange} className='form__select' defaultValue=''>
+            <select id='state' name='state' onChange={handleInputChange} className='form__select' value={input.state}>
                 <option value=''>Please select</option>
                 {listOfStates.states.map(state => <option value={`${state}`} key={`${state}`}>{state}</option>)}
             </select>

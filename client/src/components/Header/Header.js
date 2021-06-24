@@ -1,25 +1,25 @@
 import './Header.scss';
-import {NavLink} from 'react-router-dom';
+import {NavLink, useLocation} from 'react-router-dom';
 import Logo from '../Logo';
-// import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import Login from '../../pages/Login';
 import SignUp from '../../pages/SignUp';
 
 function Header({showLogin, setShowLogin, showRegister, setShowRegister, signedIn, setSignedIn}) {
 
     
-    // const {pathname}=useLocation()
+    const {pathname}=useLocation()
 
     // const [token, setToken] = useState('')
     // const [signedIn, setSignedIn] = useState(false)
 
-    // useEffect(()=>{
-    //     const token = sessionStorage.getItem('token');
+    useEffect(()=>{
+        const token = sessionStorage.getItem('token');
        
-    //     if(token){
-    //         setSignedIn(true)
-    //     }
-    // }, [pathname])
+        if(token){
+            setSignedIn(true)
+        }
+    }, [pathname, setSignedIn])
     
     return(
         <header className='header'>

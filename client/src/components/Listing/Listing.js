@@ -28,8 +28,6 @@ function Listing({listing, city}) {
         setImage(imageCopy)
     }
 
-
-
     return (
         <section key={listing.id} className='listing-card' id={listing.id}>
             <div className='listing-card__image-container'>

@@ -34,7 +34,7 @@ function UploadPageImageForm({newListingId, city, errorIcon}) {
 
         axios.post(`${API_URL}listings/${newListingId}/images`, data)
         .then((res) => {
-            history.push(`/listings/${city}`)
+            setTimeout(()=> {history.push(`/listings/${city}`)}, 500)
         });   
     }
 
