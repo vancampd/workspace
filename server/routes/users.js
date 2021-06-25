@@ -2,7 +2,6 @@ const router = require('express').Router();
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const { v4: uuidv4} = require('uuid');
 require('dotenv').config();
 const {JWT_SECRET} = process.env;
 
@@ -12,10 +11,11 @@ router
         const {name, username, password} = req.body;
 
         // If any fields are missing, return
-    if (!username || !password) {
-        return res.status(400).send("Please enter the required fields.");
-    }
+        if (!username || !password, !name) {
+            return res.status(400).send("Please enter the required fields.");
+        }
 
+    // Encrypt the password before saving
     bcrypt
         .hash(password, 8)
         .then((hashedPassword) => {
@@ -43,6 +43,7 @@ router
     .post((req, res)=>{
         const {username, password} = req.body
 
+        // Return error if login request doesn't contain a username or password
         if(!username || !password){
             return res.status(400).send('Please enter all fields')
         }
@@ -54,6 +55,7 @@ router
 
         if(!foundUser) return res.status(400).send('No user with that username was found')
 
+        // Check if the entered password is the same as the saved password in users.json
         bcrypt.compare(password, foundUser.password).then(isPasswordCorrect => {
             if(!isPasswordCorrect) return res.status(400).send('Invalid Password')
 
@@ -63,6 +65,7 @@ router
                 {expiresIn: '24h'}
             )
 
+            // If the passwords match, send jwt token to the client, where it will be saved in sessionStorage
             res.json({token})
         })
         .catch(() => res.status(400).send('Incorrect Password') )

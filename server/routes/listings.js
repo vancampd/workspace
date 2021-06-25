@@ -120,7 +120,6 @@ router
         const newListing = {
             id:uuidv4(),
             comments:[],
-            // coordinates:{},
             ...req.body,
         }
 

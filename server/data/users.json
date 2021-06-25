@@ -1,1 +1,8 @@
-[{"name":"Daniel Van Camp","username":"dvancamp","password":"$2b$08$haej2wM4ZJIpwcuVcZpyW.0t/uY/qEdNwQKLBQqZjwDmK9zKc9Jhi","favorites":[]}]
+[
+  {
+    "name": "Daniel Van Camp",
+    "username": "dvancamp",
+    "password": "$2b$08$haej2wM4ZJIpwcuVcZpyW.0t/uY/qEdNwQKLBQqZjwDmK9zKc9Jhi",
+    "favorites": []
+  }
+]

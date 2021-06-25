@@ -55,11 +55,11 @@
     border-radius: $border-radius;
     height: 100%;
     object-fit: contain;
-    transition: transform 0.3s;
+    // transition: transform 0.3s;
 
-    &:hover {
-      transform: scale(1.2);
-    }
+    // &:hover {
+    //   transform: scale(1.2);
+    // }
   }
 
   &__right-arrow {
