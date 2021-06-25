@@ -6,10 +6,6 @@
   background-color: $primary-light;
   padding: $general-mobile-padding;
 
-  @include tablet {
-    padding-bottom: $general-tablet-padding;
-  }
-
   &__wrapper {
     display: flex;
     justify-content: space-between;
@@ -32,6 +28,7 @@
   &__list-item {
     list-style: none;
     margin-left: $general-mobile-padding;
+    cursor: pointer;
     @include paragraph-and-comments;
 
     &--logout {
