@@ -3,24 +3,17 @@
 @use './partials/font-scale' as *;
 
 .App {
-  // margin: $general-mobile-padding;
   color: $primary-font;
   font-family: "Nunito", sans-serif;
-
-  @include tablet {
-    margin: $general-tablet-padding;
-  }
+  width: 400px;
+  background-color: white;
+  position: relative;
 }
 
 .card {
   display: flex;
   flex-direction: column;
   border-radius: $border-radius;
-
-  @include tablet {
-    padding: $general-tablet-padding;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
-  }
 }
 
 .button {
@@ -46,6 +39,12 @@
     width: 33%;
     margin-right: 1rem;
     background-color: $primary-font;
+
+    &:hover {
+      background-color: unset;
+      border: 2px solid $primary-font;
+      color: $primary-font;
+    }
   }
 
   &--reverse {

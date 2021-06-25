@@ -9,10 +9,6 @@
     font-weight: 600;
     margin: 0;
     padding: $general-mobile-padding 0;
-
-    @include tablet {
-      padding: 4rem 0 2rem 0;
-    }
   }
 
   &__container {
@@ -20,19 +16,11 @@
     flex-direction: row;
     border-bottom: 1px solid $divider-line;
     margin: 0;
-
-    @include tablet {
-      align-items: center;
-    }
   }
 
   &__image {
     padding-top: 2rem;
     padding-right: 1rem;
-
-    @include tablet {
-      padding-top: 0;
-    }
   }
 
   &__form {
@@ -40,26 +28,12 @@
     flex-direction: column;
     padding-bottom: $general-mobile-padding;
     width: 100%;
-
-    @include tablet {
-      display: flex;
-      flex-direction: row;
-      align-items: flex-end;
-    }
   }
 
   &__form-content {
     padding-bottom: 1rem;
     display: flex;
     flex-direction: column;
-
-    @include tablet {
-      flex-direction: column;
-      flex-wrap: nowrap;
-      margin-right: 1rem;
-      padding-bottom: 0;
-      width: calc(100% - 12.5rem);
-    }
   }
 
   &__label {
@@ -89,10 +63,6 @@
     &:focus {
       border: 2px solid $primary-color;
     }
-
-    @include tablet {
-      display: none;
-    }
   }
 
   &__input {
@@ -112,9 +82,6 @@
 
     &:focus {
       border: 2px solid $primary-color;
-    }
-    @include tablet {
-      display: unset;
     }
 
     &--name {

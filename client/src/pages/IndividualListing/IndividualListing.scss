@@ -80,15 +80,6 @@
   &__image {
     border-radius: $border-radius;
     height: 100%;
-    transition: transform 0.3s;
-
-    &:hover {
-      transform: scale(1.2);
-    }
-
-    @include tablet {
-      border-radius: unset;
-    }
   }
 
   &__side-images {

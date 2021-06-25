@@ -6,11 +6,11 @@
   align-items: center;
 }
 
-@mixin tablet {
-  @media (min-width: $tablet-width) {
-    @content;
-  }
-}
+// @mixin tablet {
+//   @media (min-width: $tablet-width) {
+//     @content;
+//   }
+// }
 
 @mixin desktop {
   @media (min-width: $desktop-width) {
