@@ -10,9 +10,9 @@ import CommentSection from '../../components/CommentSection';
 require('dotenv').config();
 const API_URL = process.env.REACT_APP_EXPRESS_API_URL;
 
-function IndividualListing({signedIn}) {
+function IndividualListing({signedIn, credentials}) {
 
-    const profileName = sessionStorage.getItem('name');
+    const profileName = credentials.name
 
     const {listingID} = useParams();
 
@@ -245,6 +245,7 @@ function IndividualListing({signedIn}) {
                     error={error}
                     setError={setError}
                     signedIn={signedIn}
+                    profileName={profileName}
                 />
             </section>
         </>

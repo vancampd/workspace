@@ -17,4 +17,4 @@ app.use('/favorites', favoritesRoutes);
 
 app.use('/users', usersRoutes);
 
-app.listen(PORT, () => console.log(`The server is running on port http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`The server is running on port ${PORT}`));

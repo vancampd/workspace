@@ -1,22 +1,10 @@
 import './Header.scss';
-import {NavLink, useLocation} from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 import Logo from '../Logo';
-import {useEffect} from 'react';
 import Login from '../../pages/Login';
 import SignUp from '../../pages/SignUp';
 
-function Header({showLogin, setShowLogin, showRegister, setShowRegister, signedIn, setSignedIn}) {
-
-    
-    const {pathname}=useLocation()
-
-    useEffect(()=>{
-        const token = sessionStorage.getItem('token');
-       
-        if(token){
-            setSignedIn(true)
-        }
-    }, [pathname, setSignedIn])
+function Header({showLogin, setShowLogin, showRegister, setShowRegister, signedIn, setSignedIn, setCredentials}) {
     
     return(
         <header className='header'>
@@ -30,7 +18,7 @@ function Header({showLogin, setShowLogin, showRegister, setShowRegister, signedI
                             : <>
                                 <li className='header__list-item'><NavLink strict to='/favorites' className='header__link' activeClassName='header__link--active'>Favorites</NavLink></li>
                                 <li className='header__list-item'><NavLink to='/post' className='header__link' activeClassName='header__link--active'>Post Your Space</NavLink></li>
-                                <li className='header__list-item--logout' onClick={()=>{sessionStorage.clear(); setSignedIn(false)}}>Logout</li>
+                                <li className='header__list-item--logout' onClick={()=>{localStorage.clear(); setSignedIn(false)}}>Logout</li>
                             </>
                         }
                         
@@ -39,7 +27,7 @@ function Header({showLogin, setShowLogin, showRegister, setShowRegister, signedI
             </div>
             {
                 showLogin ?
-                <Login showRegister={showRegister} setShowRegister={setShowRegister} setShowLogin={setShowLogin} setSignedIn={setSignedIn}/>
+                <Login showRegister={showRegister} setShowRegister={setShowRegister} setShowLogin={setShowLogin} setSignedIn={setSignedIn} setCredentials={setCredentials}/>
                 : ''
             }
             {

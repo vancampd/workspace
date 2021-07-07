@@ -1,13 +1,10 @@
 import './Comment.scss';
 import Rating from '../Rating';
 
-const Comment = ({comment, handleDeleteComment, rating}) => {
-
-    const name = sessionStorage.getItem('name');
+const Comment = ({comment, handleDeleteComment, rating, profileName}) => {
 
             return (
             <section className="comment"  key={comment.commentID}>
-                {/* <div className="comment__image"></div> */}
                 <div className="comment__content">
                     <div className="comment__header-container">
                         <h3 className="comment__header">{comment.name}</h3>
@@ -17,7 +14,7 @@ const Comment = ({comment, handleDeleteComment, rating}) => {
                     <div className='comment__button-div'>
                         <Rating rating={rating} setRating={()=>{}} classAddition='comment-star'/>
                         {
-                            comment.name === name ?
+                            comment.name === profileName ?
                             <button className="comment__delete-button" onClick={(e)=> handleDeleteComment(e, comment.commentID)}>delete</button>
                             : ''
                         }

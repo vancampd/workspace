@@ -5,13 +5,11 @@ import errorIcon from '../../assets/images/error-12px.svg';
 import jwt_decode from 'jwt-decode';
 const API_URL = process.env.REACT_APP_EXPRESS_API_URL;
 
-function Login({setShowRegister, setShowLogin, setSignedIn}) {
+function Login({setShowRegister, setShowLogin, setSignedIn, setCredentials}) {
 
     const [input, setInput] = useState({})
 
     const [error, setError] = useState(false)
-
-    // const [register, setRegister] = useState(false)
 
     const handleInputChange = (e) => {
 
@@ -30,12 +28,13 @@ function Login({setShowRegister, setShowLogin, setSignedIn}) {
         axios
         .post(`${API_URL}users/login`, input)
         .then(res => {
-            sessionStorage.setItem('token', res.data.token)
+            localStorage.setItem('token', res.data.token)
             const decoded = jwt_decode(res.data.token)
-            sessionStorage.setItem('name', decoded.name)
+            localStorage.setItem('name', decoded.name)
             setError(false)
             setShowLogin(false)
             setSignedIn(true)
+            setCredentials({name: decoded.name})
         })
         .catch(err => {
             console.log('Error signing up', err)

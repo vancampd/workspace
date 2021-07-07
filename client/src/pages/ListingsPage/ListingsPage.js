@@ -10,7 +10,7 @@ const API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
 const API_URL = process.env.REACT_APP_EXPRESS_API_URL;
 const GEO_URL = process.env.REACT_APP_GOOGLE_GEOCODING_URL;
 
-function ListingsPage() {
+function ListingsPage({signedIn, credentials}) {
 
     const {pathname}=useLocation()
 
@@ -18,18 +18,8 @@ function ListingsPage() {
 
     const [mapActive, setMapActive] = useState(false)
 
-    const name = sessionStorage.getItem('name');
+    const name = credentials.name
     
-    // const getFavorites = () => {
-    //     axios
-    //     .get(`${API_URL}favorites/${name}`)
-    //     .then(res => {
-    //         const favorites = res.data;
-    //         setListings(favorites)
-    //     })
-    //     .catch(err => console.log("Error fetching listings", err))
-    // }
-
     const [listings, setListings] = useState([]);
     useEffect(() => {
         if(pathname ==='/favorites'){
@@ -69,6 +59,9 @@ function ListingsPage() {
         })
         }, [city])
 
+    if(pathname==='/favorites' && !signedIn){
+        return <p className='listing-card'>You must be logged in to view your favorites</p>
+    }
 
     if(pathname==='/favorites' && !listings.length){
         
@@ -82,11 +75,6 @@ function ListingsPage() {
 
     if(!listings.length || !coordinates){
         return <div className='listings-page'>Loading...</div>
-    }
-
-    const token = sessionStorage.getItem('token');
-    if(pathname==='/favorites' && !token){
-        return <p className='listing-card'>You must be logged in to view your favorites</p>
     }
     
     return (

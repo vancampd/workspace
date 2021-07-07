@@ -5,7 +5,7 @@ import Rating from '../Rating';
 import errorIcon from '../../assets/images/error-12px.svg';
 
 
-function CommentSection({mainListing, handleCommentSubmit, handleDeleteComment, rating, setRating, error, setError, signedIn}) {
+function CommentSection({mainListing, handleCommentSubmit, handleDeleteComment, rating, setRating, error, setError, signedIn, profileName}) {
 
     const [input, setInput]= useState({})
 
@@ -32,7 +32,7 @@ function CommentSection({mainListing, handleCommentSubmit, handleDeleteComment, 
     return (
         <section className="comments-section">
             <h3 className="comments-section__header">
-             {averageRating} out of 5 stars
+             {mainListing.comments.length>0 && `${averageRating} out of 5 stars`}
                 ({
                     mainListing.comments.length === 1 ?
                     `${mainListing.comments.length} Review`
@@ -82,6 +82,7 @@ function CommentSection({mainListing, handleCommentSubmit, handleDeleteComment, 
                 comment={comment}
                 handleDeleteComment={handleDeleteComment}
                 rating={comment.rating}
+                profileName={profileName}
             />
             )}
         </section>

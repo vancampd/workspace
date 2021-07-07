@@ -11,7 +11,7 @@ const API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
 const API_URL = process.env.REACT_APP_EXPRESS_API_URL;
 const GEO_URL = process.env.REACT_APP_GOOGLE_GEOCODING_URL;
 
-function UploadPage() {
+function UploadPage({signedIn, credentials}) {
 
     const [page, setPage] = useState(0)
 
@@ -91,31 +91,6 @@ function UploadPage() {
         setPage(2)
     }
 
-    // const handleCheckPage3 = () => {
-    //     const {phone, email} = input;
-
-    //     if(!phone && !email){
-    //         return setError(true)
-    //     }
-
-    //     if(phone){
-    //         if(!validatePhone(phone)){
-    //             return setError(true)
-    //         }
-    //     }
-
-    //     // Have to check valid email before returning setValidPhone
-    //     if(email){
-    //         if(!validateEmail(email)){
-    //             return setError(true)
-    //         }
-    //     }
-
-    //     setError(false)
-    //     setPage(3)
-    // }
-
-
     const handlePostListing = (e) => {
         e.preventDefault();
 
@@ -140,7 +115,7 @@ function UploadPage() {
 
         setError(false)
 
-        const name=sessionStorage.getItem('name');
+        const name = credentials.name;
 
         // Send request to Google Geocode with the address entered on the from to retrieve the coordinates
         axios
@@ -175,9 +150,7 @@ function UploadPage() {
         return re.test(String(email).toLowerCase());
     }
 
-    const token = sessionStorage.getItem('token');
-
-    if(!token){
+    if(!signedIn){
         return <p className='form'>You must be logged in to post your space</p>
     }
 
@@ -211,14 +184,11 @@ function UploadPage() {
                             error={error} 
                             input={input} 
                             errorIcon={errorIcon}
-                            // validPhone={validPhone}
-                            // validEmail={validEmail}
                             validateEmail={validateEmail}
                             validatePhone={validatePhone}
                         />
                         <div className='form__button-container'>
                             <button type='button' className='button--back'  onClick={()=>setPage(1)}>Back</button> 
-                            {/* <button className='button' type='submit' onClick={handleCheckPage3}>Submit Info</button> */}
                             <button className='button' type='submit'>Next</button>
                         </div>
                     </>

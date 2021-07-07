@@ -22,7 +22,6 @@ router
                 res.sendStatus(500);
             }
 
-            console.log('params', req.params);
             const{listingID} = req.params;
 
             const listings = getListings();
@@ -115,7 +114,6 @@ router
         res.json(listings);
     })
     .post((req, res) => {
-        console.log("Listings post request:", req.body)
 
         const newListing = {
             id:uuidv4(),
