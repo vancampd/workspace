@@ -2,7 +2,7 @@
 
 **A full stack application designed to give businesses a place to post unused space and connect them with potential renters.**
 
-I developed Workspace as my capstone project for the BrainStation full-stack web development bootcamp. The front-end was developed with React.js and SASS. The back-end used Node.js and express.js to build a rest API, JWT for authentication, and Multer for file upload. I also took on the challenge of learning React Hooks for this project.
+I developed Workspace as my capstone project for the BrainStation full-stack web development bootcamp. The front-end was developed with React.js and SASS. The back-end used Node.js and express.js to build a REST API, JWT for authentication, and Multer for file upload. I also took on the challenge of learning React Hooks for this project.
 
 Please check out my three minute presentation <a href='https://www.loom.com/share/016d401a1d8842ee9ab6083a995d0650'>here</a>
 
