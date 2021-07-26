@@ -27,7 +27,3 @@ npm start
 ````bash
 node server.js 
 ````
-OR
-````bash
-nodemon server.js
-````
