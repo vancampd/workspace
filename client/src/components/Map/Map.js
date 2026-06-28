@@ -1,7 +1,6 @@
 import './Map.scss'
 import GoogleMapReact from 'google-map-react';
 import MapIcon from '../MapIcon';
-require('dotenv').config()
 const API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
 
 function Map({listings, center, zoom}) {

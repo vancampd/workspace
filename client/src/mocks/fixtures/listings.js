@@ -1,0 +1,62 @@
+export const mockListings = [
+  {
+    id: '936604ea-97cf-4a71-bff7-628cf93d80d7',
+    title: 'Work Space Office and Conference Room (Westchester/Kendall)',
+    description:
+      'Two offices and shared conference room available. Rent single office or the whole space',
+    rentPeriod: 'Daily, Weekly, Monthly',
+    images: [
+      'http://localhost:8080/public/images/936604ea-97cf-4a71-bff7-628cf93d80d7/image1.jpeg',
+      'http://localhost:8080/public/images/936604ea-97cf-4a71-bff7-628cf93d80d7/image2.jpeg',
+      'http://localhost:8080/public/images/936604ea-97cf-4a71-bff7-628cf93d80d7/image3.jpeg',
+    ],
+    streetAddress: '8900 SW 117th Ave',
+    city: 'Miami',
+    state: 'FL',
+    zipCode: '33186',
+    coordinates: { lat: '25.684912', lng: '-80.385075' },
+    price: '$30',
+    amenities: [
+      'Air Conditioning',
+      'Flooring: wood',
+      'Furnished',
+      'Street Parking',
+      '1 BR',
+    ],
+    name: 'Billy',
+    phone: '305-722-6482',
+    email: '',
+    comments: [
+      {
+        commentID: '9e9fac08-5093-4616-9ffd-9952f8c6c73e',
+        name: 'Elon Musk',
+        comment: 'Love the feng shui in this office!',
+        rating: 5,
+        date: 1624283180414,
+      },
+    ],
+  },
+  {
+    id: '62e5bd62-0091-4565-ba99-511895cdf5f0',
+    title: 'Mignonette - Repurposing our space for individual or collaborative work',
+    description:
+      'Our restaurant opens at 5pm. With the growing tech presence throughout the city, we want to offer our space to individuals and groups.',
+    rentPeriod: 'Daily, Weekly, Monthly',
+    images: [
+      'http://localhost:8080/public/images/62e5bd62-0091-4565-ba99-511895cdf5f0/image1.jpg',
+      'http://localhost:8080/public/images/62e5bd62-0091-4565-ba99-511895cdf5f0/image2.jpg',
+      'http://localhost:8080/public/images/62e5bd62-0091-4565-ba99-511895cdf5f0/image3.jpg',
+    ],
+    streetAddress: '210 NE 18th St',
+    city: 'Miami',
+    state: 'FL',
+    zipCode: '33182',
+    coordinates: { lat: '25.793434088986697', lng: '-80.1904559067461' },
+    price: '$20',
+    amenities: [],
+    name: '',
+    phone: '(305) 374-4635',
+    email: '',
+    comments: [],
+  },
+];

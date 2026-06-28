@@ -6,7 +6,6 @@ import UploadPage3 from '../../components/UploadPage3';
 import UploadPageImageForm from '../../components/UploadPageImageForm';
 import axios from 'axios';
 import errorIcon from '../../assets/images/error-12px.svg';
-require('dotenv').config()
 const API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
 const API_URL = process.env.REACT_APP_EXPRESS_API_URL;
 const GEO_URL = process.env.REACT_APP_GOOGLE_GEOCODING_URL;
