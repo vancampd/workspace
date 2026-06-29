@@ -65,19 +65,22 @@ Start the React app in a second terminal:
 
 ```bash
 cd client
-npm start
+npm run dev
 ```
 
-The client runs on `http://localhost:3000`, and the API runs on `http://localhost:8080`.
+The client runs on `http://localhost:5173`, and the API runs on `http://localhost:8080`.
 
 ## Scripts
 
 Client:
 
 ```bash
+npm run dev
 npm start
 npm test
+npm run typecheck
 npm run build
+npm run preview
 npm run format
 ```
 
@@ -97,4 +100,3 @@ npm run format
 - Move data fetching to TanStack Query.
 - Extract frontend logic into custom hooks.
 - Reduce derived state and unnecessary `useEffect` usage.
-- Update or replace the Create React App build tooling before moving beyond Node 22.
