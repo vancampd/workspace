@@ -3,7 +3,7 @@ import GoogleMapReact from 'google-map-react';
 import MapIcon from '../MapIcon';
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY || '';
 
-function Map({listings, center, zoom}) {
+function Map({listings, center, zoom}: any) {
     const defaultProps={
         zoom: 10
     };

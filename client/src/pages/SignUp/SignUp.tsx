@@ -3,9 +3,9 @@ import axios from 'axios';
 import errorIcon from '../../assets/images/error-12px.svg';
 const API_URL = import.meta.env.VITE_EXPRESS_API_URL || 'http://localhost:8080/';
 
-function SignUp({showRegister, setShowRegister, setShowLogin}) {
+function SignUp({showRegister, setShowRegister, setShowLogin}: any) {
 
-    const [input, setInput] = useState({});
+    const [input, setInput] = useState<any>({});
 
     const [error, setError] = useState(false);
 

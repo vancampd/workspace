@@ -4,7 +4,7 @@ import Logo from '../Logo';
 import Login from '../../pages/Login';
 import SignUp from '../../pages/SignUp';
 
-function Header({showLogin, setShowLogin, showRegister, setShowRegister, signedIn, setSignedIn, setCredentials}) {
+function Header({showLogin, setShowLogin, showRegister, setShowRegister, signedIn, setSignedIn, setCredentials}: any) {
     
     return(
         <header className='header'>

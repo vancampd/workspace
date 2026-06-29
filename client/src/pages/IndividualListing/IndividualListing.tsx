@@ -13,7 +13,7 @@ function IndividualListing({signedIn, credentials}) {
 
     const profileName = credentials.name
 
-    const {listingID} = useParams();
+    const {listingID} = useParams<{listingID: string}>();
 
     const [favoriteClicked, setFavoriteClicked] = useState(false);
 

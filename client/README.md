@@ -18,6 +18,10 @@ Open `http://localhost:5173` to view it in the browser.
 
 Runs the Vitest test suite.
 
+### `npm run typecheck`
+
+Runs TypeScript without emitting build output.
+
 ### `npm run build`
 
 Builds the app for production to the `dist` folder.

@@ -14,8 +14,8 @@ function CommentSection({
   setError,
   signedIn,
   profileName,
-}) {
-  const [input, setInput] = useState({});
+}: any) {
+  const [input, setInput] = useState<any>({});
 
   const handleInputChange = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -26,7 +26,7 @@ function CommentSection({
   });
 
   const handleCancelComment = () => {
-    setInput("");
+    setInput({});
     setRating("");
     setError(false);
   };
@@ -67,7 +67,7 @@ function CommentSection({
               )}
               <div
                 className={
-                  error & !input.comment
+                  error && !input.comment
                     ? "form__element-container--comment error"
                     : "form__element-container--comment"
                 }

@@ -32,7 +32,7 @@ function HomePage() {
         .catch(err => console.log("Error fetching listings", err))
     }
 
-    const [input, setInput]= useState({})
+    const [input, setInput]= useState<any>({})
 
     const handleInputChange = (e) => {
         setInput({...input, [e.target.name]: e.target.value})

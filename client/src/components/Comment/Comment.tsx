@@ -1,7 +1,7 @@
 import "./Comment.scss";
 import Rating from "../Rating";
 
-const Comment = ({ comment, handleDeleteComment, rating, profileName }) => {
+const Comment = ({ comment, handleDeleteComment, rating, profileName }: any) => {
   return (
     <section className="comment" key={comment.commentID}>
       <div className="comment__content">
@@ -38,7 +38,7 @@ export default Comment;
 function dynamicDate(comment) {
   const currentDate = new Date();
 
-  let commentDate = new Date(comment.date);
+  let commentDate: Date | string = new Date(comment.date);
 
   let commentDay = commentDate.getDate();
   let commentMonth = commentDate.getMonth();

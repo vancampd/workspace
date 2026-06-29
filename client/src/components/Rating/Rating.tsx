@@ -2,7 +2,7 @@ import './Rating.scss';
 import star from '../../assets/images/star.svg';
 import emptyStar from '../../assets/images/empty-star.svg';
 
-function Rating({rating, setRating, classAddition}) {
+function Rating({rating, setRating, classAddition}: any) {
 
 
     return (

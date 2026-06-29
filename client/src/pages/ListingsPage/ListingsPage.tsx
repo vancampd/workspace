@@ -16,7 +16,7 @@ function ListingsPage({signedIn, credentials}) {
 
     const {pathname}=useLocation()
 
-    const {city} = useParams();
+    const {city} = useParams<{city: string}>();
 
     const [mapActive, setMapActive] = useState(false)
 

@@ -2,7 +2,7 @@ import React from "react";
 import leftArrow from "../../assets/images/left-arrow.svg";
 import "./BackArrow.scss";
 
-function BackArrow() {
+function BackArrow(_props: any) {
   const handleReturnToListings = () => {
     window.history.back();
   };

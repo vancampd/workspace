@@ -5,9 +5,9 @@ import errorIcon from '../../assets/images/error-12px.svg';
 import jwt_decode from 'jwt-decode';
 const API_URL = import.meta.env.VITE_EXPRESS_API_URL || 'http://localhost:8080/';
 
-function Login({setShowRegister, setShowLogin, setSignedIn, setCredentials}) {
+function Login({setShowRegister, setShowLogin, setSignedIn, setCredentials}: any) {
 
-    const [input, setInput] = useState({})
+    const [input, setInput] = useState<any>({})
 
     const [error, setError] = useState(false)
 
@@ -29,7 +29,7 @@ function Login({setShowRegister, setShowLogin, setSignedIn, setCredentials}) {
         .post(`${API_URL}users/login`, input)
         .then(res => {
             localStorage.setItem('token', res.data.token)
-            const decoded = jwt_decode(res.data.token)
+            const decoded = jwt_decode<{name: string}>(res.data.token)
             localStorage.setItem('name', decoded.name)
             setError(false)
             setShowLogin(false)
