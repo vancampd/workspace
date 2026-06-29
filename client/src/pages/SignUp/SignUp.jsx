@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react'
 import axios from 'axios';
 import errorIcon from '../../assets/images/error-12px.svg';
-const API_URL = process.env.REACT_APP_EXPRESS_API_URL;
+const API_URL = import.meta.env.VITE_EXPRESS_API_URL || 'http://localhost:8080/';
 
 function SignUp({showRegister, setShowRegister, setShowLogin}) {
 

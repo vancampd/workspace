@@ -1,1 +1,1 @@
-export {default} from './MapIcon.js'
+export {default} from './MapIcon.jsx'

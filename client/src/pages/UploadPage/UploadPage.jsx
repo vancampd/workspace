@@ -6,9 +6,11 @@ import UploadPage3 from '../../components/UploadPage3';
 import UploadPageImageForm from '../../components/UploadPageImageForm';
 import axios from 'axios';
 import errorIcon from '../../assets/images/error-12px.svg';
-const API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
-const API_URL = process.env.REACT_APP_EXPRESS_API_URL;
-const GEO_URL = process.env.REACT_APP_GOOGLE_GEOCODING_URL;
+const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY || '';
+const API_URL = import.meta.env.VITE_EXPRESS_API_URL || 'http://localhost:8080/';
+const GEO_URL =
+    import.meta.env.VITE_GOOGLE_GEOCODING_URL ||
+    'https://maps.googleapis.com/maps/api/geocode/json?address=';
 
 function UploadPage({signedIn, credentials}) {
 

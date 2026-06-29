@@ -7,7 +7,7 @@ import office1 from '../../assets/images/office1.jpeg';
 import office2 from '../../assets/images/office2.jpeg';
 import errorIcon from '../../assets/images/error-12px.svg';
 import axios from 'axios';
-const API_URL = process.env.REACT_APP_EXPRESS_API_URL
+const API_URL = import.meta.env.VITE_EXPRESS_API_URL || 'http://localhost:8080/'
 
 
 function HomePage() {

@@ -3,7 +3,7 @@ import './Login.scss';
 import axios from 'axios';
 import errorIcon from '../../assets/images/error-12px.svg';
 import jwt_decode from 'jwt-decode';
-const API_URL = process.env.REACT_APP_EXPRESS_API_URL;
+const API_URL = import.meta.env.VITE_EXPRESS_API_URL || 'http://localhost:8080/';
 
 function Login({setShowRegister, setShowLogin, setSignedIn, setCredentials}) {
 
