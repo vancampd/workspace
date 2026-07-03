@@ -1,42 +1,26 @@
-import { rest } from 'msw';
-import { mockListings } from './fixtures/listings';
-
-const apiUrl = import.meta.env.VITE_EXPRESS_API_URL || 'http://localhost:8080/';
+import { mockListings } from "./fixtures/listings";
+import {
+  mockGetRequestHandler,
+  mockPostRequestHandler,
+} from "./requestHandlers";
 
 export const handlers = [
-  rest.get(`${apiUrl}listings`, (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(mockListings));
+  mockGetRequestHandler("listings", mockListings),
+  mockGetRequestHandler("favorites/:name", []),
+  mockPostRequestHandler("users/login", {
+    token:
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVGVzdCBVc2VyIiwidXNlcm5hbWUiOiJ0ZXN0In0.mock-signature",
   }),
-
-  rest.get(`${apiUrl}favorites/:name`, (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json([]));
-  }),
-
-  rest.post(`${apiUrl}users/login`, (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
-        token:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVGVzdCBVc2VyIiwidXNlcm5hbWUiOiJ0ZXN0In0.mock-signature',
-      })
-    );
-  }),
-
-  rest.get('https://maps.googleapis.com/maps/api/geocode/json', (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
-        results: [
-          {
-            geometry: {
-              location: {
-                lat: 25.7617,
-                lng: -80.1918,
-              },
-            },
+  mockGetRequestHandler("https://maps.googleapis.com/maps/api/geocode/json", {
+    results: [
+      {
+        geometry: {
+          location: {
+            lat: 25.7617,
+            lng: -80.1918,
           },
-        ],
-      })
-    );
+        },
+      },
+    ],
   }),
 ];
