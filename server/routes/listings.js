@@ -82,7 +82,7 @@ router
 router
     .route('/:listingID/comments/:commentID')
     .delete((req, res) => {
-        const {listingID, commentID} = req.body;
+        const {listingID, commentID} = req.params;
 
         const listingsData = fs.readFileSync('./data/listings.json');
         const listings = JSON.parse(listingsData);

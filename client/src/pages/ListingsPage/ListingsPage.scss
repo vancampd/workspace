@@ -8,4 +8,59 @@
   // @include tablet {
   //   padding: $general-tablet-padding;
   // }
+
+  &__skeletons {
+    padding: 1rem;
+  }
+}
+
+.listing-skeleton {
+  display: flex;
+  gap: 1rem;
+  margin: 0 auto 1rem;
+  max-width: 42rem;
+  padding: 1rem 0;
+
+  &__image,
+  &__line {
+    animation: skeleton-pulse 1.4s ease-in-out infinite;
+    background: linear-gradient(90deg, #eeeeee 25%, #f7f7f7 50%, #eeeeee 75%);
+    background-size: 200% 100%;
+    border-radius: 4px;
+  }
+
+  &__image {
+    flex: 0 0 8rem;
+    height: 6rem;
+  }
+
+  &__content {
+    flex: 1;
+    padding-top: 0.25rem;
+  }
+
+  &__line {
+    height: 0.9rem;
+    margin-bottom: 0.75rem;
+    width: 100%;
+  }
+
+  &__line--title {
+    height: 1.25rem;
+    width: 70%;
+  }
+
+  &__line--short {
+    width: 45%;
+  }
+}
+
+@keyframes skeleton-pulse {
+  from {
+    background-position: 200% 0;
+  }
+
+  to {
+    background-position: -200% 0;
+  }
 }

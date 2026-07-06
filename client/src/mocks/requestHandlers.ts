@@ -1,7 +1,7 @@
 import { rest } from 'msw';
 import type { DefaultBodyType, PathParams, RestRequest } from 'msw';
 
-const apiUrl = import.meta.env.VITE_EXPRESS_API_URL || 'http://localhost:8080/';
+const apiUrl = import.meta.env.VITE_BASE_API_URL || 'http://localhost:8080/';
 
 export type RequestCallback = (
   req: RestRequest<DefaultBodyType, PathParams>

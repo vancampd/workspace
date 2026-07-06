@@ -16,8 +16,8 @@ function Header({showLogin, setShowLogin, showRegister, setShowRegister, signedI
                             !signedIn ?
                                 <li className='header__list-item' onClick={()=>setShowLogin(true)}>Sign In</li>
                             : <>
-                                <li className='header__list-item'><NavLink strict to='/favorites' className='header__link' activeClassName='header__link--active'>Favorites</NavLink></li>
-                                <li className='header__list-item'><NavLink to='/post' className='header__link' activeClassName='header__link--active'>Post Your Space</NavLink></li>
+                                <li className='header__list-item'><NavLink to='/favorites' className={({ isActive }) => isActive ? 'header__link header__link--active' : 'header__link'}>Favorites</NavLink></li>
+                                <li className='header__list-item'><NavLink to='/post' className={({ isActive }) => isActive ? 'header__link header__link--active' : 'header__link'}>Post Your Space</NavLink></li>
                                 <li className='header__list-item--logout' onClick={()=>{localStorage.clear(); setSignedIn(false)}}>Logout</li>
                             </>
                         }

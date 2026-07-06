@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 import { mockListings } from '../../mocks/fixtures/listings';
@@ -39,6 +39,7 @@ test('renders listing details and comments from the API', async () => {
 });
 
 test('switches the main image on an individual listing', async () => {
+  const user = userEvent.setup();
   renderIndividualListing();
 
   const mainImage = (await screen.findByAltText(
@@ -47,54 +48,62 @@ test('switches the main image on an individual listing', async () => {
   expect(mainImage.src).toContain('image1.jpeg');
 
   const sideImages = screen.getAllByAltText(/listing/i);
-  userEvent.click(sideImages[0]);
+  await user.click(sideImages[0]);
 
-  expect(mainImage.src).toContain('image2.jpeg');
+  await waitFor(() =>
+    expect((screen.getByAltText(/office overview/i) as HTMLImageElement).src).toContain(
+      'image2.jpeg'
+    )
+  );
 });
 
 test('shows a sign-in warning when a signed-out user tries to favorite a listing', async () => {
+  const user = userEvent.setup();
   renderIndividualListing();
 
-  userEvent.click(await screen.findByAltText(/like button/i));
+  await user.click(await screen.findByAltText(/like button/i));
 
   expect(
-    screen.getByText(/you must be signed in to like a post/i)
+    await screen.findByText(/you must be signed in to like a post/i)
   ).toBeInTheDocument();
 });
 
 test('adds and removes a favorite for a signed-in user', async () => {
+  const user = userEvent.setup();
   const addFavorite = vi.fn();
   const removeFavorite = vi.fn();
 
   mockGetRequest('favorites/:name', []);
   mockPostRequest('favorites/:name', [firstListing], 200, () => addFavorite());
-  mockDeleteRequest('favorites/:name', [], 200, () => removeFavorite());
+  mockDeleteRequest('favorites/:name/:listingId', [], 200, () => removeFavorite());
 
   renderIndividualListing({ signedIn: true });
 
   const favoriteButton = await screen.findByAltText(/like button/i);
-  userEvent.click(favoriteButton);
+  await user.click(favoriteButton);
   await waitFor(() => expect(addFavorite).toHaveBeenCalledTimes(1));
 
-  userEvent.click(favoriteButton);
+  await user.click(favoriteButton);
   await waitFor(() => expect(removeFavorite).toHaveBeenCalledTimes(1));
 });
 
 test('validates missing comment text and rating for signed-in users', async () => {
+  const user = userEvent.setup();
   renderIndividualListing({ signedIn: true });
 
   await screen.findByRole('heading', {
     name: /work space office and conference room/i,
   });
-  userEvent.click(screen.getByRole('button', { name: /submit/i }));
+  await user.click(screen.getByRole('button', { name: /submit/i }));
 
-  expect(screen.getByText(/you must leave a rating/i)).toBeInTheDocument();
+  expect(await screen.findByText(/you must leave a rating/i)).toBeInTheDocument();
   expect(
     screen.getByText(/text is required in the review field/i)
   ).toBeInTheDocument();
 });
 
 test('submits a signed-in user review', async () => {
+  const user = userEvent.setup();
   const createComment = vi.fn();
   const reviewText = 'Quiet, bright, and easy to book.';
   const updatedListing = {
@@ -123,15 +132,16 @@ test('submits a signed-in user review', async () => {
   await screen.findByRole('heading', {
     name: /work space office and conference room/i,
   });
-  userEvent.type(screen.getByPlaceholderText(/leave review here/i), reviewText);
-  userEvent.click(screen.getAllByAltText(/empty star/i)[4]);
-  userEvent.click(screen.getByRole('button', { name: /submit/i }));
+  await user.type(screen.getByPlaceholderText(/leave review here/i), reviewText);
+  await user.click(screen.getAllByAltText(/empty star/i)[4]);
+  await user.click(screen.getByRole('button', { name: /submit/i }));
 
   await waitFor(() => expect(createComment).toHaveBeenCalledTimes(1));
   expect(await screen.findByText(reviewText)).toBeInTheDocument();
 });
 
 test('deletes a signed-in user review', async () => {
+  const user = userEvent.setup();
   const deleteComment = vi.fn();
   const ownComment = {
     commentID: 'own-comment-id',
@@ -160,7 +170,7 @@ test('deletes a signed-in user review', async () => {
   renderIndividualListing({ signedIn: true });
 
   expect(await screen.findByText(ownComment.comment)).toBeInTheDocument();
-  userEvent.click(screen.getByRole('button', { name: /delete/i }));
+  await user.click(screen.getByRole('button', { name: /delete/i }));
 
   await waitFor(() => expect(deleteComment).toHaveBeenCalledTimes(1));
   await waitFor(() =>

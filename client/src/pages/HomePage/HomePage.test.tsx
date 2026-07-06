@@ -6,6 +6,7 @@ import { renderWithProviders } from '../../test-utils/renderWithProviders';
 import HomePage from './HomePage';
 
 test('searches by city and routes to matching listings', async () => {
+  const user = userEvent.setup();
   let resolveListingsRequest: () => void;
   const listingsRequest = new Promise<void>((resolve) => {
     resolveListingsRequest = resolve;
@@ -13,13 +14,13 @@ test('searches by city and routes to matching listings', async () => {
 
   mockGetRequest('listings', mockListings, 200, () => resolveListingsRequest());
 
-  const { history } = renderWithProviders(<HomePage />, { route: '/home' });
+  const { getLocation } = renderWithProviders(<HomePage />, { route: '/home' });
   await act(async () => {
     await listingsRequest;
   });
 
-  userEvent.type(screen.getByLabelText(/location/i), 'Miami');
-  userEvent.click(screen.getByRole('button', { name: /search/i }));
+  await user.type(screen.getByLabelText(/location/i), 'Miami');
+  await user.click(screen.getByRole('button', { name: /search/i }));
 
-  expect(history.location.pathname).toBe('/listings/miami');
+  expect(getLocation()?.pathname).toBe('/listings/miami');
 });

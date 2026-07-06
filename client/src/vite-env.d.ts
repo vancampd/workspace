@@ -1,9 +1,8 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  readonly VITE_EXPRESS_API_URL?: string;
-  readonly VITE_GOOGLE_API_KEY?: string;
-  readonly VITE_GOOGLE_GEOCODING_URL?: string;
+  readonly VITE_BASE_API_URL?: string;
+  readonly VITE_GOOGLE_MAPS_API_KEY?: string;
 }
 
 interface ImportMeta {

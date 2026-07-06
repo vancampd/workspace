@@ -1,14 +1,14 @@
 import {useState} from 'react';
-import {useHistory} from 'react-router-dom';
-import axios from 'axios';
-const API_URL = import.meta.env.VITE_EXPRESS_API_URL || 'http://localhost:8080/'
+import {useNavigate} from 'react-router-dom';
+import { useUploadListingImageMutation } from '../../hooks/mutations/useUploadListingImageMutation';
 
 function UploadPageImageForm({newListingId, city, errorIcon}) {
 
-    const history = useHistory();
+    const navigate = useNavigate();
 
-    const [error, setError] = useState(false);
+    const [showMissingImageError, setShowMissingImageError] = useState(false);
     const [image, setImage] = useState('');
+    const uploadListingImageMutation = useUploadListingImageMutation();
 
     const handleSetImage = (e) => {
 
@@ -26,16 +26,20 @@ function UploadPageImageForm({newListingId, city, errorIcon}) {
         e.preventDefault();
 
         if(!e.target[0].files[0]){
-            return setError(true)
+            return setShowMissingImageError(true)
         }
 
         const data = new FormData();
         data.append('file', e.target[0].files[0]);
 
-        axios.post(`${API_URL}listings/${newListingId}/images`, data)
-        .then((res) => {
-            setTimeout(()=> {history.push(`/listings/${city}`)}, 500)
-        });   
+        uploadListingImageMutation.mutate(
+            { listingId: newListingId, data },
+            {
+                onSuccess: () => {
+                    navigate(`/listings/${city}`)
+                }
+            }
+        );   
     }
 
     return (
@@ -50,8 +54,13 @@ function UploadPageImageForm({newListingId, city, errorIcon}) {
                     onChange={handleSetImage}
                 />
                 {
-                    error && !image ? 
+                    showMissingImageError && !image ? 
                     <p className='error-text'><img src={errorIcon} alt='error icon'/> You must upload an image</p> 
+                    : ''
+                }
+                {
+                    uploadListingImageMutation.isError ?
+                    <p className='error-text'><img src={errorIcon} alt='error icon'/> Image upload failed. Please try again.</p>
                     : ''
                 }
             </div>

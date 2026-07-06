@@ -36,8 +36,11 @@ router
                 return res.status(400).json({ 'message': 'error posting favorite'})
             }
     })
+
+router
+    .route('/:name/:listingId')
     .delete((req,res) => {
-        const {name} = req.params;
+        const {name, listingId} = req.params;
 
         // Get all users
         const users = getUsers();
@@ -45,10 +48,10 @@ router
         // Get the favorites for the user with the name in the request params
         const favorites = getUsersFavorites(name);
 
-        // Remove the favorite with the id in the request body
-        const newFavorites = favorites.filter(favorite => favorite.id !== req.body.id);
+        // Remove the favorite with the id in the request params
+        const newFavorites = favorites.filter(favorite => favorite.id !== listingId);
 
-        // Set the favorites for the user with the name in the request body to the updated favorites
+        // Set the favorites for the user with the name in the request params to the updated favorites
         users.forEach(user => {
             if(user.name === name){
                 user.favorites = newFavorites

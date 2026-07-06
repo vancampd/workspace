@@ -1,13 +1,21 @@
 import { useParams} from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import './IndividualListing.scss';
-import axios from 'axios';
 import emptyLike from '../../assets/images/like-empty.svg';
 import filledLike from '../../assets/images/like.svg';
 import BackArrow from '../../components/BackArrow';
 import Map from '../../components/Map';
 import CommentSection from '../../components/CommentSection';
-const API_URL = import.meta.env.VITE_EXPRESS_API_URL || 'http://localhost:8080/';
+import {
+    useAddFavoriteMutation,
+    useRemoveFavoriteMutation,
+} from '../../hooks/mutations/useFavoriteMutations';
+import {
+    useCreateCommentMutation,
+    useDeleteCommentMutation,
+} from '../../hooks/mutations/useCommentMutations';
+import { useFavoritesQuery } from '../../hooks/queries/useFavoritesQuery';
+import { useListingQuery } from '../../hooks/queries/useListingQuery';
 
 function IndividualListing({signedIn, credentials}) {
 
@@ -17,75 +25,40 @@ function IndividualListing({signedIn, credentials}) {
 
     const [favoriteClicked, setFavoriteClicked] = useState(false);
 
-    const [listings, setListings] = useState([]);
-    useEffect(() => {
-        // Get the listings
-        getListings()
-    }, [])
-
-    const [mainListing, setMainListing] = useState(null)
-    useEffect(()=> {
-        // Set the main listing being displayed on the page
-        if(listings){
-            const mainListing = listings.find(listing => listing.id === listingID)
-            setMainListing(mainListing)
-        }
-    } 
-    , [listings, listingID])
-
-    const [image, setImage] = useState('');
-    useEffect(()=>{
-        if(mainListing){
-            setImage(mainListing.images[0])
-        }
-    },[mainListing])
-
-    const getListings = () => {
-        axios
-        .get(`${API_URL}listings`)
-        .then(res => {
-            const listings = res.data;
-            setListings(listings)
-        })
-        .catch(err => console.log("Error fetching listings", err))
-    }
-
-    const [isFavorite, setFavorite] = useState(false);
-    useEffect(()=> {
-        // Check if mainListing exists in favorites
-        if(mainListing && profileName){
-           axios
-            .get(`${API_URL}favorites/${profileName}`)
-            .then(res => {
-                const favorites = res.data;
-                if(favorites.some(favorite => favorite.id === mainListing.id)){
-                    setFavorite(true)
-                } else {
-                    setFavorite(false)
-                }
-            }) 
-        }
-        
-    }, [mainListing, profileName])
+    const listingQuery = useListingQuery(listingID);
+    const [updatedListing, setUpdatedListing] = useState(null)
+    const [selectedImage, setSelectedImage] = useState('');
+    const favoritesQuery = useFavoritesQuery(profileName)
+    const addFavoriteMutation = useAddFavoriteMutation(profileName)
+    const removeFavoriteMutation = useRemoveFavoriteMutation(profileName)
+    const createCommentMutation = useCreateCommentMutation()
+    const deleteCommentMutation = useDeleteCommentMutation()
+    const mainListing = updatedListing?.id === listingID ? updatedListing : listingQuery.data
+    const isFavorite = Boolean(
+        mainListing &&
+        favoritesQuery.data?.some(favorite => favorite.id === mainListing.id)
+    )
 
     const handleAddFavorite = () => {
-        setFavorite(true)
-
-        axios
-        .post(`${API_URL}favorites/${profileName}`, mainListing)
-        .catch(err => console.log("error posting favorite", err))
+        addFavoriteMutation.mutate(
+            { name: profileName, favoriteListing: mainListing },
+            {
+                onError: (err) => {
+                    console.log("error posting favorite", err)
+                }
+            }
+        )
     }
 
     const handleRemoveFavorite = () => {
-        setFavorite(false)
-
-        axios
-        .delete(`${API_URL}favorites/${profileName}`, {
-            data:{
-                id: mainListing.id
+        removeFavoriteMutation.mutate(
+            { name: profileName, listingId: mainListing.id },
+            {
+                onError: (err) => {
+                    console.log('error removing favorite', err)
+                }
             }
-        })
-        .catch(err => console.log('error removing favorite', err))
+        )
     }
 
     const [error, setError] = useState(false);
@@ -104,14 +77,20 @@ function IndividualListing({signedIn, credentials}) {
             return setError(true)
         }
 
-        axios
-        .post(`${API_URL}listings/${mainListing.id}/comments`, {
-            listingID: mainListing.id,
-            rating,
-            ...newComment
-        })
-        .then(res => setMainListing(res.data))
-        .catch(err => console.log('error posting comment', err))
+        createCommentMutation.mutate(
+            {
+                listingId: mainListing.id,
+                comment: {
+                    listingID: mainListing.id,
+                    rating,
+                    ...newComment
+                }
+            },
+            {
+                onSuccess: (data) => setUpdatedListing(data),
+                onError: (err) => console.log('error posting comment', err),
+            }
+        )
 
         e.target.reset();
         setRating(0)
@@ -123,20 +102,22 @@ function IndividualListing({signedIn, credentials}) {
     const handleDeleteComment = (e, commentID) => {
         e.preventDefault();    
      
-        axios
-          .delete(`${API_URL}listings/${mainListing.id}/comments/${commentID}`, 
-          {
-            data:{
-              listingID: mainListing.id, commentID
+        deleteCommentMutation.mutate(
+            {
+                listingId: mainListing.id,
+                commentId: commentID,
+            },
+            {
+                onSuccess: (data) => setUpdatedListing(data),
             }
-          })
-          .then(res => setMainListing(res.data))
+        )
     }
 
     if(!mainListing){
         return <div className='individual-listing'>Loading...</div>
     }
 
+    const image = selectedImage || mainListing.images[0]
     const sideImages = mainListing.images.filter(img => img !== image)
     
     return (
@@ -163,7 +144,7 @@ function IndividualListing({signedIn, credentials}) {
                         sideImages.map((img,i) => {
                             return (
                                 <div className='individual-listing__side-image-container' key={i}>
-                                    <img className='individual-listing__side-image' onClick={()=>{setImage(img)}} src={img} alt='Listing'/>
+                                    <img className='individual-listing__side-image' onClick={()=>{setSelectedImage(img)}} src={img} alt='Listing'/>
                                 </div>
                             )
                         })

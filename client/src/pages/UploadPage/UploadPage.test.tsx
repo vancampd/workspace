@@ -1,11 +1,12 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { renderWithProviders } from '../../test-utils/renderWithProviders';
 import UploadPage from './UploadPage';
 
 const credentials = { name: 'Test User' };
 
 test('blocks unauthenticated users from the upload form', () => {
-  render(<UploadPage signedIn={false} credentials={credentials} />);
+  renderWithProviders(<UploadPage signedIn={false} credentials={credentials} />);
 
   expect(
     screen.getByText(/you must be logged in to post your space/i)
@@ -13,9 +14,10 @@ test('blocks unauthenticated users from the upload form', () => {
 });
 
 test('validates required upload form fields before advancing', async () => {
-  render(<UploadPage signedIn={true} credentials={credentials} />);
+  const user = userEvent.setup();
+  renderWithProviders(<UploadPage signedIn={true} credentials={credentials} />);
 
-  userEvent.click(await screen.findByRole('button', { name: /next/i }));
+  await user.click(await screen.findByRole('button', { name: /next/i }));
 
   expect(
     screen.getByText(/you must enter the title of your post/i)

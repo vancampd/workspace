@@ -36,7 +36,7 @@ Formats client source files with Prettier.
 
 ## Environment
 
-Copy `.env.example` to `.env` and provide a Google Maps API key.
+Copy `.env.example` to `.env` and provide the backend API URL.
 
 ```bash
 cp .env.example .env
@@ -44,6 +44,4 @@ cp .env.example .env
 
 Required variables:
 
-- `VITE_GOOGLE_API_KEY`
-- `VITE_GOOGLE_GEOCODING_URL`
-- `VITE_EXPRESS_API_URL`
+- `VITE_BASE_API_URL`

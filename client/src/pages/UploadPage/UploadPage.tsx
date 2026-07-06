@@ -4,13 +4,9 @@ import UploadPage1 from '../../components/UploadPage1';
 import UploadPage2 from '../../components/UploadPage2';
 import UploadPage3 from '../../components/UploadPage3';
 import UploadPageImageForm from '../../components/UploadPageImageForm';
-import axios from 'axios';
 import errorIcon from '../../assets/images/error-12px.svg';
-const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY || '';
-const API_URL = import.meta.env.VITE_EXPRESS_API_URL || 'http://localhost:8080/';
-const GEO_URL =
-    import.meta.env.VITE_GOOGLE_GEOCODING_URL ||
-    'https://maps.googleapis.com/maps/api/geocode/json?address=';
+import { getGeocode } from '../../api/geocoding';
+import { useCreateListingMutation } from '../../hooks/mutations/useCreateListingMutation';
 
 function UploadPage({signedIn, credentials}) {
 
@@ -64,6 +60,8 @@ function UploadPage({signedIn, credentials}) {
     const [newListingId, setNewListingId] = useState('')
 
     const [error, setError] = useState(false);
+    const [submissionError, setSubmissionError] = useState(false);
+    const { mutateAsync: createListing } = useCreateListingMutation()
 
     const handleCheckPage1 = () => {
         const {title, description, rentPeriod, amenities, price } = input;
@@ -92,7 +90,7 @@ function UploadPage({signedIn, credentials}) {
         setPage(2)
     }
 
-    const handlePostListing = (e) => {
+    const handlePostListing = async (e) => {
         e.preventDefault();
 
         const {phone, email} = input;
@@ -115,26 +113,24 @@ function UploadPage({signedIn, credentials}) {
         }
 
         setError(false)
+        setSubmissionError(false)
 
         const name = credentials.name;
 
-        // Send request to Google Geocode with the address entered on the from to retrieve the coordinates
-        axios
-        .get(`${GEO_URL}${input.streetAddress},${input.city},${input.state}&key=${API_KEY}`)
-        .then(res => {
-            const {location} = res.data.results[0].geometry;
-
-            axios
-            .post(`${API_URL}listings`, {
+        try {
+            const location = await getGeocode(`${input.streetAddress},${input.city},${input.state}`)
+            const data = await createListing({
                 ...input,
                 name,
                 coordinates:{lat: String(location.lat), lng: String(location.lng)}
             })
-            .then(res => {
-                return (setNewListingId(res.data.id), setPage(3))
-            })
-            .catch(err => console.log(err)) 
-        })  
+
+            setNewListingId(data.id)
+            setPage(3)
+        } catch (err) {
+            console.log('Error posting listing', err)
+            setSubmissionError(true)
+        }
     }
 
     const validatePhone = (phone) => {
@@ -205,6 +201,11 @@ function UploadPage({signedIn, credentials}) {
                 }
             <p className='form__footnote'>* indicates a required field</p>
             <p className='form__footnote'>** indicates at least one field must be selected</p>
+            {
+                submissionError ?
+                <p className='error-text'><img src={errorIcon} alt='error icon'/>Unable to post listing. Please try again.</p>
+                : ''
+            }
         </div>
     )
 }

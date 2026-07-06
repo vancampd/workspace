@@ -1,6 +1,7 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
+import { renderWithProviders } from '../../test-utils/renderWithProviders';
 import Login from './Login';
 
 const renderLogin = () => {
@@ -11,17 +12,18 @@ const renderLogin = () => {
     setCredentials: vi.fn(),
   };
 
-  render(<Login {...props} />);
+  renderWithProviders(<Login {...props} />);
 
   return props;
 };
 
 test('logs in with mocked credentials and updates auth state', async () => {
+  const user = userEvent.setup();
   const props = renderLogin();
 
-  userEvent.type(screen.getByLabelText(/username/i), 'test');
-  userEvent.type(screen.getByLabelText(/password/i), 'password');
-  userEvent.click(screen.getByRole('button', { name: /login/i }));
+  await user.type(screen.getByLabelText(/username/i), 'test');
+  await user.type(screen.getByLabelText(/password/i), 'password');
+  await user.click(screen.getByRole('button', { name: /login/i }));
 
   await screen.findByText(/if you do not have a username/i);
 

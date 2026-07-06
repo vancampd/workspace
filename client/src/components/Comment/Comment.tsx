@@ -40,16 +40,16 @@ function dynamicDate(comment) {
 
   let commentDate: Date | string = new Date(comment.date);
 
-  let commentDay = commentDate.getDate();
-  let commentMonth = commentDate.getMonth();
-  let commentYear = commentDate.getFullYear();
+  const commentDay = commentDate.getDate();
+  const commentMonth = commentDate.getMonth();
+  const commentYear = commentDate.getFullYear();
 
   // The dynamic times are the amount of time since the comment was posted (current time - comment time)
-  let dynamicDay = currentDate.getDate() - commentDay;
-  let dynamicMonth = currentDate.getMonth() - commentMonth;
-  let dynamicYear = currentDate.getFullYear() - commentYear;
-  let dynamicHours = currentDate.getHours() - commentDate.getHours();
-  let dynamicMinutes = currentDate.getMinutes() - commentDate.getMinutes();
+  const dynamicDay = currentDate.getDate() - commentDay;
+  const dynamicMonth = currentDate.getMonth() - commentMonth;
+  const dynamicYear = currentDate.getFullYear() - commentYear;
+  const dynamicHours = currentDate.getHours() - commentDate.getHours();
+  const dynamicMinutes = currentDate.getMinutes() - commentDate.getMinutes();
 
   // If the comment was left in a different year than the current year
   if (dynamicYear > 0) {

@@ -1,15 +1,15 @@
 import {useState} from 'react'
 import './Login.scss';
-import axios from 'axios';
 import errorIcon from '../../assets/images/error-12px.svg';
 import jwt_decode from 'jwt-decode';
-const API_URL = import.meta.env.VITE_EXPRESS_API_URL || 'http://localhost:8080/';
+import { useLoginMutation } from '../../hooks/mutations/useLoginMutation';
 
 function Login({setShowRegister, setShowLogin, setSignedIn, setCredentials}: any) {
 
     const [input, setInput] = useState<any>({})
 
     const [error, setError] = useState(false)
+    const loginMutation = useLoginMutation()
 
     const handleInputChange = (e) => {
 
@@ -25,20 +25,20 @@ function Login({setShowRegister, setShowLogin, setSignedIn, setCredentials}: any
 
         if(!username || !password) return setError(true)
 
-        axios
-        .post(`${API_URL}users/login`, input)
-        .then(res => {
-            localStorage.setItem('token', res.data.token)
-            const decoded = jwt_decode<{name: string}>(res.data.token)
+        loginMutation.mutate(input, {
+        onSuccess: (data) => {
+            localStorage.setItem('token', data.token)
+            const decoded = jwt_decode<{name: string}>(data.token)
             localStorage.setItem('name', decoded.name)
             setError(false)
             setShowLogin(false)
             setSignedIn(true)
             setCredentials({name: decoded.name})
-        })
-        .catch(err => {
-            console.log('Error signing up', err)
+        },
+        onError: (err) => {
+            console.log('Error logging in', err)
             setError(true)
+        }
         })
     }
 

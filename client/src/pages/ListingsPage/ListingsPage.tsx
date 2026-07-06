@@ -1,16 +1,28 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {useLocation, useParams} from 'react-router-dom';
 import './ListingsPage.scss';
-import axios from 'axios';
 import Listing from '../../components/Listing';
 import ListingMapNav from '../../components/ListingsMapNav';
 import Map from '../../components/Map';
 import BackArrow from '../../components/BackArrow';
-const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY || '';
-const API_URL = import.meta.env.VITE_EXPRESS_API_URL || 'http://localhost:8080/';
-const GEO_URL =
-    import.meta.env.VITE_GOOGLE_GEOCODING_URL ||
-    'https://maps.googleapis.com/maps/api/geocode/json?address=';
+import { useCityListingsQuery } from '../../hooks/queries/useCityListingsQuery';
+import { useFavoritesQuery } from '../../hooks/queries/useFavoritesQuery';
+import { useGeocodeQuery } from '../../hooks/queries/useGeocodeQuery';
+
+const ListingSkeletons = () => (
+    <div className='listings-page__skeletons' aria-label='Loading listings'>
+        {[0, 1, 2].map((item) => (
+            <div className='listing-skeleton' key={item}>
+                <div className='listing-skeleton__image' />
+                <div className='listing-skeleton__content'>
+                    <div className='listing-skeleton__line listing-skeleton__line--title' />
+                    <div className='listing-skeleton__line' />
+                    <div className='listing-skeleton__line listing-skeleton__line--short' />
+                </div>
+            </div>
+        ))}
+    </div>
+)
 
 function ListingsPage({signedIn, credentials}) {
 
@@ -21,51 +33,19 @@ function ListingsPage({signedIn, credentials}) {
     const [mapActive, setMapActive] = useState(false)
 
     const name = credentials.name
-    
-    const [listings, setListings] = useState([]);
-    useEffect(() => {
-        if(pathname ==='/favorites'){
-            axios
-            .get(`${API_URL}favorites/${name}`)
-            .then(res => {
-            const favorites = res.data;
-            setListings(favorites)
-        })
-        .catch(err => console.log("Error fetching listings", err))  
+    const isFavoritesPage = pathname === '/favorites'
 
-        } else {
-            // Get the listings
-            axios
-            .get(`${API_URL}listings`)
-            .then(res => {
-                const listings = res.data;
+    const cityListingsQuery = useCityListingsQuery(city)
+    const favoritesQuery = useFavoritesQuery(name)
+    const geocodeQuery = useGeocodeQuery(city)
+    const listings = isFavoritesPage ? favoritesQuery.data || [] : cityListingsQuery.data || []
+    const coordinates = geocodeQuery.data
 
-                const foundListings = listings.filter(listing => listing.city.toLowerCase() === city.toLowerCase())
-
-                setListings(foundListings)
-            })
-            .catch(err => console.log("Error fetching listings", err))
-        }
-        
-    }, [pathname, city, name])
-
-    const [coordinates, setCoordinates] = useState();
-    useEffect(()=> {
-        axios
-        .get(`${GEO_URL}${city}&key=${API_KEY}`)
-        .then(res => {
-
-            const coordinates = res.data.results[0].geometry.location
-
-            setCoordinates(coordinates)
-        })
-        }, [city])
-
-    if(pathname==='/favorites' && !signedIn){
+    if(isFavoritesPage && !signedIn){
         return <p className='listing-card'>You must be logged in to view your favorites</p>
     }
 
-    if(pathname==='/favorites' && !listings.length){
+    if(isFavoritesPage && !listings.length){
         
         return (
             <>
@@ -75,14 +55,18 @@ function ListingsPage({signedIn, credentials}) {
         )
     }
 
-    if(!listings.length || !coordinates){
-        return <div className='listings-page'>Loading...</div>
+    if(!listings.length || (!isFavoritesPage && !coordinates)){
+        return (
+            <div className='listings-page'>
+                <ListingSkeletons />
+            </div>
+        )
     }
     
     return (
         <div className='listings-page'>
             {
-                pathname==='/favorites' ?
+                isFavoritesPage ?
                 <BackArrow/>
                 : <>
                     <ListingMapNav mapActive={mapActive} setMapActive={setMapActive}/>
@@ -90,7 +74,7 @@ function ListingsPage({signedIn, credentials}) {
                 </>
             }
             {
-                listings.map((listing, l) =>
+                listings.map((listing) =>
                     <Listing 
                         listing={listing}
                         key={listing.id}

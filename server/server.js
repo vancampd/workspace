@@ -5,6 +5,7 @@ require('dotenv').config();
 const listingsRoutes = require('./routes/listings');
 const favoritesRoutes = require('./routes/favorites');
 const usersRoutes = require('./routes/users');
+const geocodeRoutes = require('./routes/geocode');
 const {PORT} = process.env || 5000;
 
 app.use(cors());
@@ -16,5 +17,7 @@ app.use('/listings', listingsRoutes);
 app.use('/favorites', favoritesRoutes);
 
 app.use('/users', usersRoutes);
+
+app.use('/geocode', geocodeRoutes);
 
 app.listen(PORT, () => console.log(`The server is running on port ${PORT}`));

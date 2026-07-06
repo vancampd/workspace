@@ -1,36 +1,22 @@
-import {useState, useEffect} from 'react'
-import axios from 'axios';
+import {useState} from 'react'
 import errorIcon from '../../assets/images/error-12px.svg';
-const API_URL = import.meta.env.VITE_EXPRESS_API_URL || 'http://localhost:8080/';
+import { useRegisterMutation } from '../../hooks/mutations/useRegisterMutation';
 
-function SignUp({showRegister, setShowRegister, setShowLogin}: any) {
+function SignUp({setShowRegister, setShowLogin}: any) {
 
     const [input, setInput] = useState<any>({});
 
     const [error, setError] = useState(false);
 
-    const [passwordMatch, setPasswordMatch] = useState(true);
+    const registerMutation = useRegisterMutation();
+    const passwordMismatch = Boolean(input.password || input.confirmPassword) && input.password !== input.confirmPassword;
 
     const handleInputChange = (e) => {
 
         const {name, value} = e.target;
 
         setInput({...input, [name]: value});
-
-        if(input.password === input.confirmPassword){
-            setPasswordMatch(true)
-        }
     }
-
-    useEffect(()=>{
-        if(input.password !== input.confirmPassword){
-                return setPasswordMatch(false)
-        } else {
-            setPasswordMatch(true)
-        }
-    },[input.password, input.confirmPassword])
-
-    
 
     const handleSignUp = (e) => {
         e.preventDefault();
@@ -41,20 +27,16 @@ function SignUp({showRegister, setShowRegister, setShowLogin}: any) {
             return setError(true) 
         }
 
-        if(password !== confirmPassword){
-            return setPasswordMatch(false)
-        } else {
-            setPasswordMatch(true)
-        }
+        if(password !== confirmPassword) return
 
-        axios
-        .post(`${API_URL}users/register`, input)
-        .then(res => {
+        registerMutation.mutate(input, {
+        onSuccess: () => {
             alert('Registered Successfully')
             setShowRegister(false);
             setShowLogin(true);
+        },
+        onError: (err) => console.log('Error signing up', err)
         })
-        .catch(err => console.log('Error signing up', err))
     }
 
     return (
@@ -124,7 +106,7 @@ function SignUp({showRegister, setShowRegister, setShowLogin}: any) {
                             : ''
                         }
                         {
-                            !passwordMatch ? 
+                            passwordMismatch ? 
                             <p className='error-text'><img src={errorIcon} alt='error icon'/>Passwords don't match</p> 
                             : ''
                         }

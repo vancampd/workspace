@@ -1,13 +1,12 @@
-import {useState, useEffect} from 'react'
-import {useHistory} from 'react-router-dom';
+import {useState} from 'react'
+import {useNavigate} from 'react-router-dom';
 import './HomePage.scss';
 import Add from '../../components/Add';
 import globe from '../../assets/images/Blue_globe_icon.svg';
 import office1 from '../../assets/images/office1.jpeg';
 import office2 from '../../assets/images/office2.jpeg';
 import errorIcon from '../../assets/images/error-12px.svg';
-import axios from 'axios';
-const API_URL = import.meta.env.VITE_EXPRESS_API_URL || 'http://localhost:8080/'
+import { useListingsQuery } from '../../hooks/queries/useListingsQuery';
 
 
 function HomePage() {
@@ -15,22 +14,7 @@ function HomePage() {
 
     const [error, setError] = useState(false);
 
-    const [listings, setListings] = useState([]);
-    useEffect(() => {
-        // Get the listings
-        getListings()
-        
-    }, [])
-
-    const getListings = () => {
-        axios
-        .get(`${API_URL}listings`)
-        .then(res => {
-            const listings = res.data;
-            setListings(listings)
-        })
-        .catch(err => console.log("Error fetching listings", err))
-    }
+    const { data: listings = [] } = useListingsQuery();
 
     const [input, setInput]= useState<any>({})
 
@@ -39,7 +23,7 @@ function HomePage() {
         setFoundCity(true)
     }
 
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const [foundCity, setFoundCity] = useState(true);
 
@@ -58,7 +42,7 @@ function HomePage() {
           return setFoundCity(false)
        }
 
-       history.push(`/listings/${foundCity.city.toLowerCase()}`)
+       navigate(`/listings/${foundCity.city.toLowerCase()}`)
 
     }
 
