@@ -143,6 +143,12 @@ cp server/.env.example server/.env
 
 Configure the environment variables using the example files as a reference.
 
+The server refuses to start unless `JWT_SECRET` is a random value of at least 32 characters. Generate one with:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
+```
+
 Do not commit real credentials or API keys.
 
 ### Running Locally
@@ -185,7 +191,7 @@ The following work remains on the modernization roadmap.
 
 - Replace JSON file storage with a relational database
 - Add database-backed integration tests
-- Enforce JWT verification and resource-level authorization
+- Replace JWTs with HttpOnly cookie sessions (see [docs/auth.md](./docs/auth.md))
 - Strengthen request validation and upload security
 - Add rate limiting for sensitive endpoints
 

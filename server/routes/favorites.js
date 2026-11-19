@@ -1,87 +1,62 @@
 const router = require('express').Router();
-const fs = require('fs');
+const { readUsers, writeUsers } = require('../lib/dataStore');
+const requireAuth = require('../middleware/requireAuth');
+
+// Favorites are private: every route needs a signed-in user, and the user is taken
+// from the token rather than the URL. The :name segment is kept so the client API
+// doesn't change yet, but it must match the signed-in user.
+router.use(requireAuth);
+
+router.param('name', (req, res, next, name) => {
+  if (name !== req.user.name) {
+    return res.status(403).json({ message: 'You can only access your own favorites' });
+  }
+  return next();
+});
+
+const findCurrentUser = (users, req) =>
+  users.find((user) => user.username === req.user.username);
 
 router
-    .route('/:name')
-    .get((req, res) => {
-        const {name} = req.params;
+  .route('/:name')
+  .get((req, res) => {
+    const user = findCurrentUser(readUsers(), req);
+    if (!user) return res.status(404).json({ message: 'User not found' });
 
-        const favorites = getUsersFavorites(name)
+    return res.json(user.favorites || []);
+  })
+  .post((req, res) => {
+    const favorite = req.body;
+    if (!favorite || typeof favorite.id !== 'string') {
+      return res.status(400).json({ message: 'A listing id is required' });
+    }
 
-        res.json(favorites)
-    })
-    .post((req, res) => {
-        const {name} = req.params;
+    const users = readUsers();
+    const user = findCurrentUser(users, req);
+    if (!user) return res.status(404).json({ message: 'User not found' });
 
-        const users = getUsers();
-        const foundUser = users.find(user => user.name === name)
+    user.favorites = user.favorites || [];
+    if (user.favorites.some((existing) => existing.id === favorite.id)) {
+      return res.status(400).json({ message: 'error posting favorite' });
+    }
 
-        const favorites = getUsersFavorites(name);
+    user.favorites.push(favorite);
+    writeUsers(users);
 
-        if(!favorites.some(favorite => favorite.id === req.body.id)){
-                favorites.push(req.body)
+    return res.json(user.favorites);
+  });
 
-                users.forEach(user => {
-                    if(user.name === name){
-                        user.favorites = favorites
-                    }
-                })
+router.route('/:name/:listingId').delete((req, res) => {
+  const users = readUsers();
+  const user = findCurrentUser(users, req);
+  if (!user) return res.status(404).json({ message: 'User not found' });
 
-                writeUserFavorites(users)
-    
-                return res.json(favorites)
-    
-            } else {
-                console.log('sending error')
-                return res.status(400).json({ 'message': 'error posting favorite'})
-            }
-    })
+  user.favorites = (user.favorites || []).filter(
+    (favorite) => favorite.id !== req.params.listingId
+  );
+  writeUsers(users);
 
-router
-    .route('/:name/:listingId')
-    .delete((req,res) => {
-        const {name, listingId} = req.params;
-
-        // Get all users
-        const users = getUsers();
-
-        // Get the favorites for the user with the name in the request params
-        const favorites = getUsersFavorites(name);
-
-        // Remove the favorite with the id in the request params
-        const newFavorites = favorites.filter(favorite => favorite.id !== listingId);
-
-        // Set the favorites for the user with the name in the request params to the updated favorites
-        users.forEach(user => {
-            if(user.name === name){
-                user.favorites = newFavorites
-            }
-        })
-
-        writeUserFavorites(users)
-
-        return res.json(newFavorites)
-
-    })
-
-function getUsersFavorites(name){
-    const userData = fs.readFileSync('./data/users.json')
-        const users = JSON.parse(userData)
-        const foundUser = users.find(user => user.name === name)
-
-    return (foundUser.favorites)
-}
-
-function getUsers(name){
-    const userData = fs.readFileSync('./data/users.json')
-        const users = JSON.parse(userData)
-
-    return (users)
-}
-
-function writeUserFavorites(data){
-    fs.writeFileSync('./data/users.json', JSON.stringify(data))
-    console.log('New favorite added to favorites.json')
-}
+  return res.json(user.favorites);
+});
 
 module.exports = router;

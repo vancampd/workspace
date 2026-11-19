@@ -83,6 +83,10 @@ function SignUp({setShowRegister, setShowLogin}: any) {
                             type='password'
                             {...register('password', {
                                 required: 'You must enter a password',
+                                minLength: {
+                                    value: 8,
+                                    message: 'Password must be at least 8 characters',
+                                },
                                 deps: 'confirmPassword',
                             })}
                         />

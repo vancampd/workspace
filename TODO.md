@@ -95,10 +95,27 @@
 - Fixed form copy and label bugs: login username error text, sign-up name error text, label `htmlFor` targets, and redundant `name` attributes.
 - Added tests for: sign up (validation, mismatch, success payload, failure), login (validation, failure, generic failure, retry), home search (missing, no listings, whitespace, loading, error), comments (validation clearing, cancel, payload, failure, retry), and upload (each step's validation, contact rules, payload, phone-only, geocode failure and retry, back navigation, pending state, image validation, image failure, post-upload navigation).
 
+## Authentication
+
+See [docs/auth.md](./docs/auth.md) for the full plan.
+
+### Addressed
+
+- Phase 1 stopgap hardening: JWT verification on write routes, ownership checks for comments, listing images and favorites, registration validation and duplicate-username checks, generic login errors, bcrypt cost 12 with rehash on login, rate limits on login/register/geocode, required strong `JWT_SECRET`, CORS limited to `CLIENT_ORIGIN`, bearer token sent by the client, and server tests with supertest.
+
+### Remaining
+
+- Upgrade `jsonwebtoken` to v9 (`npm install jsonwebtoken@9` in `server`) until JWTs are removed.
+- Stop tracking `server/data/users.json` (it contains a password hash) and replace it with a seed script or example file.
+- Phase 2: move users, listings, comments and favorites into a database with user IDs.
+- Phase 3: replace JWTs in `localStorage` with HttpOnly cookie sessions and a `useSession` hook; move favorites to `/me/favorites`.
+- Add schema validation (zod) for request bodies and `helmet` for security headers.
+- Phase 4 (optional): password reset, email verification, TOTP two-factor authentication, Google sign-in, passkeys.
+
 ## Known Bugs
 
 - `/login` and `/register` routes in `App.tsx` render `Login` and `SignUp` without props. Visiting either URL and clicking Cancel throws, and a successful login stores the token and then throws on `setShowLogin`. Nothing links to these routes (the header uses modals), so remove them and let the catch-all redirect to `/home`.
 - New listings and seed data store `rentPeriod` and `price` differently. Seed data uses `'Daily, Weekly, Monthly'` and `'$30'`; the upload form sends `['Daily', 'Weekly']` and `'25'`. Cards and the detail page render `rentPeriod` directly, so new listings show "DailyWeekly" and prices without `$`. Pick one format (ideally as part of stricter domain types) and migrate the seed data; until then, join arrays when displaying.
 - A listing is created before its image is uploaded. If the upload fails or the user leaves, the listing is saved with `images: []` and cards/detail pages render broken images (`src="undefined"`). Add a placeholder image, or create the listing and upload the image in one step.
 - Deleting a comment and adding/removing a favorite fail silently (`console.log` only) and are not disabled while pending. Show an error and disable the control during the request.
-- The server's `/geocode` route proxies Google with the server's API key and has no authentication or rate limiting, so anyone can spend the key's quota. Cover it with the planned rate limiting and auth work.
+- The server's `/geocode` route proxies Google with the server's API key and stays public because signed-out visitors search listings. It is now rate limited per IP (30 per minute); consider caching results or restricting the key further.

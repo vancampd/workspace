@@ -41,6 +41,21 @@ test('validates password confirmation', async () => {
   expect(screen.getByText(/passwords don't match/i)).toBeInTheDocument();
 });
 
+test('requires passwords to be at least 8 characters', async () => {
+  const user = userEvent.setup();
+  renderSignUp();
+
+  await user.type(screen.getByLabelText(/^name:/i), 'Test User');
+  await user.type(screen.getByLabelText(/username/i), 'test');
+  await user.type(screen.getByLabelText(/^password:/i), 'short');
+  await user.type(screen.getByLabelText(/confirm password/i), 'short');
+  await user.click(screen.getByRole('button', { name: /sign up/i }));
+
+  expect(
+    screen.getByText(/password must be at least 8 characters/i)
+  ).toBeInTheDocument();
+});
+
 test('revalidates password confirmation when the password changes', async () => {
   const user = userEvent.setup();
   renderSignUp();
