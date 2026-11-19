@@ -1,4 +1,3 @@
-import {useState} from 'react'
 import {useNavigate} from 'react-router-dom';
 import './HomePage.scss';
 import Add from '../../components/Add';
@@ -7,67 +6,77 @@ import office1 from '../../assets/images/office1.jpeg';
 import office2 from '../../assets/images/office2.jpeg';
 import errorIcon from '../../assets/images/error-12px.svg';
 import { useListingsQuery } from '../../hooks/queries/useListingsQuery';
+import { useForm } from 'react-hook-form';
+
+type SearchFormValues = {
+    location: string;
+    startDate: string;
+    endDate: string;
+};
 
 
 function HomePage() {
 
+    const {
+        data: listings = [],
+        isPending: areListingsPending,
+        isError: didListingsFail,
+    } = useListingsQuery();
+    const navigate = useNavigate();
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<SearchFormValues>({
+        mode: 'onSubmit',
+        reValidateMode: 'onChange',
+        defaultValues: {
+            location: '',
+            startDate: '',
+            endDate: '',
+        },
+    });
 
-    const [error, setError] = useState(false);
+    const findListingCity = (location: string) => {
+        const normalizedLocation = location.trim().toLowerCase()
 
-    const { data: listings = [] } = useListingsQuery();
-
-    const [input, setInput]= useState<any>({})
-
-    const handleInputChange = (e) => {
-        setInput({...input, [e.target.name]: e.target.value})
-        setFoundCity(true)
+        return listings.find(
+            (listing) => listing.city.toLowerCase() === normalizedLocation
+        )
     }
 
-    const navigate = useNavigate();
+    const handleSearch = ({ location }: SearchFormValues) => {
+        const foundCity = findListingCity(location)
 
-    const [foundCity, setFoundCity] = useState(true);
+        if(!foundCity) return
 
-    const handleSearch = (e) => {
-        e.preventDefault();
-
-       const {location} = input;
-
-       if(!location){
-           return setError(true)
-       }
-
-       const foundCity = listings.find(listing => listing.city.toLowerCase() === location.toLowerCase())
-
-       if(!foundCity) {
-          return setFoundCity(false)
-       }
-
-       navigate(`/listings/${foundCity.city.toLowerCase()}`)
-
+        navigate(`/listings/${foundCity.city.toLowerCase()}`)
     }
 
 
     return(
         <div>
-            <form className='form'  onSubmit={handleSearch}>
+            <form className='form'  onSubmit={handleSubmit(handleSearch)}>
                 <h2 className='form__header'>Find a workspace</h2>
                 <div className='form__element-container'>
                     <label className='form__label' htmlFor='location'>Location:</label>
-                    <input 
-                        className='form__input' 
-                        name='location' 
-                        id='location' 
+                    <input
+                        className='form__input'
+                        id='location'
                         placeholder="Enter the city you're working in"
-                        onChange={handleInputChange}
+                        {...register('location', {
+                            validate: {
+                                required: (location) =>
+                                    location.trim() !== '' || 'You must enter a location',
+                                hasListings: (location) =>
+                                    Boolean(findListingCity(location)) ||
+                                    'Sorry, there are no listings currently in that city',
+                            },
+                        })}
                     />
                     {
-                        error && !input.location ? 
-                        <p className='error-text'><img src={errorIcon} alt='error icon'/>You must enter a location</p> 
-                        : ''
-                    }
-                    {
-                        !foundCity ? 
-                        <p className='error-text'><img src={errorIcon} alt='error icon'/>Sorry, there are no listings currently in that city</p> 
+                        errors.location ?
+                        <p className='error-text'><img src={errorIcon} alt='error icon'/>{errors.location.message}</p>
                         : ''
                     }
                 </div>
@@ -75,20 +84,30 @@ function HomePage() {
                     <div className='form__inner-container'>
                         <div className='form__inner-left'>
                             <label className='form__label' htmlFor='startDate'>Start date:</label>
-                            <input type='date' className='form__input' name='startDate' id='startDate' placeholder='Select a date'/>
+                            <input type='date' className='form__input' id='startDate' placeholder='Select a date' {...register('startDate')}/>
                         </div>
                         <div className='form__inner-right'>
                             <label className='form__label' htmlFor='endDate'>End date:</label>
-                            <input type='date' className='form__input' name='endDate' id='endDate' placeholder='Select a date'/>
+                            <input type='date' className='form__input' id='endDate' placeholder='Select a date' {...register('endDate')}/>
                         </div>
                     </div>
                 </div>
-                <button className='button'>Search</button>
+                <button
+                    className='button'
+                    disabled={areListingsPending || didListingsFail}
+                >
+                    Search
+                </button>
+                {
+                    didListingsFail ?
+                    <p className='error-text'><img src={errorIcon} alt='error icon'/>Unable to load listings. Please try again.</p>
+                    : ''
+                }
             </form>
-            <Add 
-                heading='Become one of our 1000s of locations across the world' 
-                icon={globe} 
-                iconAlt='Globe Icon' 
+            <Add
+                heading='Become one of our 1000s of locations across the world'
+                icon={globe}
+                iconAlt='Globe Icon'
                 background='alt-background'
                 image1={office1}
                 alt1='Shared open office'
