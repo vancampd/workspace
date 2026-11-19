@@ -5,7 +5,7 @@ const apiUrl = import.meta.env.VITE_BASE_API_URL || 'http://localhost:8080/';
 
 export type RequestCallback = (
   req: RestRequest<DefaultBodyType, PathParams>
-) => void;
+) => void | Promise<void>;
 
 const getMockUrl = (endpoint: string) => {
   if (endpoint.startsWith('http')) return endpoint;
@@ -15,8 +15,8 @@ const getMockUrl = (endpoint: string) => {
 
 const jsonResponseResolver =
   (responseBody: unknown, statusCode: number, onRequest?: RequestCallback) =>
-  (req, res, ctx) => {
-    onRequest?.(req);
+  async (req, res, ctx) => {
+    await onRequest?.(req);
 
     return res(ctx.status(statusCode), ctx.json(responseBody));
   };

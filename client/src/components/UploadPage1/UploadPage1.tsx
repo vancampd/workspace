@@ -1,41 +1,42 @@
-import React from 'react'
-
-function UploadPage1({handleInputChange, error, input, errorIcon}) {
-    const {title, description, rentPeriod, price } = input;
+function UploadPage1({register, errors, errorIcon}) {
+    const rentPeriodRules = {
+        validate: (value) =>
+            value.length > 0 || 'You must leave a time period',
+    };
 
     return (
         <>
             <h2 className='form__header'>Post your workspace</h2>
             <div className='form__element-container'>
                 <label className='form__label' htmlFor='title'>*Give a title to your post:</label>
-                <input 
-                    className='form__input' 
-                    name='title' 
-                    id='title' 
+                <input
+                    className='form__input'
+                    id='title'
                     placeholder="Title"
-                    value={input.title}
-                    onChange={handleInputChange}
+                    {...register('title', {
+                        required: 'You must enter the title of your post',
+                    })}
                 />
                 {
-                    error && !title ? 
-                    <p className='error-text'><img src={errorIcon} alt='error icon'/> You must enter the title of your post</p> 
+                    errors.title ?
+                    <p className='error-text'><img src={errorIcon} alt='error icon'/> {errors.title.message}</p>
                     : ''
                 }
             </div>
             <div className='form__element-container'>
                 <label className='form__label' htmlFor='description'>*Describe your space:</label>
-                <textarea 
-                    className='form__input' 
-                    name='description' 
-                    id='description' 
+                <textarea
+                    className='form__input'
+                    id='description'
                     placeholder="Description"
-                    value={input.description}
-                    onChange={handleInputChange}
+                    {...register('description', {
+                        required: 'You must write the description of your space',
+                    })}
                 >
                 </textarea>
                 {
-                    error && !description ? 
-                    <p className='error-text'><img src={errorIcon} alt='error icon'/> You must write the description of your space</p> 
+                    errors.description ?
+                    <p className='error-text'><img src={errorIcon} alt='error icon'/> {errors.description.message}</p>
                     : ''
                 }
             </div>
@@ -45,44 +46,38 @@ function UploadPage1({handleInputChange, error, input, errorIcon}) {
                         <label className='form__label'>**Length of availability:</label>
                         <div className='form__check-box-container'>
                             <label className='form__label'>
-                                <input 
-                                    className='form__input' 
-                                    name='rentPeriod'
-                                    id='daily' 
-                                    value='Daily' 
+                                <input
+                                    className='form__input'
+                                    id='daily'
+                                    value='Daily'
                                     type='checkbox'
-                                    checked={input.rentPeriod.includes('Daily') ? true : false}
-                                    onChange={handleInputChange}
+                                    {...register('rentPeriod', rentPeriodRules)}
                                 />
                                 Daily
                             </label>
                             <label className='form__label'>
-                                <input 
-                                    className='form__input' 
-                                    name='rentPeriod'
-                                    id='weekly' 
-                                    value='Weekly' 
+                                <input
+                                    className='form__input'
+                                    id='weekly'
+                                    value='Weekly'
                                     type='checkbox'
-                                    checked={input.rentPeriod.includes('Weekly') ? true : false}
-                                    onChange={handleInputChange}
+                                    {...register('rentPeriod', rentPeriodRules)}
                                 />
                                 Weekly
                             </label>
                             <label className='form__label'>
-                                <input 
-                                    className='form__input' 
-                                    name='rentPeriod' 
+                                <input
+                                    className='form__input'
                                     id='monthly'
-                                    value='Monthly' 
+                                    value='Monthly'
                                     type='checkbox'
-                                    checked={input.rentPeriod.includes('Monthly') ? true : false}
-                                    onChange={handleInputChange}
+                                    {...register('rentPeriod', rentPeriodRules)}
                                 />
                                 Monthly
                             </label>
                             {
-                                error && !rentPeriod ? 
-                                <p className='error-text'><img src={errorIcon} alt='error icon'/> You must leave a time period</p> 
+                                errors.rentPeriod ?
+                                <p className='error-text'><img src={errorIcon} alt='error icon'/> {errors.rentPeriod.message}</p>
                                 : ''
                             }
                         </div>
@@ -91,83 +86,73 @@ function UploadPage1({handleInputChange, error, input, errorIcon}) {
                         <label className='form__label'>Amenities:</label>
                         <div className='form__check-box-container'>
                             <label className='form__label'>
-                                <input 
-                                    className='form__input' 
-                                    name='amenities'
-                                    id='Conference Room' 
-                                    value='Conference Room' 
+                                <input
+                                    className='form__input'
+                                    id='Conference Room'
+                                    value='Conference Room'
                                     type='checkbox'
-                                    checked={input.amenities.includes('Conference Room') ? true : false}
-                                    onChange={handleInputChange}
+                                    {...register('amenities')}
                                 />
                                 Conference Room
                             </label>
                             <label className='form__label'>
-                                <input 
-                                    className='form__input' 
-                                    name='amenities'
-                                    id='Refrigerator' 
-                                    value='Refrigerator' 
+                                <input
+                                    className='form__input'
+                                    id='Refrigerator'
+                                    value='Refrigerator'
                                     type='checkbox'
-                                    checked={input.amenities.includes('Refrigerator') ? true : false}
-                                    onChange={handleInputChange}
+                                    {...register('amenities')}
                                 />
                                 Refrigerator
                             </label>
                             <label className='form__label'>
-                                <input 
-                                    className='form__input' 
-                                    name='amenities' 
+                                <input
+                                    className='form__input'
                                     id='Bathroom'
-                                    value='Bathroom' 
+                                    value='Bathroom'
                                     type='checkbox'
-                                    checked={input.amenities.includes('Bathroom') ? true : false}
-                                    onChange={handleInputChange}
+                                    {...register('amenities')}
                                 />
                                 Bathroom
                             </label>
                             <label className='form__label'>
-                                <input 
-                                    className='form__input' 
-                                    name='amenities' 
+                                <input
+                                    className='form__input'
                                     id='Coffee'
-                                    value='Coffee' 
+                                    value='Coffee'
                                     type='checkbox'
-                                    checked={input.amenities.includes('Coffee') ? true : false}
-                                    onChange={handleInputChange}
+                                    {...register('amenities')}
                                 />
                                 Coffee
                             </label>
                             <label className='form__label'>
-                                <input 
-                                    className='form__input' 
-                                    name='amenities' 
+                                <input
+                                    className='form__input'
                                     id='Outside work area'
-                                    value='Outside work area' 
+                                    value='Outside work area'
                                     type='checkbox'
-                                    checked={input.amenities.includes('Outside work area') ? true : false}
-                                    onChange={handleInputChange}
+                                    {...register('amenities')}
                                 />
                                 Outside work area
                             </label>
                         </div>
                     </div>
-                </div>    
+                </div>
             </div>
             <div className='form__element-container'>
-                <label className='form__label' htmlFor='description'>Daily price:</label>
-                <input 
-                    className='form__input' 
-                    name='price' 
-                    id='price' 
+                <label className='form__label' htmlFor='price'>Daily price:</label>
+                <input
+                    className='form__input'
+                    id='price'
                     placeholder="Enter the price to rent each day"
                     type='number'
-                    value={parseInt(input.price, 10) || ''}
-                    onChange={handleInputChange}
+                    {...register('price', {
+                        required: 'You must list your daily price',
+                    })}
                 />
                 {
-                    error && !price ? 
-                    <p className='error-text'><img src={errorIcon} alt='error icon'/> You must list your daily price</p> 
+                    errors.price ?
+                    <p className='error-text'><img src={errorIcon} alt='error icon'/> {errors.price.message}</p>
                     : ''
                 }
             </div>
