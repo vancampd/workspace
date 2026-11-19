@@ -1,36 +1,45 @@
 import "./CommentSection.scss";
 import Comment from "../Comment";
-import { useState } from "react";
 import Rating from "../Rating";
 import errorIcon from "../../assets/images/error-12px.svg";
+import { useForm, useWatch } from "react-hook-form";
+import { useCreateCommentMutation } from "../../hooks/mutations/useCommentMutations";
+
+type CommentFormValues = {
+  comment: string;
+  rating: number;
+};
 
 function CommentSection({
   mainListing,
-  handleCommentSubmit,
+  onCommentCreated,
   handleDeleteComment,
-  rating,
-  setRating,
-  error,
-  setError,
   signedIn,
   profileName,
 }: any) {
-  const [input, setInput] = useState<any>({});
-
-  const handleInputChange = (e) => {
-    setInput({ ...input, [e.target.name]: e.target.value });
-  };
-
-  const comments = mainListing.comments.sort((commentA, commentB) => {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    control,
+    formState: { errors },
+  } = useForm<CommentFormValues>({
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+    defaultValues: {
+      comment: "",
+      rating: 0,
+    },
+  });
+  const createCommentMutation = useCreateCommentMutation();
+  const rating = useWatch({
+    control,
+    name: "rating",
+  });
+  const comments = [...mainListing.comments].sort((commentA, commentB) => {
     return commentB.date - commentA.date;
   });
-
-  const handleCancelComment = () => {
-    setInput({});
-    setRating("");
-    setError(false);
-  };
-
   const totalRatings = mainListing.comments.reduce(
     (total, comment) => total + comment.rating,
     0,
@@ -38,6 +47,38 @@ function CommentSection({
   const averageRating = (
     Math.round((totalRatings / mainListing.comments.length) * 10) / 10
   ).toFixed(1);
+
+  const handleCancelComment = () => {
+    reset();
+    createCommentMutation.reset();
+  };
+
+  const handleValidCommentSubmit = ({ comment, rating }: CommentFormValues) => {
+    createCommentMutation.mutate(
+      {
+        listingId: mainListing.id,
+        comment: {
+          listingID: mainListing.id,
+          name: profileName,
+          comment,
+          rating,
+        },
+      },
+      {
+        onSuccess: (updatedListing) => {
+          onCommentCreated(updatedListing);
+          reset();
+        },
+      }
+    );
+  };
+
+  const handleRatingChange = (nextRating) => {
+    setValue("rating", nextRating, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  };
 
   return (
     <section className="comments-section">
@@ -52,41 +93,56 @@ function CommentSection({
         <div className="comments-section__container">
           <form
             className="comments-section__form"
-            onSubmit={handleCommentSubmit}
+            onSubmit={handleSubmit(handleValidCommentSubmit)}
           >
             <div className="comments-section__form-content">
               <label className="form__label">Rating</label>
-              <Rating rating={rating} setRating={setRating} />
-              {error && !rating ? (
+              <Rating rating={rating} setRating={handleRatingChange} />
+              <input
+                type="hidden"
+                {...register("rating", {
+                  validate: (value) =>
+                    Number(value) > 0 || "You must leave a rating",
+                })}
+              />
+              {errors.rating ? (
                 <p className="error-text">
-                  <img src={errorIcon} alt="error icon" /> You must leave a
-                  rating
+                  <img src={errorIcon} alt="error icon" /> {errors.rating.message}
                 </p>
               ) : (
                 ""
               )}
               <div
                 className={
-                  error && !input.comment
+                  errors.comment
                     ? "form__element-container--comment error"
                     : "form__element-container--comment"
                 }
               >
-                <label className="form__label" htmlFor="name">
+                <label className="form__label" htmlFor="comment">
                   Review
                 </label>
                 <input
                   className="form__input"
-                  name="comment"
                   id="comment"
                   placeholder="Leave review here"
-                  onChange={handleInputChange}
+                  {...register("comment", {
+                    required: "Text is required in the review field",
+                  })}
                 />
               </div>
-              {error && !input.comment ? (
+              {errors.comment ? (
                 <p className="error-text">
-                  <img src={errorIcon} alt="error icon" /> Text is required in
-                  the review field
+                  <img src={errorIcon} alt="error icon" />{" "}
+                  {errors.comment.message}
+                </p>
+              ) : (
+                ""
+              )}
+              {createCommentMutation.isError ? (
+                <p className="error-text">
+                  <img src={errorIcon} alt="error icon" /> Unable to submit your
+                  review. Please try again.
                 </p>
               ) : (
                 ""
@@ -100,7 +156,11 @@ function CommentSection({
               >
                 Cancel
               </button>
-              <button type="submit" className="comments-section__button">
+              <button
+                type="submit"
+                className="comments-section__button"
+                disabled={createCommentMutation.isPending}
+              >
                 Submit
               </button>
             </div>
@@ -109,7 +169,6 @@ function CommentSection({
       ) : (
         ""
       )}
-
       {comments.map((comment) => (
         <Comment
           key={comment.commentID}

@@ -1,136 +1,79 @@
-import {useState,} from 'react'
+import {useState} from 'react'
 import './UploadPage.scss'
 import UploadPage1 from '../../components/UploadPage1';
 import UploadPage2 from '../../components/UploadPage2';
 import UploadPage3 from '../../components/UploadPage3';
 import UploadPageImageForm from '../../components/UploadPageImageForm';
 import errorIcon from '../../assets/images/error-12px.svg';
-import { getGeocode } from '../../api/geocoding';
 import { useCreateListingMutation } from '../../hooks/mutations/useCreateListingMutation';
+import { useForm, useWatch } from 'react-hook-form';
+
+type UploadFormValues = {
+    title: string;
+    description: string;
+    rentPeriod: string[];
+    amenities: string[];
+    price: string;
+    streetAddress: string;
+    city: string;
+    state: string;
+    phone: string;
+    email: string;
+};
 
 function UploadPage({signedIn, credentials}) {
 
     const [page, setPage] = useState(0)
-
-    const [input, setInput] = useState({
-        title: '',
-        description: '',
-        rentPeriod:[],
-        amenities: [],
-        price: '',
-        streetAddress: '',
-        city: '',
-        state: '',
-        name: '',
-        phone: '',
-        email: '',
-        comments: [],
-        images: [],
-        
-    })
-    const handleInputChange = (e) => {
-        const {name, value, checked, type} = e.target        
-
-        // Enter this block if the input/target is a checkbox
-        if(type==='checkbox'){
-            // If the input was checked, add it to the list of checked values
-            if(checked){
-                // if the array of checked values already exists, add the new value to the end
-                if(input[name]){
-                    input[name].push(value)
-                    setInput({...input, [name]: input[name]})
-                } 
-                // If the array doesn't exist, create it
-                else {
-                    setInput({...input, [name]: [value]})
-                }  
-            } 
-            // If the input was unchecked, remove it from the array of checked values
-            else {
-                const newRentPeriod = input[name].filter(input => input !== value)
-                setInput({...input, [name]: newRentPeriod})
-            }
-        } 
-        // If the input/target is not a check box, set the input to be the current value in the input field
-        else {
-            setInput({...input, [name]: value})
-        }
-    }
-
     const [newListingId, setNewListingId] = useState('')
 
-    const [error, setError] = useState(false);
-    const [submissionError, setSubmissionError] = useState(false);
-    const { mutateAsync: createListing } = useCreateListingMutation()
+    const createListingMutation = useCreateListingMutation()
+    const {
+        register,
+        handleSubmit,
+        trigger,
+        control,
+        formState: { errors },
+    } = useForm<UploadFormValues>({
+        mode: 'onSubmit',
+        reValidateMode: 'onChange',
+        defaultValues: {
+            title: '',
+            description: '',
+            rentPeriod: [],
+            amenities: [],
+            price: '',
+            streetAddress: '',
+            city: '',
+            state: '',
+            phone: '',
+            email: '',
+        },
+    })
+    const city = useWatch({
+        control,
+        name: 'city',
+    })
 
-    const handleCheckPage1 = () => {
-        const {title, description, rentPeriod, amenities, price } = input;
-
-
-        if(!title || !description || !rentPeriod || !price){
-            return setError(true)
-        }
-
-        if(!amenities){
-            setInput({...input, amenities: []})
-        }
-
-        setError(false)
-        setPage(1)
+    const handleCheckPage1 = async () => {
+        const isStepValid = await trigger(['title', 'description', 'rentPeriod', 'price'])
+        if(isStepValid) setPage(1)
     }
 
-    const handleCheckPage2 = () => {
-        const {streetAddress, city, state} = input;
-
-        if(!streetAddress || !city || !state){
-            return setError(true)
-        }
-
-        setError(false)
-        setPage(2)
+    const handleCheckPage2 = async () => {
+        const isStepValid = await trigger(['streetAddress', 'city', 'state'])
+        if(isStepValid) setPage(2)
     }
 
-    const handlePostListing = async (e) => {
-        e.preventDefault();
-
-        const {phone, email} = input;
-
-        if(!phone && !email){
-            return setError(true)
-        }
-
-        if(phone){
-            if(!validatePhone(phone)){
-                return setError(true)
+    const handlePostListing = (input: UploadFormValues) => {
+        createListingMutation.mutate(
+            { ...input, name: credentials.name, comments: [], images: [] },
+            {
+                onSuccess: (data) => {
+                    setNewListingId(data.id)
+                    setPage(3)
+                },
             }
-        }
-
-        // Have to check valid email before returning setValidPhone
-        if(email){
-            if(!validateEmail(email)){
-                return setError(true)
-            }
-        }
-
-        setError(false)
-        setSubmissionError(false)
-
-        const name = credentials.name;
-
-        try {
-            const location = await getGeocode(`${input.streetAddress},${input.city},${input.state}`)
-            const data = await createListing({
-                ...input,
-                name,
-                coordinates:{lat: String(location.lat), lng: String(location.lng)}
-            })
-
-            setNewListingId(data.id)
-            setPage(3)
-        } catch (err) {
-            console.log('Error posting listing', err)
-            setSubmissionError(true)
-        }
+        )
     }
 
     const validatePhone = (phone) => {
@@ -153,19 +96,19 @@ function UploadPage({signedIn, credentials}) {
 
     return (
         <div className='form__upload-container'>
-            <form className='form' onSubmit={handlePostListing}>
+            <form className='form' onSubmit={handleSubmit(handlePostListing)}>
                 {
-                    page===0 ?
+                page===0 ?
                     <>
-                        <UploadPage1 handleInputChange={handleInputChange} error={error} input={input} errorIcon={errorIcon}/>
+                        <UploadPage1 register={register} errors={errors} errorIcon={errorIcon}/>
                         <button type='button' className='button' onClick={handleCheckPage1}>Next</button>
                     </>
                     : ''
                 }
                 {
-                    page===1 ?
+                page===1 ?
                     <>
-                        <UploadPage2 handleInputChange={handleInputChange} error={error} input={input} errorIcon={errorIcon}/>
+                        <UploadPage2 register={register} errors={errors} errorIcon={errorIcon}/>
                         <div className='form__button-container'>
                             <button className='button--back' type='button' onClick={()=>setPage(0)}>Back</button> 
                             <button className='button' type='button' onClick={handleCheckPage2}>Next</button>
@@ -174,19 +117,18 @@ function UploadPage({signedIn, credentials}) {
                     : ''
                 }
                 {
-                    page===2 ?
+                page===2 ?
                     <>
                         <UploadPage3 
-                            handleInputChange={handleInputChange} 
-                            error={error} 
-                            input={input} 
+                            register={register}
+                            errors={errors}
                             errorIcon={errorIcon}
                             validateEmail={validateEmail}
                             validatePhone={validatePhone}
                         />
                         <div className='form__button-container'>
                             <button type='button' className='button--back'  onClick={()=>setPage(1)}>Back</button> 
-                            <button className='button' type='submit'>Next</button>
+                            <button className='button' type='submit' disabled={createListingMutation.isPending}>Next</button>
                         </div>
                     </>
                     : ''
@@ -195,14 +137,14 @@ function UploadPage({signedIn, credentials}) {
                 {
                 page===3 ?
                 <>
-                    <UploadPageImageForm newListingId={newListingId} city={input.city} errorIcon={errorIcon}/>
+                    <UploadPageImageForm newListingId={newListingId} city={city} errorIcon={errorIcon}/>
                 </>
                 : ''
                 }
             <p className='form__footnote'>* indicates a required field</p>
             <p className='form__footnote'>** indicates at least one field must be selected</p>
             {
-                submissionError ?
+                createListingMutation.isError ?
                 <p className='error-text'><img src={errorIcon} alt='error icon'/>Unable to post listing. Please try again.</p>
                 : ''
             }
