@@ -10,10 +10,11 @@
 - React has been upgraded to 19.
 - TanStack Query is installed and configured in the client using the current major version.
 - API reads and writes now flow through `src/api` and query/mutation hooks.
+- Forms (search, login, sign up, comments, listing upload, image upload) use React Hook Form; server errors come from mutation state.
 
 ## Next Steps
 
-1. Commit the current frontend test and test utility changes.
+1. ~~Commit the current frontend test and test utility changes.~~
 2. ~~Install and configure TanStack Query in the client.~~
 3. ~~Add `QueryClientProvider` at the app root.~~
 4. ~~Extend `renderWithProviders` with a test `QueryClient`.~~
@@ -50,17 +51,71 @@
 - `App.tsx`: initialize auth state directly from `localStorage` instead of using effects to mirror `token` and `name`.
 - `IndividualListing.tsx`: remove effects that copy query data into local state, reset image state from listing data, and mirror favorite query results.
 - `SignUp.tsx`: derive password mismatch state from form input instead of synchronizing it in an effect.
-- Result: all client HTTP calls now go through `src/api`, server state uses TanStack Query hooks, and `client/src` no longer has `useEffect` calls.
+- Result: all client HTTP calls now go through `src/api`, server state uses TanStack Query hooks, and app code in `client/src` no longer has `useEffect` calls (one remains in test utilities).
 - Verification: `npm test`, `npm run typecheck`, and `npm run build` passed after each cleanup slice.
 
 ### Remaining Frontend Follow-ups
 
 - Add stronger TypeScript types for API payloads and query/mutation hook return data.
 - Consider grouping related query/mutation hooks by feature if the hook folders grow.
-- Add tests for registration and the successful upload flow.
 - Consider replacing `alert` in `SignUp` with app-level feedback UI.
-- Keep form-state extraction for a later pass; current forms still have local validation logic in components.
-- Refactor `UploadPage` into a form hook with schema-based validation and smaller step components.
+- Refactor `UploadPage` into a form hook with schema-based validation and smaller step components. (Partly done: React Hook Form with per-step `trigger` validation is in place; schema validation and smaller step components remain.)
+- After image upload, navigate to the newly created listing detail page instead of the city listings page.
 - Refactor `IndividualListing` into smaller hooks/components for listing media, favorites, and comments.
 - Refactor `ListingsPage` into smaller hooks/components for loading states, favorites view, and city listing/map behavior.
-- Refactor `SignUp` to use shared form validation patterns, clearer error handling, and app-level success feedback.
+- Refactor `SignUp` to use app-level success feedback instead of `alert`. (Shared React Hook Form validation and mutation-state error handling are done.)
+- Update frontend authentication flow before continuing component-level refactors.
+- Refactor `Rating` so interactive ratings use semantic form controls, such as a radio group or buttons with accessible names, instead of clickable `<img>` elements.
+- Split `Rating` into separate read-only display and interactive input variants, or add an explicit mode prop, so comment display and comment form behavior are not coupled.
+- Generate rating options from an array rather than repeating five nearly identical star blocks.
+- Assert the remaining request payloads in form tests: the login body, and the image-upload `FormData` (MSW 1.x does not reliably expose multipart bodies, so this may need an API-layer spy or an MSW upgrade). Sign up, comments, and listing upload are covered.
+- Add test coverage for login/sign-up modal cancellation and switching between the two modals.
+- Strengthen the "cancels and resets a signed-in user review form" test: assert no filled stars remain instead of only checking that some empty stars exist.
+- Tidy tests: move shared helpers (`waitForListing`, `fillReview`, `advanceToImageStep`) to the top of their files and reuse them in older tests; remove tests now covered by newer ones ("posts a listing and advances to image upload", "uploads a listing image after listing creation").
+- Add a visible disabled style for buttons (for example `.button:disabled`); submit buttons are now disabled while requests run but look the same as enabled ones.
+- Use one listings cache: `useListingsQuery`, `useListingQuery`, and `useCityListingsQuery` all fetch the full list under different query keys. Share `queryKeys.listings` and keep filtering in `select`.
+- Have comment create/delete mutations update the query cache with `setQueryData` and remove the `updatedListing` local state in `IndividualListing` (it duplicates server state and leaves the cache stale).
+
+## React Hook Form Migration
+
+### Addressed
+
+- Migrated home search, login, sign up, comment, listing upload, and image upload forms from hand-rolled `useState` validation to React Hook Form.
+- Upload steps validate with `trigger` before advancing; values persist when navigating back between steps.
+- Contact validation (phone or email required) reads the other field from validator form values; sign-up password confirmation does the same.
+- Server errors are read from mutation state (`isError`) instead of form errors, so failed submissions can be retried.
+- Geocoding moved into `useCreateListingMutation`, so geocode and create failures share one error state.
+- `CommentSection` owns the create-comment mutation; a failed review keeps the draft, and Cancel clears both the form and the error.
+- Submit buttons are disabled while their mutation is pending, preventing duplicate listings and reviews.
+- Sign up no longer sends `confirmPassword` to the API.
+- Upload form values contain only form fields; `name`, `comments`, and `images` are added when building the request.
+- Login shows "Invalid login credentials" for 400/401 responses and a generic error otherwise.
+- Home search trims whitespace and treats a whitespace-only location as missing.
+- Home search is disabled while listings load and shows an error if they fail.
+- Fixed form copy and label bugs: login username error text, sign-up name error text, label `htmlFor` targets, and redundant `name` attributes.
+- Added tests for: sign up (validation, mismatch, success payload, failure), login (validation, failure, generic failure, retry), home search (missing, no listings, whitespace, loading, error), comments (validation clearing, cancel, payload, failure, retry), and upload (each step's validation, contact rules, payload, phone-only, geocode failure and retry, back navigation, pending state, image validation, image failure, post-upload navigation).
+
+## Authentication
+
+See [docs/auth.md](./docs/auth.md) for the full plan.
+
+### Addressed
+
+- Phase 1 stopgap hardening: JWT verification on write routes, ownership checks for comments, listing images and favorites, registration validation and duplicate-username checks, generic login errors, bcrypt cost 12 with rehash on login, rate limits on login/register/geocode, required strong `JWT_SECRET`, CORS limited to `CLIENT_ORIGIN`, bearer token sent by the client, and server tests with supertest.
+
+### Remaining
+
+- Upgrade `jsonwebtoken` to v9 (`npm install jsonwebtoken@9` in `server`) until JWTs are removed.
+- Stop tracking `server/data/users.json` (it contains a password hash) and replace it with a seed script or example file.
+- Phase 2: move users, listings, comments and favorites into a database with user IDs.
+- Phase 3: replace JWTs in `localStorage` with HttpOnly cookie sessions and a `useSession` hook; move favorites to `/me/favorites`.
+- Add schema validation (zod) for request bodies and `helmet` for security headers.
+- Phase 4 (optional): password reset, email verification, TOTP two-factor authentication, Google sign-in, passkeys.
+
+## Known Bugs
+
+- `/login` and `/register` routes in `App.tsx` render `Login` and `SignUp` without props. Visiting either URL and clicking Cancel throws, and a successful login stores the token and then throws on `setShowLogin`. Nothing links to these routes (the header uses modals), so remove them and let the catch-all redirect to `/home`.
+- New listings and seed data store `rentPeriod` and `price` differently. Seed data uses `'Daily, Weekly, Monthly'` and `'$30'`; the upload form sends `['Daily', 'Weekly']` and `'25'`. Cards and the detail page render `rentPeriod` directly, so new listings show "DailyWeekly" and prices without `$`. Pick one format (ideally as part of stricter domain types) and migrate the seed data; until then, join arrays when displaying.
+- A listing is created before its image is uploaded. If the upload fails or the user leaves, the listing is saved with `images: []` and cards/detail pages render broken images (`src="undefined"`). Add a placeholder image, or create the listing and upload the image in one step.
+- Deleting a comment and adding/removing a favorite fail silently (`console.log` only) and are not disabled while pending. Show an error and disable the control during the request.
+- The server's `/geocode` route proxies Google with the server's API key and stays public because signed-out visitors search listings. It is now rate limited per IP (30 per minute); consider caching results or restricting the key further.

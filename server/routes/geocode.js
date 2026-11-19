@@ -1,11 +1,16 @@
 const router = require('express').Router();
+const rateLimit = require('../middleware/rateLimit');
+
+// The listings page geocodes searches for signed-out visitors, so this route stays public;
+// the limit stops one client from spending the Google API key's quota.
+const geocodeLimiter = rateLimit({ windowMs: 60 * 1000, max: 30 });
 
 const GOOGLE_GEOCODING_URL =
   process.env.GOOGLE_GEOCODING_URL ||
   'https://maps.googleapis.com/maps/api/geocode/json?address=';
 const { GOOGLE_API_KEY } = process.env;
 
-router.route('/').get(async (req, res) => {
+router.route('/').get(geocodeLimiter, async (req, res) => {
   const { address } = req.query;
 
   if (!address) {
@@ -33,5 +38,7 @@ router.route('/').get(async (req, res) => {
     return res.status(500).json({ message: 'Error fetching geocode' });
   }
 });
+
+router.geocodeLimiter = geocodeLimiter;
 
 module.exports = router;

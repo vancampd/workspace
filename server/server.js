@@ -1,23 +1,17 @@
-const express = require('express');
-const app = express();
-const cors = require('cors');
 require('dotenv').config();
-const listingsRoutes = require('./routes/listings');
-const favoritesRoutes = require('./routes/favorites');
-const usersRoutes = require('./routes/users');
-const geocodeRoutes = require('./routes/geocode');
-const {PORT} = process.env || 5000;
 
-app.use(cors());
-app.use(express.json());
-app.use('/public', express.static(__dirname + '/public'))
+const { JWT_SECRET } = process.env;
 
-app.use('/listings', listingsRoutes);
+// Refuse to start with a missing or placeholder secret: anyone who knows it can forge logins.
+if (!JWT_SECRET || JWT_SECRET === 'replace_me' || JWT_SECRET.length < 32) {
+  console.error(
+    'JWT_SECRET must be set to a random value of at least 32 characters. ' +
+      "Generate one with: node -e \"console.log(require('crypto').randomBytes(48).toString('hex'))\""
+  );
+  process.exit(1);
+}
 
-app.use('/favorites', favoritesRoutes);
-
-app.use('/users', usersRoutes);
-
-app.use('/geocode', geocodeRoutes);
+const app = require('./app');
+const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => console.log(`The server is running on port ${PORT}`));

@@ -1,119 +1,128 @@
-import {useState} from 'react'
 import errorIcon from '../../assets/images/error-12px.svg';
 import { useRegisterMutation } from '../../hooks/mutations/useRegisterMutation';
+import { useForm } from 'react-hook-form';
+
+type SignUpFormValues = {
+    name: string;
+    username: string;
+    password: string;
+    confirmPassword: string;
+};
 
 function SignUp({setShowRegister, setShowLogin}: any) {
 
-    const [input, setInput] = useState<any>({});
-
-    const [error, setError] = useState(false);
-
     const registerMutation = useRegisterMutation();
-    const passwordMismatch = Boolean(input.password || input.confirmPassword) && input.password !== input.confirmPassword;
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<SignUpFormValues>({
+        mode: 'onSubmit',
+        reValidateMode: 'onChange',
+        defaultValues: {
+            name: '',
+            username: '',
+            password: '',
+            confirmPassword: '',
+        },
+    });
 
-    const handleInputChange = (e) => {
-
-        const {name, value} = e.target;
-
-        setInput({...input, [name]: value});
-    }
-
-    const handleSignUp = (e) => {
-        e.preventDefault();
-
-        const {name, username, password, confirmPassword} = input;
-
-        if(!name || !username || !password || !confirmPassword){
-            return setError(true) 
-        }
-
-        if(password !== confirmPassword) return
-
-        registerMutation.mutate(input, {
+    const handleSignUp = ({ confirmPassword: _confirmPassword, ...newUser }: SignUpFormValues) => {
+        registerMutation.mutate(newUser, {
         onSuccess: () => {
             alert('Registered Successfully')
             setShowRegister(false);
             setShowLogin(true);
         },
-        onError: (err) => console.log('Error signing up', err)
         })
     }
 
     return (
         <div className='overlay'>
             <div className='login-container'>
-                <form className='form' onSubmit={handleSignUp}>
+                <form className='form' onSubmit={handleSubmit(handleSignUp)}>
                     <h2 className='form__header'>Sign Up</h2>
                     <div className='form__element-container'>
                         <label className='form__label' htmlFor='name'>Name:</label>
-                        <input 
-                            className='form__input' 
-                            name='name' 
-                            id='name' 
+                        <input
+                            className='form__input'
+                            id='name'
                             placeholder="Enter your full name"
-                            onChange={handleInputChange}
+                            {...register('name', {
+                                required: 'You must enter your name',
+                            })}
                         />
                         {
-                            error && !input.username ? 
-                            <p className='error-text'><img src={errorIcon} alt='error icon'/>You must enter a username</p> 
+                            errors.name ?
+                            <p className='error-text'><img src={errorIcon} alt='error icon'/>{errors.name.message}</p>
                             : ''
                         }
                     </div>
                     <div className='form__element-container'>
                         <label className='form__label' htmlFor='username'>Username:</label>
-                        <input 
-                            className='form__input' 
-                            name='username' 
-                            id='username' 
+                        <input
+                            className='form__input'
+                            id='username'
                             placeholder="Username"
-                            onChange={handleInputChange}
+                            {...register('username', {
+                                required: 'You must enter a username',
+                            })}
                         />
                         {
-                            error && !input.username ? 
-                            <p className='error-text'><img src={errorIcon} alt='error icon'/>You must enter a username</p> 
+                            errors.username ?
+                            <p className='error-text'><img src={errorIcon} alt='error icon'/>{errors.username.message}</p>
                             : ''
                         }
                     </div>
                     <div className='form__element-container'>
                         <label className='form__label' htmlFor='password'>Password:</label>
-                        <input 
-                            className='form__input' 
-                            name='password' 
-                            id='password' 
+                        <input
+                            className='form__input'
+                            id='password'
                             placeholder="Password"
                             type='password'
-                            onChange={handleInputChange}
+                            {...register('password', {
+                                required: 'You must enter a password',
+                                minLength: {
+                                    value: 8,
+                                    message: 'Password must be at least 8 characters',
+                                },
+                                deps: 'confirmPassword',
+                            })}
                         />
                         {
-                            error && !input.password ? 
-                            <p className='error-text'><img src={errorIcon} alt='error icon'/>You must enter a password</p> 
+                            errors.password ?
+                            <p className='error-text'><img src={errorIcon} alt='error icon'/>{errors.password.message}</p>
                             : ''
                         }
                     </div>
                     <div className='form__element-container'>
-                        <label className='form__label' htmlFor='password'>Confirm password:</label>
-                        <input 
-                            className='form__input' 
-                            name='confirmPassword' 
-                            id='confirmPassword' 
+                        <label className='form__label' htmlFor='confirmPassword'>Confirm password:</label>
+                        <input
+                            className='form__input'
+                            id='confirmPassword'
                             placeholder="Confirm Password"
                             type='password'
-                            onChange={handleInputChange}
+                            {...register('confirmPassword', {
+                                required: 'You must confirm your password',
+                                validate: (value, formValues) =>
+                                    value === formValues.password || "Passwords don't match",
+                            })}
                         />
                         {
-                            error && !input.confirmPassword ? 
-                            <p className='error-text'><img src={errorIcon} alt='error icon'/>You must enter a password</p> 
+                            errors.confirmPassword ?
+                            <p className='error-text'><img src={errorIcon} alt='error icon'/>{errors.confirmPassword.message}</p>
                             : ''
                         }
                         {
-                            passwordMismatch ? 
-                            <p className='error-text'><img src={errorIcon} alt='error icon'/>Passwords don't match</p> 
+                            registerMutation.isError ?
+                            <p className='error-text'><img src={errorIcon} alt='error icon'/>Unable to register. Please try again.</p>
                             : ''
                         }
                     </div>
                     <div className='form__button-container'>
-                        <button className='button--back' type='button' onClick={()=>setShowRegister(false)}>Cancel</button> 
-                        <button className='button' type='submit'>Sign Up</button>
+                        <button className='button--back' type='button' onClick={()=>setShowRegister(false)}>Cancel</button>
+                        <button className='button' type='submit' disabled={registerMutation.isPending}>Sign Up</button>
                     </div>
                 </form>
             </div>
