@@ -15,7 +15,7 @@ I've since revisited the project to modernize its frontend architecture and appl
 - Register and log in with JWT-based authentication
 - Save favorite listings
 - View and submit comments and ratings
-- Explore locations using Google Maps and geocoding
+- Explore locations on an interactive map and with geocoding
 
 ## Tech Stack
 
@@ -27,6 +27,7 @@ I've since revisited the project to modernize its frontend architecture and appl
 - React Router
 - Axios
 - React Hook Form
+- MapLibre GL (via react-map-gl) with OpenFreeMap tiles
 - Sass
 
 ### Backend
@@ -109,7 +110,7 @@ The original implementation uses JSON files for persistence. Replacing this with
 
 - Node.js 22
 - npm
-- Google Maps API credentials
+- Google API key (server-side Geocoding only)
 
 ### Installation
 
@@ -143,10 +144,11 @@ cp server/.env.example server/.env
 
 Configure the environment variables using the example files as a reference.
 
-Two separate Google keys are used:
+Only one Google key is used:
 
 - `server/.env` `GOOGLE_API_KEY`: used by the backend `/geocode` route. Keep it private and restrict it to the Geocoding API (and by IP in production).
-- `client/.env` `VITE_GOOGLE_MAPS_API_KEY`: loaded by the browser for the Maps JavaScript API, so it is public by design. Restrict it in Google Cloud to the Maps JavaScript API and your HTTP referrers (`localhost:*` and your production domain).
+
+The map uses MapLibre GL with OpenFreeMap tiles and needs no API key.
 
 Do not commit real credentials or API keys.
 

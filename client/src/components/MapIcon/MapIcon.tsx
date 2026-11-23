@@ -2,7 +2,12 @@ import { Icon } from '@iconify/react'
 import locationIcon from '@iconify/icons-mdi/map-marker'
 import './MapIcon.scss'
 
-const MapIcon = ({ text, href }: any) => {
+interface MapIconProps {
+    text: string | number
+    href: string | number
+}
+
+const MapIcon = ({ text, href }: MapIconProps) => {
     return (
     <div className="icon-container">
       <a href={`#${href}`} className='icon__link'>

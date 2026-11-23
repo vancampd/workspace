@@ -11,6 +11,7 @@
 - TanStack Query is installed and configured in the client using the current major version.
 - API reads and writes now flow through `src/api` and query/mutation hooks.
 - Forms (search, login, sign up, comments, listing upload, image upload) use React Hook Form; server errors come from mutation state.
+- The map moved from google-map-react to MapLibre GL (react-map-gl) with keyless OpenFreeMap tiles; geocoding still uses the server's Google `/geocode` route.
 
 ## Next Steps
 
