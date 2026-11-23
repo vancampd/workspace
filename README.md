@@ -143,6 +143,11 @@ cp server/.env.example server/.env
 
 Configure the environment variables using the example files as a reference.
 
+Two separate Google keys are used:
+
+- `server/.env` `GOOGLE_API_KEY`: used by the backend `/geocode` route. Keep it private and restrict it to the Geocoding API (and by IP in production).
+- `client/.env` `VITE_GOOGLE_MAPS_API_KEY`: loaded by the browser for the Maps JavaScript API, so it is public by design. Restrict it in Google Cloud to the Maps JavaScript API and your HTTP referrers (`localhost:*` and your production domain).
+
 Do not commit real credentials or API keys.
 
 ### Running Locally

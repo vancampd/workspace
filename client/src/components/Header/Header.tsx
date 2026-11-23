@@ -14,11 +14,11 @@ function Header({showLogin, setShowLogin, showRegister, setShowRegister, signedI
                     <ul className='header__nav-list'>
                         {
                             !signedIn ?
-                                <li className='header__list-item' onClick={()=>setShowLogin(true)}>Sign In</li>
+                                <li className='header__list-item' data-label='Sign In' onClick={()=>setShowLogin(true)}>Sign In</li>
                             : <>
-                                <li className='header__list-item'><NavLink to='/favorites' className={({ isActive }) => isActive ? 'header__link header__link--active' : 'header__link'}>Favorites</NavLink></li>
-                                <li className='header__list-item'><NavLink to='/post' className={({ isActive }) => isActive ? 'header__link header__link--active' : 'header__link'}>Post Your Space</NavLink></li>
-                                <li className='header__list-item--logout' onClick={()=>{localStorage.clear(); setSignedIn(false)}}>Logout</li>
+                                <li className='header__list-item' data-label='Favorites'><NavLink to='/favorites' className={({ isActive }) => isActive ? 'header__link header__link--active' : 'header__link'}>Favorites</NavLink></li>
+                                <li className='header__list-item' data-label='Post Your Space'><NavLink to='/post' className={({ isActive }) => isActive ? 'header__link header__link--active' : 'header__link'}>Post Your Space</NavLink></li>
+                                <li className='header__list-item--logout' data-label='Logout' onClick={()=>{localStorage.clear(); setSignedIn(false)}}>Logout</li>
                             </>
                         }
                         

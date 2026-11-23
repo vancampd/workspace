@@ -1,12 +1,36 @@
-function UploadPage3({register, errors, errorIcon, validatePhone, validateEmail}) {
+import { useFormContext } from 'react-hook-form';
+import errorIcon from '../../assets/images/error-12px.svg';
+import type { UploadFormValues } from '../../pages/UploadPage/uploadFormValues';
+
+// Accepts 10 digits (optionally prefixed with 1) with common separators.
+const validatePhone = (phone: string) => {
+    if (!/^[\d\s().+-]+$/.test(phone)) return false;
+
+    const digits = phone.replace(/\D/g, '');
+
+    return digits.length === 10 || (digits.length === 11 && digits.startsWith('1'));
+};
+
+const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+function UploadPage3() {
+    const {
+        register,
+        formState: { errors },
+    } = useFormContext<UploadFormValues>();
+
     const contactRequiredError =
         errors.phone?.type === 'contactRequired' ||
         errors.email?.type === 'contactRequired';
-    const getContactValidation = (otherField, validateValue, invalidMessage) => ({
-        contactRequired: (value, formValues) =>
+    const getContactValidation = (
+        otherField: 'phone' | 'email',
+        validateValue: (value: string) => boolean,
+        invalidMessage: string
+    ) => ({
+        contactRequired: (value: string, formValues: UploadFormValues) =>
             Boolean(value || formValues[otherField]) ||
             'Either a valid phone or a valid email is required',
-        validFormat: (value) => !value || validateValue(value) || invalidMessage,
+        validFormat: (value: string) => !value || validateValue(value) || invalidMessage,
     });
 
     return (
@@ -22,6 +46,7 @@ function UploadPage3({register, errors, errorIcon, validatePhone, validateEmail}
                 <input
                     className='form__input'
                     id='phone'
+                    type='tel'
                     placeholder="Phone Number"
                     {...register('phone', {
                         deps: 'email',
@@ -43,6 +68,7 @@ function UploadPage3({register, errors, errorIcon, validatePhone, validateEmail}
                 <input
                     className='form__input'
                     id='email'
+                    type='email'
                     placeholder="Email"
                     {...register('email', {
                         deps: 'phone',

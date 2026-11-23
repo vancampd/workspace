@@ -1,6 +1,17 @@
-function UploadPage1({register, errors, errorIcon}) {
+import { useFormContext } from 'react-hook-form';
+import errorIcon from '../../assets/images/error-12px.svg';
+import type { UploadFormValues } from '../../pages/UploadPage/uploadFormValues';
+
+const RENT_PERIODS = ['Daily', 'Weekly', 'Monthly'];
+
+function UploadPage1() {
+    const {
+        register,
+        formState: { errors },
+    } = useFormContext<UploadFormValues>();
+
     const rentPeriodRules = {
-        validate: (value) =>
+        validate: (value: string[]) =>
             value.length > 0 || 'You must leave a time period',
     };
 
@@ -45,36 +56,18 @@ function UploadPage1({register, errors, errorIcon}) {
                     <div className='form__inner-left'>
                         <label className='form__label'>**Length of availability:</label>
                         <div className='form__check-box-container'>
-                            <label className='form__label'>
-                                <input
-                                    className='form__input'
-                                    id='daily'
-                                    value='Daily'
-                                    type='checkbox'
-                                    {...register('rentPeriod', rentPeriodRules)}
-                                />
-                                Daily
-                            </label>
-                            <label className='form__label'>
-                                <input
-                                    className='form__input'
-                                    id='weekly'
-                                    value='Weekly'
-                                    type='checkbox'
-                                    {...register('rentPeriod', rentPeriodRules)}
-                                />
-                                Weekly
-                            </label>
-                            <label className='form__label'>
-                                <input
-                                    className='form__input'
-                                    id='monthly'
-                                    value='Monthly'
-                                    type='checkbox'
-                                    {...register('rentPeriod', rentPeriodRules)}
-                                />
-                                Monthly
-                            </label>
+                            {RENT_PERIODS.map((period) => (
+                                <label className='form__label' key={period}>
+                                    <input
+                                        className='form__input'
+                                        id={period.toLowerCase()}
+                                        value={period}
+                                        type='checkbox'
+                                        {...register('rentPeriod', rentPeriodRules)}
+                                    />
+                                    {period}
+                                </label>
+                            ))}
                             {
                                 errors.rentPeriod ?
                                 <p className='error-text'><img src={errorIcon} alt='error icon'/> {errors.rentPeriod.message}</p>
@@ -140,7 +133,7 @@ function UploadPage1({register, errors, errorIcon}) {
                 </div>
             </div>
             <div className='form__element-container'>
-                <label className='form__label' htmlFor='price'>Daily price:</label>
+                <label className='form__label' htmlFor='price'>*Daily price:</label>
                 <input
                     className='form__input'
                     id='price'

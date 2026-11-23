@@ -6,14 +6,14 @@ export const getListings = async () => {
   return response.data;
 };
 
-export const createListing = async (listing) => {
-  const response = await apiClient.post('listings', listing);
+// The listing fields are sent as a JSON string next to the image so the
+// server can run its image middleware before creating the listing.
+export const createListing = async ({ image, ...listing }) => {
+  const data = new FormData();
+  data.append('listing', JSON.stringify(listing));
+  data.append('file', image);
 
-  return response.data;
-};
-
-export const uploadListingImage = async ({ listingId, data }) => {
-  const response = await apiClient.post(`listings/${listingId}/images`, data);
+  const response = await apiClient.post('listings', data);
 
   return response.data;
 };

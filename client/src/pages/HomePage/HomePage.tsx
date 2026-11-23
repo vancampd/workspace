@@ -10,13 +10,10 @@ import { useForm } from 'react-hook-form';
 
 type SearchFormValues = {
     location: string;
-    startDate: string;
-    endDate: string;
 };
 
 
 function HomePage() {
-
     const {
         data: listings = [],
         isPending: areListingsPending,
@@ -32,8 +29,6 @@ function HomePage() {
         reValidateMode: 'onChange',
         defaultValues: {
             location: '',
-            startDate: '',
-            endDate: '',
         },
     });
 
@@ -79,18 +74,6 @@ function HomePage() {
                         <p className='error-text'><img src={errorIcon} alt='error icon'/>{errors.location.message}</p>
                         : ''
                     }
-                </div>
-                <div className='form__element-container'>
-                    <div className='form__inner-container'>
-                        <div className='form__inner-left'>
-                            <label className='form__label' htmlFor='startDate'>Start date:</label>
-                            <input type='date' className='form__input' id='startDate' placeholder='Select a date' {...register('startDate')}/>
-                        </div>
-                        <div className='form__inner-right'>
-                            <label className='form__label' htmlFor='endDate'>End date:</label>
-                            <input type='date' className='form__input' id='endDate' placeholder='Select a date' {...register('endDate')}/>
-                        </div>
-                    </div>
                 </div>
                 <button
                     className='button'
