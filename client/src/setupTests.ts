@@ -15,5 +15,6 @@ vi.mock('react-map-gl/maplibre', async () => {
   return {
     Map: ({ children }: Props) => createElement('div', { 'data-testid': 'map' }, children),
     Marker: ({ children }: Props) => createElement('div', { 'data-testid': 'map-marker' }, children),
+    Popup: ({ children }: Props) => createElement('div', { 'data-testid': 'map-popup' }, children),
   };
 });
