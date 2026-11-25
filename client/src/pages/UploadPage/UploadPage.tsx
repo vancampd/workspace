@@ -5,7 +5,7 @@ import UploadPage1 from '../../components/UploadPage1';
 import UploadPage2 from '../../components/UploadPage2';
 import UploadPage3 from '../../components/UploadPage3';
 import UploadPage4 from '../../components/UploadPage4';
-import errorIcon from '../../assets/images/error-12px.svg';
+import FormError from '../../components/FormError';
 import { useCreateListingMutation } from '../../hooks/mutations/useCreateListingMutation';
 import { useGeocodeAddressMutation } from '../../hooks/mutations/useGeocodeAddressMutation';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -147,7 +147,7 @@ function UploadPage({signedIn, credentials}) {
             <p className='form__footnote'>** indicates at least one field must be selected</p>
             {
                 createListingMutation.isError ?
-                <p className='error-text'><img src={errorIcon} alt='error icon'/>Unable to post listing. Please try again.</p>
+                <FormError>Unable to post listing. Please try again.</FormError>
                 : ''
             }
         </div>

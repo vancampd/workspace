@@ -4,9 +4,10 @@ import Add from '../../components/Add';
 import globe from '../../assets/images/Blue_globe_icon.svg';
 import office1 from '../../assets/images/office1.jpeg';
 import office2 from '../../assets/images/office2.jpeg';
-import errorIcon from '../../assets/images/error-12px.svg';
+import FormError from '../../components/FormError';
+import TextField from '../../components/TextField';
 import { useListingsQuery } from '../../hooks/queries/useListingsQuery';
-import { useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 
 type SearchFormValues = {
     location: string;
@@ -20,17 +21,14 @@ function HomePage() {
         isError: didListingsFail,
     } = useListingsQuery();
     const navigate = useNavigate();
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<SearchFormValues>({
+    const methods = useForm<SearchFormValues>({
         mode: 'onSubmit',
         reValidateMode: 'onChange',
         defaultValues: {
             location: '',
         },
     });
+    const { handleSubmit } = methods;
 
     const findListingCity = (location: string) => {
         const normalizedLocation = location.trim().toLowerCase()
@@ -51,15 +49,14 @@ function HomePage() {
 
     return(
         <div>
-            <form className='form'  onSubmit={handleSubmit(handleSearch)}>
-                <h2 className='form__header'>Find a workspace</h2>
-                <div className='form__element-container'>
-                    <label className='form__label' htmlFor='location'>Location:</label>
-                    <input
-                        className='form__input'
-                        id='location'
+            <FormProvider {...methods}>
+                <form className='form'  onSubmit={handleSubmit(handleSearch)}>
+                    <h2 className='form__header'>Find a workspace</h2>
+                    <TextField
+                        name='location'
+                        label='Location:'
                         placeholder="Enter the city you're working in"
-                        {...register('location', {
+                        rules={{
                             validate: {
                                 required: (location) =>
                                     location.trim() !== '' || 'You must enter a location',
@@ -67,26 +64,17 @@ function HomePage() {
                                     Boolean(findListingCity(location)) ||
                                     'Sorry, there are no listings currently in that city',
                             },
-                        })}
+                        }}
                     />
-                    {
-                        errors.location ?
-                        <p className='error-text'><img src={errorIcon} alt='error icon'/>{errors.location.message}</p>
-                        : ''
-                    }
-                </div>
-                <button
-                    className='button'
-                    disabled={areListingsPending || didListingsFail}
-                >
-                    Search
-                </button>
-                {
-                    didListingsFail ?
-                    <p className='error-text'><img src={errorIcon} alt='error icon'/>Unable to load listings. Please try again.</p>
-                    : ''
-                }
-            </form>
+                    <button
+                        className='button'
+                        disabled={areListingsPending || didListingsFail}
+                    >
+                        Search
+                    </button>
+                    {didListingsFail ? <FormError>Unable to load listings. Please try again.</FormError> : ''}
+                </form>
+            </FormProvider>
             <Add
                 heading='Become one of our 1000s of locations across the world'
                 icon={globe}

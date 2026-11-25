@@ -1,7 +1,7 @@
 import "./CommentSection.scss";
 import Comment from "../Comment";
 import Rating from "../Rating";
-import errorIcon from "../../assets/images/error-12px.svg";
+import FormError from "../FormError";
 import { useForm, useWatch } from "react-hook-form";
 import { useCreateCommentMutation } from "../../hooks/mutations/useCommentMutations";
 
@@ -106,9 +106,7 @@ function CommentSection({
                 })}
               />
               {errors.rating ? (
-                <p className="error-text">
-                  <img src={errorIcon} alt="error icon" /> {errors.rating.message}
-                </p>
+                <FormError id="rating-error">{errors.rating.message}</FormError>
               ) : (
                 ""
               )}
@@ -125,6 +123,8 @@ function CommentSection({
                 <input
                   className="form__input"
                   id="comment"
+                  aria-invalid={errors.comment ? true : undefined}
+                  aria-describedby={errors.comment ? "comment-error" : undefined}
                   placeholder="Leave review here"
                   {...register("comment", {
                     required: "Text is required in the review field",
@@ -132,18 +132,14 @@ function CommentSection({
                 />
               </div>
               {errors.comment ? (
-                <p className="error-text">
-                  <img src={errorIcon} alt="error icon" />{" "}
-                  {errors.comment.message}
-                </p>
+                <FormError id="comment-error">{errors.comment.message}</FormError>
               ) : (
                 ""
               )}
               {createCommentMutation.isError ? (
-                <p className="error-text">
-                  <img src={errorIcon} alt="error icon" /> Unable to submit your
-                  review. Please try again.
-                </p>
+                <FormError>
+                  Unable to submit your review. Please try again.
+                </FormError>
               ) : (
                 ""
               )}

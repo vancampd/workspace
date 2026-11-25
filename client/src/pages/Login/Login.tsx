@@ -1,8 +1,9 @@
 import './Login.scss';
-import errorIcon from '../../assets/images/error-12px.svg';
+import FormError from '../../components/FormError';
+import TextField from '../../components/TextField';
 import jwt_decode from 'jwt-decode';
 import { useLoginMutation } from '../../hooks/mutations/useLoginMutation';
-import { useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 
 type LoginFormValues = {
     username: string;
@@ -12,11 +13,7 @@ type LoginFormValues = {
 function Login({setShowRegister, setShowLogin, setSignedIn, setCredentials}: any) {
 
     const loginMutation = useLoginMutation()
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<LoginFormValues>({
+    const methods = useForm<LoginFormValues>({
         mode: 'onSubmit',
         reValidateMode: 'onChange',
         defaultValues: {
@@ -24,6 +21,7 @@ function Login({setShowRegister, setShowLogin, setSignedIn, setCredentials}: any
             password: '',
         },
     })
+    const { handleSubmit } = methods
 
     const loginErrorStatus = (loginMutation.error as { response?: { status?: number } } | null)
         ?.response?.status
@@ -49,55 +47,31 @@ function Login({setShowRegister, setShowLogin, setSignedIn, setCredentials}: any
     return (
         <div className='overlay'>
             <div className='login-container'>
-                <form className='form' onSubmit={handleSubmit(handleLogin)}>
-                    <h2 className='form__header'>Login</h2>
-                    <div className='form__element-container'>
-                        <label className='form__label' htmlFor='username'>Username:</label>
-                        <input
-                            className='form__input'
-                            id='username'
-                            placeholder="Username"
-                            {...register('username', {
-                                required: 'You must enter a username',
-                            })}
+                <FormProvider {...methods}>
+                    <form className='form' onSubmit={handleSubmit(handleLogin)}>
+                        <h2 className='form__header'>Login</h2>
+                        <TextField
+                            name='username'
+                            label='Username:'
+                            placeholder='Username'
+                            rules={{ required: 'You must enter a username' }}
                         />
-                        {
-                            errors.username ?
-                            <p className='error-text'><img src={errorIcon} alt='error icon'/>{errors.username.message}</p>
-                            : ''
-                        }
-
-                    </div>
-                    <div className='form__element-container'>
-                        <label className='form__label' htmlFor='password'>Password:</label>
-                        <input
-                            className='form__input'
-                            id='password'
-                            placeholder="Password"
+                        <TextField
+                            name='password'
+                            label='Password:'
+                            placeholder='Password'
                             type='password'
-                            {...register('password', {
-                                required: 'You must enter a password',
-                            })}
+                            rules={{ required: 'You must enter a password' }}
                         />
-                        {
-                            errors.password ?
-                            <p className='error-text'><img src={errorIcon} alt='error icon'/>{errors.password.message}</p>
-                            : ''
-                        }
 
-                    </div>
-
-                    <div className='form__button-container'>
-                        <button className='button--back' type='button' onClick={()=>setShowLogin(false)}>Cancel</button>
-                        <button className='button' type='submit' disabled={loginMutation.isPending}>Login</button>
-                    </div>
-                    {
-                        loginMutation.isError ?
-                        <p className='error-text'><img src={errorIcon} alt='error icon'/>{loginErrorMessage}</p>
-                        : ''
-                    }
-                    <p className='form__label'>If you do not have a username, please register <span className='emphasize' onClick={()=>{setShowLogin(false); setShowRegister(true)}}>here</span></p>
-                </form>
+                        <div className='form__button-container'>
+                            <button className='button--back' type='button' onClick={()=>setShowLogin(false)}>Cancel</button>
+                            <button className='button' type='submit' disabled={loginMutation.isPending}>Login</button>
+                        </div>
+                        {loginMutation.isError ? <FormError>{loginErrorMessage}</FormError> : ''}
+                        <p className='form__label'>If you do not have a username, please register <span className='emphasize' onClick={()=>{setShowLogin(false); setShowRegister(true)}}>here</span></p>
+                    </form>
+                </FormProvider>
             </div>
         </div>
     )
