@@ -6,3 +6,64 @@
   height: 20rem;
   padding-bottom: $general-mobile-padding;
 }
+
+@mixin line-clamp($lines) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// MapLibre's popup is a global class, so restyle it as a small card.
+.map-preview {
+  &.maplibregl-popup {
+    // Keep the card from stealing hover from the pin (prevents flicker).
+    pointer-events: none;
+  }
+
+  .maplibregl-popup-content {
+    padding: 0;
+    overflow: hidden;
+    border-radius: 8px;
+    color: $primary-font;
+    font-size: 0.8125rem;
+  }
+
+  // Horizontal layout keeps the card short enough to fit inside the 20rem map.
+  &__content {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  &__image {
+    flex: 0 0 72px;
+    width: 72px;
+    height: 72px;
+    border-radius: 4px;
+    object-fit: cover;
+  }
+
+  &__body {
+    min-width: 0;
+  }
+
+  &__title {
+    margin: 0;
+    font-weight: 700;
+    color: $primary-color;
+    line-height: 1.2;
+    @include line-clamp(2);
+  }
+
+  &__price {
+    margin: 0.125rem 0;
+  }
+
+  &__description {
+    margin: 0;
+    line-height: 1.2;
+    @include line-clamp(2);
+  }
+}

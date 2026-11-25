@@ -1,57 +1,44 @@
-import React from 'react'
 import listOfStates from '../../assets/data/listOfStates.json';
+import SelectField from '../SelectField';
+import TextField from '../TextField';
 
-function UploadPage2({handleInputChange, error, input, errorIcon}) {
-    const {streetAddress, city, state} = input;
-
+function UploadPage2() {
     return (
         <>
-        <h2 className='form__sub-header'>Location</h2>
-        <div className='form__element-container'>
-            <label className='form__label' htmlFor='streetAddress'>*Street Address:</label>
-                <input 
-                    className='form__input' 
-                    name='streetAddress' 
-                    id='streetAddress' 
-                    placeholder="Street Address"
-                    value={input.streetAddress}
-                    onChange={handleInputChange}
-                />
-                {
-                    error && !streetAddress ? 
-                    <p className='error-text'><img src={errorIcon} alt='error icon'/> You must enter the street address</p> 
-                    : ''
-                }
-            </div>
-        <div className='form__element-container'>
-            <label className='form__label' htmlFor='city'>*City:</label>
-            <input 
-                className='form__input' 
-                name='city' 
-                id='city' 
-                placeholder="City"
-                value={input.city}
-                onChange={handleInputChange}
+            <h2 className='form__sub-header'>Location</h2>
+            <TextField
+                name='streetAddress'
+                label='*Street Address:'
+                placeholder='Street Address'
+                rules={{ required: 'You must enter the street address' }}
             />
-             {
-                error && !city ? 
-                <p className='error-text'><img src={errorIcon} alt='error icon'/> You must enter the city</p> 
-                : ''
-            }
-        </div>
-        <div className='form__element-container'>
-            <label className='form__label' htmlFor='state'>*State:</label>
-            <select id='state' name='state' onChange={handleInputChange} className='form__select' value={input.state}>
-                <option value=''>Please select</option>
-                {listOfStates.states.map(state => <option value={`${state}`} key={`${state}`}>{state}</option>)}
-            </select>
-            {
-                error && !state ? 
-                <p className='error-text'><img src={errorIcon} alt='error icon'/> You must select a state</p> 
-                : ''
-            }
-        </div>
-    </>
+            <TextField
+                name='city'
+                label='*City:'
+                placeholder='City'
+                rules={{ required: 'You must enter the city' }}
+            />
+            <SelectField
+                name='state'
+                label='*State:'
+                placeholder='Please select'
+                options={listOfStates.states}
+                rules={{ required: 'You must select a state' }}
+            />
+            <TextField
+                name='zipCode'
+                label='*Zip Code:'
+                placeholder='Zip Code'
+                inputMode='numeric'
+                rules={{
+                    required: 'You must enter the zip code',
+                    pattern: {
+                        value: /^\d{5}(-\d{4})?$/,
+                        message: 'Please enter a valid 5-digit zip code',
+                    },
+                }}
+            />
+        </>
     )
 }
 

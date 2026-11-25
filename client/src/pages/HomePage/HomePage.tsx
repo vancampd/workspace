@@ -1,94 +1,84 @@
-import {useState} from 'react'
 import {useNavigate} from 'react-router-dom';
 import './HomePage.scss';
 import Add from '../../components/Add';
 import globe from '../../assets/images/Blue_globe_icon.svg';
 import office1 from '../../assets/images/office1.jpeg';
 import office2 from '../../assets/images/office2.jpeg';
-import errorIcon from '../../assets/images/error-12px.svg';
+import FormError from '../../components/FormError';
+import TextField from '../../components/TextField';
 import { useListingsQuery } from '../../hooks/queries/useListingsQuery';
+import { FormProvider, useForm } from 'react-hook-form';
+
+type SearchFormValues = {
+    location: string;
+};
 
 
 function HomePage() {
+    const {
+        data: listings = [],
+        isPending: areListingsPending,
+        isError: didListingsFail,
+    } = useListingsQuery();
+    const navigate = useNavigate();
+    const methods = useForm<SearchFormValues>({
+        mode: 'onSubmit',
+        reValidateMode: 'onChange',
+        defaultValues: {
+            location: '',
+        },
+    });
+    const { handleSubmit } = methods;
 
+    const findListingCity = (location: string) => {
+        const normalizedLocation = location.trim().toLowerCase()
 
-    const [error, setError] = useState(false);
-
-    const { data: listings = [] } = useListingsQuery();
-
-    const [input, setInput]= useState<any>({})
-
-    const handleInputChange = (e) => {
-        setInput({...input, [e.target.name]: e.target.value})
-        setFoundCity(true)
+        return listings.find(
+            (listing) => listing.city.toLowerCase() === normalizedLocation
+        )
     }
 
-    const navigate = useNavigate();
+    const handleSearch = ({ location }: SearchFormValues) => {
+        const foundCity = findListingCity(location)
 
-    const [foundCity, setFoundCity] = useState(true);
+        if(!foundCity) return
 
-    const handleSearch = (e) => {
-        e.preventDefault();
-
-       const {location} = input;
-
-       if(!location){
-           return setError(true)
-       }
-
-       const foundCity = listings.find(listing => listing.city.toLowerCase() === location.toLowerCase())
-
-       if(!foundCity) {
-          return setFoundCity(false)
-       }
-
-       navigate(`/listings/${foundCity.city.toLowerCase()}`)
-
+        navigate(`/listings/${foundCity.city.toLowerCase()}`)
     }
 
 
     return(
         <div>
-            <form className='form'  onSubmit={handleSearch}>
-                <h2 className='form__header'>Find a workspace</h2>
-                <div className='form__element-container'>
-                    <label className='form__label' htmlFor='location'>Location:</label>
-                    <input 
-                        className='form__input' 
-                        name='location' 
-                        id='location' 
+            <FormProvider {...methods}>
+                <form className='form'  onSubmit={handleSubmit(handleSearch)}>
+                    <h2 className='form__header'>Find a workspace</h2>
+                    <TextField
+                        name='location'
+                        label='Location:'
                         placeholder="Enter the city you're working in"
-                        onChange={handleInputChange}
+                        rules={{
+                            validate: {
+                                required: (location) =>
+                                    location.trim() !== '' || 'You must enter a location',
+                                hasListings: (location) =>
+                                    Boolean(findListingCity(location)) ||
+                                    'Sorry, there are no listings currently in that city',
+                            },
+                        }}
                     />
-                    {
-                        error && !input.location ? 
-                        <p className='error-text'><img src={errorIcon} alt='error icon'/>You must enter a location</p> 
-                        : ''
-                    }
-                    {
-                        !foundCity ? 
-                        <p className='error-text'><img src={errorIcon} alt='error icon'/>Sorry, there are no listings currently in that city</p> 
-                        : ''
-                    }
-                </div>
-                <div className='form__element-container'>
-                    <div className='form__inner-container'>
-                        <div className='form__inner-left'>
-                            <label className='form__label' htmlFor='startDate'>Start date:</label>
-                            <input type='date' className='form__input' name='startDate' id='startDate' placeholder='Select a date'/>
-                        </div>
-                        <div className='form__inner-right'>
-                            <label className='form__label' htmlFor='endDate'>End date:</label>
-                            <input type='date' className='form__input' name='endDate' id='endDate' placeholder='Select a date'/>
-                        </div>
-                    </div>
-                </div>
-                <button className='button'>Search</button>
-            </form>
-            <Add 
-                heading='Become one of our 1000s of locations across the world' 
-                icon={globe} 
-                iconAlt='Globe Icon' 
+                    <button
+                        className='button'
+                        disabled={areListingsPending || didListingsFail}
+                    >
+                        Search
+                    </button>
+                    {didListingsFail ? <FormError>Unable to load listings. Please try again.</FormError> : ''}
+                </form>
+            </FormProvider>
+            <Add
+                heading='Become one of our 1000s of locations across the world'
+                icon={globe}
+                iconAlt='Globe Icon'
                 background='alt-background'
                 image1={office1}
                 alt1='Shared open office'

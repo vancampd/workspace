@@ -2,43 +2,49 @@ const router = require('express').Router();
 const { v4: uuidv4} = require('uuid');
 const fs = require('fs');
 const multer = require('multer')
+const path = require('path')
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'public')
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' +file.originalname)
+    cb(null, `${Date.now()}-${uuidv4()}${path.extname(file.originalname)}`)
   }
 })
 
-const upload = multer({ storage: storage }).single('file')
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    if (!file.mimetype.startsWith('image/')) {
+      return cb(new Error('Only image files are allowed'))
+    }
+    cb(null, true)
+  },
+}).single('file')
 
-router
-    .route('/:listingID/images')
-    .post((req, res) => {
-        upload(req, res, (err) => {
-            if (err) {
-                res.sendStatus(500);
-            }
+// Parses the multipart body (image + `listing` JSON field) before the create handler runs.
+const handleListingUpload = (req, res, next) => {
+    upload(req, res, (err) => {
+        if (err) {
+            return res.status(400).json({ message: err.message })
+        }
 
-            const{listingID} = req.params;
+        if (!req.file) {
+            return res.status(400).json({ message: 'An image is required' })
+        }
 
-            const listings = getListings();
+        try {
+            req.listingData = JSON.parse(req.body.listing)
+        } catch (parseError) {
+            fs.unlink(req.file.path, () => {})
+            return res.status(400).json({ message: 'Invalid listing data' })
+        }
 
-            listings.forEach(listing => {
-                if(listing.id === listingID){
-                    listing.images = [`http://localhost:8080/${req.file.path}`]
-                }
-            })
-    
-            fs.writeFile('./data/listings.json', JSON.stringify(listings), ()=>{
-                return res.send(req.file.path);
-            })
-
-            
-        })
+        next()
     })
+}
 
     router
     .route('/:listingID/comments')
@@ -113,12 +119,13 @@ router
 
         res.json(listings);
     })
-    .post((req, res) => {
+    .post(handleListingUpload, (req, res) => {
 
         const newListing = {
+            ...req.listingData,
             id:uuidv4(),
             comments:[],
-            ...req.body,
+            images:[`${req.protocol}://${req.get('host')}/public/${req.file.filename}`],
         }
 
         const listings = getListings();

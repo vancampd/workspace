@@ -1,97 +1,77 @@
-import {useState} from 'react'
 import './Login.scss';
-import errorIcon from '../../assets/images/error-12px.svg';
+import FormError from '../../components/FormError';
+import TextField from '../../components/TextField';
 import jwt_decode from 'jwt-decode';
 import { useLoginMutation } from '../../hooks/mutations/useLoginMutation';
+import { FormProvider, useForm } from 'react-hook-form';
+
+type LoginFormValues = {
+    username: string;
+    password: string;
+};
 
 function Login({setShowRegister, setShowLogin, setSignedIn, setCredentials}: any) {
 
-    const [input, setInput] = useState<any>({})
-
-    const [error, setError] = useState(false)
     const loginMutation = useLoginMutation()
+    const methods = useForm<LoginFormValues>({
+        mode: 'onSubmit',
+        reValidateMode: 'onChange',
+        defaultValues: {
+            username: '',
+            password: '',
+        },
+    })
+    const { handleSubmit } = methods
 
-    const handleInputChange = (e) => {
+    const loginErrorStatus = (loginMutation.error as { response?: { status?: number } } | null)
+        ?.response?.status
+    // The API responds 400 for an unknown user or wrong password
+    const isInvalidCredentials = loginErrorStatus === 400 || loginErrorStatus === 401
+    const loginErrorMessage = isInvalidCredentials
+        ? 'Invalid login credentials'
+        : 'Unable to log in. Please try again.'
 
-        const {name, value} = e.target;
-
-        setInput({...input, [name]: value})
-    }
-
-    const handleLogin = (e) => {
-        e.preventDefault();
-
-        const {username, password} = input;
-
-        if(!username || !password) return setError(true)
-
+    const handleLogin = (input: LoginFormValues) => {
         loginMutation.mutate(input, {
         onSuccess: (data) => {
             localStorage.setItem('token', data.token)
             const decoded = jwt_decode<{name: string}>(data.token)
             localStorage.setItem('name', decoded.name)
-            setError(false)
             setShowLogin(false)
             setSignedIn(true)
             setCredentials({name: decoded.name})
         },
-        onError: (err) => {
-            console.log('Error logging in', err)
-            setError(true)
-        }
         })
     }
 
     return (
         <div className='overlay'>
             <div className='login-container'>
-                <form className='form' onSubmit={handleLogin}>
-                    <h2 className='form__header'>Login</h2>
-                    <div className='form__element-container'>
-                        <label className='form__label' htmlFor='username'>Username:</label>
-                        <input 
-                            className='form__input' 
-                            name='username' 
-                            id='username' 
-                            placeholder="Username"
-                            onChange={handleInputChange}
+                <FormProvider {...methods}>
+                    <form className='form' onSubmit={handleSubmit(handleLogin)}>
+                        <h2 className='form__header'>Login</h2>
+                        <TextField
+                            name='username'
+                            label='Username:'
+                            placeholder='Username'
+                            rules={{ required: 'You must enter a username' }}
                         />
-                        {
-                            error && !input.username ? 
-                            <p className='error-text'><img src={errorIcon} alt='error icon'/>You must enter a location</p> 
-                            : ''
-                        }
-
-                    </div>
-                    <div className='form__element-container'>
-                        <label className='form__label' htmlFor='password'>Password:</label>
-                        <input 
-                            className='form__input' 
-                            name='password' 
-                            id='password' 
-                            placeholder="Password"
+                        <TextField
+                            name='password'
+                            label='Password:'
+                            placeholder='Password'
                             type='password'
-                            onChange={handleInputChange}
+                            rules={{ required: 'You must enter a password' }}
                         />
-                        {
-                            error && !input.password ? 
-                            <p className='error-text'><img src={errorIcon} alt='error icon'/>You must enter a password</p> 
-                            : ''
-                        }
 
-                    </div>
-                    
-                    <div className='form__button-container'>
-                        <button className='button--back' type='button' onClick={()=>setShowLogin(false)}>Cancel</button> 
-                        <button className='button' type='submit'>Login</button>
-                    </div>
-                    {
-                        error && input.password && input.username ?
-                        <p className='error-text'><img src={errorIcon} alt='error icon'/>Invalid login credentials</p> 
-                        : ''
-                    }
-                    <p className='form__label'>If you do not have a username, please register <span className='emphasize' onClick={()=>{setShowLogin(false); setShowRegister(true)}}>here</span></p>
-                </form>
+                        <div className='form__button-container'>
+                            <button className='button--back' type='button' onClick={()=>setShowLogin(false)}>Cancel</button>
+                            <button className='button' type='submit' disabled={loginMutation.isPending}>Login</button>
+                        </div>
+                        {loginMutation.isError ? <FormError>{loginErrorMessage}</FormError> : ''}
+                        <p className='form__label'>If you do not have a username, please register <span className='emphasize' onClick={()=>{setShowLogin(false); setShowRegister(true)}}>here</span></p>
+                    </form>
+                </FormProvider>
             </div>
         </div>
     )

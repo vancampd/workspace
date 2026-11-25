@@ -11,7 +11,6 @@ import {
     useRemoveFavoriteMutation,
 } from '../../hooks/mutations/useFavoriteMutations';
 import {
-    useCreateCommentMutation,
     useDeleteCommentMutation,
 } from '../../hooks/mutations/useCommentMutations';
 import { useFavoritesQuery } from '../../hooks/queries/useFavoritesQuery';
@@ -31,7 +30,6 @@ function IndividualListing({signedIn, credentials}) {
     const favoritesQuery = useFavoritesQuery(profileName)
     const addFavoriteMutation = useAddFavoriteMutation(profileName)
     const removeFavoriteMutation = useRemoveFavoriteMutation(profileName)
-    const createCommentMutation = useCreateCommentMutation()
     const deleteCommentMutation = useDeleteCommentMutation()
     const mainListing = updatedListing?.id === listingID ? updatedListing : listingQuery.data
     const isFavorite = Boolean(
@@ -60,44 +58,6 @@ function IndividualListing({signedIn, credentials}) {
             }
         )
     }
-
-    const [error, setError] = useState(false);
-
-    const [rating, setRating] = useState(0)
-
-    const handleCommentSubmit = (e) => {
-        e.preventDefault();
-
-        const newComment = {
-            name: profileName,
-            comment: e.target[0].value
-        }
-
-        if(!profileName|| !newComment.comment || !rating){   
-            return setError(true)
-        }
-
-        createCommentMutation.mutate(
-            {
-                listingId: mainListing.id,
-                comment: {
-                    listingID: mainListing.id,
-                    rating,
-                    ...newComment
-                }
-            },
-            {
-                onSuccess: (data) => setUpdatedListing(data),
-                onError: (err) => console.log('error posting comment', err),
-            }
-        )
-
-        e.target.reset();
-        setRating(0)
-        setError(false)
-
-    }
-
 
     const handleDeleteComment = (e, commentID) => {
         e.preventDefault();    
@@ -218,12 +178,8 @@ function IndividualListing({signedIn, credentials}) {
                 />
                 <CommentSection 
                     mainListing={mainListing} 
-                    handleCommentSubmit={handleCommentSubmit} 
+                    onCommentCreated={setUpdatedListing} 
                     handleDeleteComment={handleDeleteComment} 
-                    rating={rating} 
-                    setRating={setRating}
-                    error={error}
-                    setError={setError}
                     signedIn={signedIn}
                     profileName={profileName}
                 />
